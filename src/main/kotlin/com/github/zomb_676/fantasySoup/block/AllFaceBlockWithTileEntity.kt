@@ -16,7 +16,7 @@ abstract class AllFaceBlockWithTileEntity(properties: Properties) : BlockWithTil
     }
 
     override fun getStateForPlacement(context: BlockItemUseContext): BlockState? {
-        val direction = context.nearestLookingDirection
+        val direction = context.nearestLookingDirection.opposite
         return super.getStateForPlacement(context)?.with(BlockStateProperties.FACING,direction)
     }
 }
