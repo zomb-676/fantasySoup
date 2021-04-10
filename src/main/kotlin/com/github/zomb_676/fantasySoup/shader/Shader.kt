@@ -32,7 +32,7 @@ constructor(manger: IResourceManager,val location: ResourceLocation, shaderType:
                 if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_TRUE) {
                     FantasySoup.logger.info("successfully load and compile shader ${location.path}")
                 } else {
-                    throw RuntimeException("failed to compile shader ${glGetShaderInfoLog(id).trim()}")
+                    throw RuntimeException("failed to compile shader ${location.path}\nreason: ${glGetShaderInfoLog(id).trim()}")
                 }
             } else {
                 throw RuntimeException("trying to read an unavailable shader , path:${location.path}")

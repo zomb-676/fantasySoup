@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL43
 //TODO highest priority
 @OnlyIn(Dist.CLIENT)
 @Suppress("unused")
-class Canvas {
+object Canvas {
     private var r: Int = 255
     private var g: Int = 255
     private var b: Int = 255

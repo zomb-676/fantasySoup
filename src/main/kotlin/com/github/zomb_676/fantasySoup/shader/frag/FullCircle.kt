@@ -5,4 +5,4 @@ import com.github.zomb_676.fantasySoup.shader.shaderResource
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 
-object FullCircle : FragShader(shaderResource("full_circle.frag"))
+object FullCircle : FragShader(shaderResource("circle_fill.frag"))
