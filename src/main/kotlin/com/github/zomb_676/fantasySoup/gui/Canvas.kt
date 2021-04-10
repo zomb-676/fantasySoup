@@ -1,8 +1,13 @@
 package com.github.zomb_676.fantasySoup.gui
 
+import com.github.zomb_676.fantasySoup.shader.program.FullCircleProgram
 import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.renderer.WorldVertexBufferUploader
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
+import org.lwjgl.opengl.GL43
 
 /**
  * In charge of all draw work in gui
@@ -50,6 +55,26 @@ class Canvas {
 
     fun setZ(z: Double) {
         this.z = z
+    }
+
+    fun drawFullCircle(posX:Float,posY:Float,radius:Float) {
+        FullCircleProgram.use()
+        FullCircleProgram.setRadius(radius)
+        FullCircleProgram.setCenter(posX, posY)
+        upload(posX-radius,posY-radius,posX+radius,posY+radius)
+        FullCircleProgram.stop()
+    }
+
+     private fun upload(left:Float,top:Float,right:Float,bottom:Float) {
+         val builder = Tessellator.getInstance().buffer
+        builder.begin(GL43.GL_QUADS,DefaultVertexFormats.POSITION_COLOR)
+        builder.pos(left.toDouble(), bottom.toDouble(),0.0).color(r,g,b,a).endVertex()
+        builder.pos(left.toDouble(), bottom.toDouble(), 0.0).color(r, g, b, a).endVertex()
+        builder.pos(right.toDouble(), bottom.toDouble(), 0.0).color(r, g, b, a).endVertex()
+        builder.pos(right.toDouble(), top.toDouble(), 0.0).color(r, g, b, a).endVertex()
+        builder.pos(left.toDouble(), top.toDouble(), 0.0).color(r, g, b, a).endVertex()
+        builder.finishDrawing()
+        WorldVertexBufferUploader.draw(builder)
     }
 
 }

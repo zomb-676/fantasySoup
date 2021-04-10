@@ -1,0 +1,1 @@
+MixinConnector: com.github.zomb_676.fantasySoup.mixin.MixinConnector
