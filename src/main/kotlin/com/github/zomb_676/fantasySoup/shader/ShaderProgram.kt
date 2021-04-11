@@ -1,6 +1,5 @@
 package com.github.zomb_676.fantasySoup.shader
 
-import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL43
 
 open class ShaderProgram(val vertexShader: VertexShader, val fragShader: FragShader) {

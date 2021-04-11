@@ -1,6 +1,9 @@
 package com.github.zomb_676.fantasySoup.gui
 
+import com.github.zomb_676.fantasySoup.shader.frag.FullCircle
 import com.github.zomb_676.fantasySoup.shader.program.FullCircleProgram
+import com.mojang.blaze3d.platform.GlStateManager
+import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldVertexBufferUploader
@@ -8,6 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import org.lwjgl.opengl.GL43
+import kotlin.math.min
 
 /**
  * In charge of all draw work in gui
@@ -56,11 +60,22 @@ object Canvas {
     fun setZ(z: Double) {
         this.z = z
     }
+//    init {
+//        val frameBuffer = GL43.glGenFramebuffers()
+//        GL43.glBindTexture(GL43.GL_TEXTURE_2D,frameBuffer)
+//        GlStateManager.framebufferTexture2D()
+//    }
 
     fun drawFullCircle(posX:Float,posY:Float,radius:Float) {
         FullCircleProgram.use()
         FullCircleProgram.setRadius(radius)
         FullCircleProgram.setCenter(posX, posY)
+//        RenderSystem.activeTexture(GL43.GL_TEXTURE0)
+//        FullCircleProgram.sendSampler()
+        val frameBuffer = minecraft.framebuffer
+//        RenderSystem.bindTexture(frameBuffer.frameBufferTexture)
+//        GL43.glUniform1i(2,)
+
         upload(posX-radius,posY-radius,posX+radius,posY+radius)
         FullCircleProgram.stop()
     }
@@ -69,7 +84,6 @@ object Canvas {
          val builder = Tessellator.getInstance().buffer
         builder.begin(GL43.GL_QUADS,DefaultVertexFormats.POSITION_COLOR)
         builder.pos(left.toDouble(), bottom.toDouble(),0.0).color(r,g,b,a).endVertex()
-        builder.pos(left.toDouble(), bottom.toDouble(), 0.0).color(r, g, b, a).endVertex()
         builder.pos(right.toDouble(), bottom.toDouble(), 0.0).color(r, g, b, a).endVertex()
         builder.pos(right.toDouble(), top.toDouble(), 0.0).color(r, g, b, a).endVertex()
         builder.pos(left.toDouble(), top.toDouble(), 0.0).color(r, g, b, a).endVertex()
