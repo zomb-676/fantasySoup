@@ -38,6 +38,25 @@ class TileEntityTypeRegisterInstance(
         return result
     }
 
+    fun <T : TileEntity> tileEntityBlind(
+        tileEntityTypeName: String,
+        tileEntityInstance: ()->T,
+        render: Class<out TileEntityRenderer<T>>? = null,
+        vararg validBlocks: RegistryObject<out Block>,
+    ): RegistryObject<TileEntityType<T>> {
+        val result = register.register(tileEntityTypeName) {
+            TileEntityType.Builder.create(
+                tileEntityInstance,
+                *(validBlocks.map { it.get() }.toTypedArray())
+            )
+                .build(null)
+        }
+        if (render != null) {
+            TileEntityRenderHandle.add(result, render)
+        }
+        return result
+    }
+
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     class TileEntityRenderHandle {
 

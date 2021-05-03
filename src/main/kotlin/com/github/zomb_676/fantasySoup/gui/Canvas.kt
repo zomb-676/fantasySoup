@@ -1,6 +1,5 @@
 package com.github.zomb_676.fantasySoup.gui
 
-import com.github.zomb_676.fantasySoup.shader.frag.FullCircle
 import com.github.zomb_676.fantasySoup.shader.program.FullCircleProgram
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
@@ -8,22 +7,23 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldVertexBufferUploader
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.client.shader.Framebuffer
+import net.minecraft.util.ResourceLocation
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import org.lwjgl.opengl.GL43
-import kotlin.math.min
 
 /**
  * In charge of all draw work in gui
  */
 //TODO highest priority
 @OnlyIn(Dist.CLIENT)
-@Suppress("unused")
+@Suppress("unused","MemberVisibilityCanBePrivate")
 object Canvas {
-    private var r: Int = 255
-    private var g: Int = 255
-    private var b: Int = 255
-    private var a: Int = 255
+    private var r: Int = 1
+    private var g: Int = 1
+    private var b: Int = 1
+    private var a: Int = 1
     /**
      * Depth
      */
@@ -31,6 +31,11 @@ object Canvas {
     private var minecraft = Minecraft.getInstance()
     private var window = minecraft.mainWindow
     private var itemRender = minecraft.itemRenderer
+
+    /**
+     * require this if src == dest
+     */
+//    val blitFrameBuffer = Framebuffer(0,0,true,Minecraft.IS_RUNNING_ON_MAC)
 
     fun setRGBA(r: Int, g: Int, b: Int, a: Int) {
         this.r = r
@@ -61,21 +66,25 @@ object Canvas {
         this.z = z
     }
 //    init {
-//        val frameBuffer = GL43.glGenFramebuffers()
-//        GL43.glBindTexture(GL43.GL_TEXTURE_2D,frameBuffer)
-//        GlStateManager.framebufferTexture2D()
+//        val frameBufferID = GL43.glGenFramebuffers()
+//        val width = minecraft.mainWindow.width
+//        val height = minecraft.mainWindow.height
+//        GL43.glBindFramebuffer(GL43.GL_RENDERBUFFER,frameBufferID)
+//        GL43.glRenderbufferStorage(
+//            GL43.GL_RENDERBUFFER,GL43.GL_DEPTH24_STENCIL8,width,height,)
+//
 //    }
 
     fun drawFullCircle(posX:Float,posY:Float,radius:Float) {
+        val mainFramebuffer = Minecraft.getInstance().framebuffer
+//        runBefore(mainFramebuffer.frameBufferTexture,mainFramebuffer, blitFrameBuffer)
+
+
+        GlStateManager.blendColor(1.0f,1.0f,1.0f,1.0f)
         FullCircleProgram.use()
         FullCircleProgram.setRadius(radius)
         FullCircleProgram.setCenter(posX, posY)
-//        RenderSystem.activeTexture(GL43.GL_TEXTURE0)
-//        FullCircleProgram.sendSampler()
-        val frameBuffer = minecraft.framebuffer
-//        RenderSystem.bindTexture(frameBuffer.frameBufferTexture)
-//        GL43.glUniform1i(2,)
-
+        uploadMainSampler()
         upload(posX-radius,posY-radius,posX+radius,posY+radius)
         FullCircleProgram.stop()
     }
@@ -91,4 +100,54 @@ object Canvas {
         WorldVertexBufferUploader.draw(builder)
     }
 
+    fun sampler(uniform: Int,texture : ResourceLocation,textureUnit: Int){
+        GlStateManager.activeTexture(GL43.GL_TEXTURE0 + textureUnit)
+        GlStateManager.enableTexture()
+        val manger = Minecraft.getInstance().textureManager
+        manger.bindTexture(texture)
+        GL43.glUniform1i(uniform,textureUnit)
+        GlStateManager.disableTexture()
+        GlStateManager.activeTexture(GL43.GL_TEXTURE0)
+    }
+
+//    fun uploadMainSampler() = sampler(2,Minecraft.getInstance().framebuffer.frameBufferTexture,0)
+    fun uploadMainSampler() = sampler(2,Minecraft.getInstance().framebuffer.frameBufferTexture,0)
+
+//    private fun resizeBlitFrameBuffer(){
+//        blitFrameBuffer.framebufferWidth = minecraft.mainWindow.width
+//        blitFrameBuffer.framebufferHeight= minecraft.mainWindow.height
+//    }
+
+    private fun runBefore(src:Int,dst:Framebuffer,blit:Framebuffer){
+        var intermediateDst : Framebuffer = dst
+        if (src==dst.frameBufferTexture){
+            intermediateDst=blit
+        }
+        intermediateDst.bindFramebuffer(true)
+    }
+    private fun updateWholeWindow()= upload(0f, window.height.toFloat(), window.width.toFloat(),0f)
+
+    /**
+     * @param location : layout(location) written in frag shader
+     * @param texture : [Framebuffer.framebufferTexture]
+     * @param textureUnit : index of texture to use
+     */
+    fun sampler(location:Int, texture:Int, textureUnit:Int){
+        RenderSystem.activeTexture(GL43.GL_TEXTURE0 + textureUnit)
+        RenderSystem.enableTexture()
+        RenderSystem.bindTexture(texture)
+        RenderSystem.glUniform1i(location,textureUnit)
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

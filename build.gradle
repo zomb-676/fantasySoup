@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net/' }
         mavenCentral()
         jcenter()
         maven {
@@ -94,10 +94,24 @@ dependencies {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier "sources"
+    exclude "**/*.psd"
+    exclude "**/*.bbmodel"
+    exclude "**/*.md"
     from sourceSets.main.allSource
 }
 
+task deobfJar(type: Jar) {
+    classifier "deobf"
+    exclude "**/*.psd"
+    exclude "**/*.bbmodel"
+    exclude "**/*.md"
+    from(sourceSets.main.output)
+}
+
 jar {
+    exclude "**/*.psd"
+    exclude "**/*.bbmodel"
+    exclude "**/*.md"
     manifest {
         attributes([
                 "Specification-Title"     : "fantasySoup",
@@ -112,15 +126,14 @@ jar {
         ])
     }
 }
+
 reobf {
     shadowJar {}
 }
 shadowJar {
     archiveClassifier.set('')
-    dependencies{
-       include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
-       include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
+    dependencies {
+        include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
+        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
     }
 }
-
-jar.finalizedBy('reobfJar')
