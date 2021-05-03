@@ -36,8 +36,18 @@ jobs:
         run : ./gradlew sourcesJar
       - name : build with gradle -deobf for dev
         run : ./gradlew deobfJar
-      - name : upload
+      - name : upload deobf jar
         uses : actions/upload-artifact@v2
         with :
-          name : zomb_676
-          path : ${{github.workspace}}/build/libs/*.jar
+          name : fantasySoup
+          path : ${{github.workspace}}/build/libs/.*[0-9].jar
+      - name : upload sources jar
+        uses : actions/upload-artifact@v2
+        with :
+          name : fantasySoup source
+          path : ${{github.workspace}}/build/libs/.*-sources.jar
+      - name : upload deobf jar
+        uses : actions/upload-artifact@v2
+        with :
+          name : fantasySoup deobf
+          path : ${{github.workspace}}/build/libs/.*-deobf.jar
