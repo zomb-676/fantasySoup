@@ -137,3 +137,25 @@ shadowJar {
         include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
     }
 }
+
+publishing{
+    publications {
+        mavenJava(MavenPublication) {
+            artifact sourcesJar
+            artifact deobfJar
+            pom{
+                name = "fantasySoup"
+                description = "my library mod"
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "http://ruaruarua.ddns.net:1011/artifactory/fantasySoup"
+            credentials {
+                username System.getenv("ARTIFACTORY_USERNAME")
+                password System.getenv("ARTIFACTORY_PASSWORD")
+            }
+        }
+    }
+}
