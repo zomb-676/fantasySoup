@@ -5,7 +5,10 @@ import net.minecraft.item.Item
 import net.minecraft.nbt.*
 import net.minecraft.state.EnumProperty
 import net.minecraft.state.Property
+import net.minecraft.util.Direction
 import net.minecraft.util.IStringSerializable
+import net.minecraftforge.client.model.generators.ConfiguredModel
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder
 import net.minecraftforge.common.util.LazyOptional
 import net.minecraftforge.fml.RegistryObject
 import net.minecraftforge.registries.IForgeRegistryEntry
@@ -108,3 +111,25 @@ fun <T> LazyOptional<T>.unsafeGet(): T = this.orElseThrow { Exception("try to ge
 
 inline fun <K, reified V> Map<K, EnumProperty<V>>.toProperties(): List<Property<V>> where V : Comparable<V>, V : Enum<V>, V : IStringSerializable =
     keys.map { EnumProperty.create(it.toString(), V::class.java, get(it)!!.allowedValues) }
+
+fun Direction.getRotateMethod() =
+    when (this) {
+        Direction.DOWN -> Pair(Direction.Axis.X, 90)
+        Direction.UP -> Pair(Direction.Axis.X, 270)
+        Direction.NORTH -> null
+        Direction.SOUTH -> Pair(Direction.Axis.Y, 180)
+        Direction.WEST -> Pair(Direction.Axis.Y, 270)
+        Direction.EAST -> Pair(Direction.Axis.Y, 90)
+    }
+
+fun ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder>.autoRotation(direction: Direction): ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder> {
+    when(direction){
+        Direction.DOWN -> rotationX(90)
+        Direction.UP -> rotationX(270)
+        Direction.NORTH -> {}
+        Direction.SOUTH -> rotationY(180)
+        Direction.WEST -> rotationY(270)
+        Direction.EAST -> rotationY(90)
+    }
+    return this
+}
