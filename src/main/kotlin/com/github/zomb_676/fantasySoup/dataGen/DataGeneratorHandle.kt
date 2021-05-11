@@ -8,7 +8,6 @@ import net.minecraftforge.common.data.ExistingFileHelper
 import net.minecraftforge.common.data.ForgeRecipeProvider
 import net.minecraftforge.fml.RegistryObject
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent
-import kotlin.contracts.ExperimentalContracts
 
 class DataGeneratorHandle(private val modId: String) {
 
@@ -16,15 +15,17 @@ class DataGeneratorHandle(private val modId: String) {
     private val blockModels = mutableListOf<(BlockModelProvider) -> Unit>()
     private val blockStates = mutableListOf<(BlockStateProvider) -> Unit>()
 
+    lateinit var content: Content
+
     fun init(event: GatherDataEvent) {
-        Content(event, modId, handle = this)
+        content = Content(event, modId, handle = this)
     }
 
     class Content(
         event: GatherDataEvent,
         modId: String,
         generator: DataGenerator = event.generator,
-        existingFileHelper: ExistingFileHelper = event.existingFileHelper,
+        val existingFileHelper: ExistingFileHelper = event.existingFileHelper,
         handle: DataGeneratorHandle
     ) {
         private val blockModels: BlockModelProvider =
