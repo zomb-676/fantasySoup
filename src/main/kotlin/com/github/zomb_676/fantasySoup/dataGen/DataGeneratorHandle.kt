@@ -14,7 +14,7 @@ class DataGeneratorHandle(private val modId: String) {
     private val itemModels = mutableListOf<(ItemModelProvider) -> Unit>()
     private val blockModels = mutableListOf<(BlockModelProvider) -> Unit>()
     private val blockStates = mutableListOf<(BlockStateProvider) -> Unit>()
-
+    private val customModelToAdd = mutableListOf<(BlockStateProvider)->Unit>()
     lateinit var content: Content
 
     fun init(event: GatherDataEvent) {
@@ -43,6 +43,7 @@ class DataGeneratorHandle(private val modId: String) {
         }
         private val blockStates = object : BlockStateProvider(generator, modId, existingFileHelper) {
             override fun registerStatesAndModels() {
+                handle.customModelToAdd.forEach{it(this)}
                 handle.blockStates.forEach { it(this) }
             }
         }
@@ -90,4 +91,7 @@ class DataGeneratorHandle(private val modId: String) {
             blockStateProvider.getVariantBuilder(registryObject.get()).model(blockStateProvider)
         }.apply { blockStates.add(this) }
 
+    fun addBlockModel(model : (BlockStateProvider)->Unit){
+        customModelToAdd.add(model)
+    }
 }
