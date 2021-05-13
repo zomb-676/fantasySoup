@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityType
 import net.minecraft.entity.ai.attributes.Attribute
 import net.minecraft.entity.item.PaintingType
 import net.minecraft.fluid.Fluid
+import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
@@ -94,6 +95,16 @@ class RegisterHandle private constructor(val modID: String) {
             }
         }
 
+    }
+
+    fun <T:Container> container(containerBuilder : ContainerType.IFactory<T>): ContainerType<T> {
+        val containerType = ContainerType(containerBuilder)
+        this.containerRegister.register("",){containerType}
+        return containerType
+    }
+
+    fun <T:Container> ContainerType<T>.register(): ContainerType<T> {
+        return this
     }
 
     fun registerAllRegistersToEvent(event: IEventBus) {
