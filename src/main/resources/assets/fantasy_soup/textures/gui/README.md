@@ -2,8 +2,8 @@
 | -------------------- | ------------------- | --------- | ---------- | ------------------------------------------------- |
 | universal_ui         | 0,0                 | 164       | 131        | ![universal_ui](universal_ui.png)                 |
 | inventory_alone      | 0,140               | 168       | 83         | ![inventory_alone](inventory_alone.png)           |
-| 3d_preview_bar       | 165,0               | 87        | 68         | ![3d_preview_bar](3d_preview_bar.png)             |
-| fulid_tank           | 165,69              | 22        | 70         | ![fulid_tank](fulid_tank.png)                     |
+| preview_bar_3d       | 165,0               | 87        | 68         | ![preview_bar_3d](preview_bar_3d.png)             |
+| fluid_tank           | 165,69              | 22        | 70         | ![fluid_tank](fluid_tank.png)                     |
 | item_slot            | 188,69              | 18        | 18         | ![item_slot](item_slot.png)                       |
 | item_slot_large      | 207,96              | 24        | 23         | ![item_slot_large](item_slot_large.png)           |
 | meter_style_1        | 233,69              | 18        | 18         | ![meter_style_1](meter_style_1.png)               |
@@ -21,4 +21,5 @@
 | deco_2               | 169,153             | 37        | 37         | ![deco_2](deco_2.png)                             |
 | deco_3               | 208,154             | 37        | 37         | ![deco_3](deco_3.png)                             |
 | deco_4               | 169,191             | 32        | 3          | ![deco_4](deco_4.png)                             |
+| button_small_hover   | 169,195             | 12        | 12         | ![button_small_hover](button_small_hover.png)     |
 
