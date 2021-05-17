@@ -5,6 +5,7 @@ import com.github.zomb_676.fantasySoup.capability.ICapability
 import com.github.zomb_676.fantasySoup.capability.InnerClass
 import com.github.zomb_676.fantasySoup.safeReturn
 import net.minecraft.block.Block
+import net.minecraft.client.settings.KeyBinding
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ai.attributes.Attribute
@@ -58,8 +59,10 @@ class RegisterHandle private constructor(val modID: String) {
     private val itemRegister: DeferredRegister<Item> = DeferredRegister.create(ForgeRegistries.ITEMS, modID)
 
 
+
     companion object {
-        private val map: HashMap<String, RegisterHandle> = hashMapOf()
+        val map: HashMap<String, RegisterHandle> = hashMapOf()
+        val keyBindings = mutableListOf<KeyBinding>()
 
         fun getInstance(modID: String): RegisterHandle {
             if (modID.length < 64 && modID.map { it.isUpperCase() }.isEmpty()) {
@@ -128,6 +131,7 @@ class RegisterHandle private constructor(val modID: String) {
     fun registerItem() = ItemRegisterInstance(this, itemRegister)
     fun registerTileEntityType() = TileEntityTypeRegisterInstance(this, tileEntityTypeRegister)
     fun registerBlock() = BlockRegisterInstance(this, blockRegister)
+
 
 
 }
