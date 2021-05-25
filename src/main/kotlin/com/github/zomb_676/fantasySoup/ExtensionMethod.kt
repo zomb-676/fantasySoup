@@ -133,3 +133,5 @@ fun ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder>.autoRotation
     }
     return this
 }
+
+fun deprecated(reason : String? = null): Nothing = throw RuntimeException("use deprecated method , reason : ${reason?:"no provided"}")

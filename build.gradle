@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
     id 'com.github.johnrengelman.shadow' version "5.2.0"
 }
 
@@ -34,10 +34,10 @@ group = 'com.github.zomb_676'
 version = '1.0'
 archivesBaseName = 'fantasySoup'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
 }
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -88,8 +88,8 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.4'
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
     runtime "org.jetbrains.kotlin:kotlin-stdlib"
-    runtime group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.4.3'
-    runtimeOnly group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: "1.4.32"
+    runtime group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.5.0'
+    runtimeOnly group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.5.0'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
