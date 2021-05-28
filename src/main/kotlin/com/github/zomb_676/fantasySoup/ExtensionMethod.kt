@@ -24,6 +24,7 @@ inline fun <T> T?.safeReturn(block: () -> T): T {
 /**
  * without need for jvm args to enable assert feature
  */
+@Throws(RuntimeException::class)
 inline fun <T : Any> T?.assert(block: (T?) -> Boolean) {
     if (this == null) {
         throw NullPointerException("try to use assert on a null")
@@ -36,6 +37,7 @@ inline fun <T : Any> T?.assert(block: (T?) -> Boolean) {
 /**
  * implement boolean array by write byte/short/int/long
  */
+@Throws(RuntimeException::class)
 fun CompoundNBT.putBooleanArrayToSingle(key: String, value: BooleanArray) {
     when {
         value.size <= 8 -> {
@@ -75,6 +77,7 @@ fun CompoundNBT.putBooleanArrayToSingle(key: String, value: BooleanArray) {
 /**
  * read boolean array
  */
+@Throws(RuntimeException::class)
 fun CompoundNBT.getBooleanArray(key : String) : BooleanArray{
     val nbt = get(key) ?: throw RuntimeException("nbt $this didn't has a key called $key")
     val number = (nbt as NumberNBT).asNumber.toLong()
@@ -134,4 +137,5 @@ fun ConfiguredModel.Builder<MultiPartBlockStateBuilder.PartBuilder>.autoRotation
     return this
 }
 
+@Throws(RuntimeException::class)
 fun deprecated(reason : String? = null): Nothing = throw RuntimeException("use deprecated method , reason : ${reason?:"no provided"}")

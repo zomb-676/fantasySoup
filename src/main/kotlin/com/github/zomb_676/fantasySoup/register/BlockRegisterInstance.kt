@@ -3,6 +3,7 @@ package com.github.zomb_676.fantasySoup.register
 import com.github.zomb_676.fantasySoup.render.trySetISTER
 import net.minecraft.block.AbstractBlock.Properties
 import net.minecraft.block.Block
+import net.minecraft.block.FlowingFluidBlock
 import net.minecraft.block.material.Material
 import net.minecraft.block.material.MaterialColor
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer
@@ -10,6 +11,7 @@ import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraftforge.client.model.generators.ModelFile
+import net.minecraftforge.fluids.ForgeFlowingFluid
 import net.minecraftforge.fml.RegistryObject
 import net.minecraftforge.registries.DeferredRegister
 
@@ -21,6 +23,7 @@ class BlockRegisterInstance(registerInstance: RegisterHandle, register: Deferred
             RegistryObject<Block> = register.register(name) {
         Block(Properties.create(material, MapColor))
     }
+
     @JvmOverloads
     fun simpleBlockAndItem(
         BlockName: String, itemName: String = BlockName, itemItemGroup: ItemGroup,
@@ -30,6 +33,7 @@ class BlockRegisterInstance(registerInstance: RegisterHandle, register: Deferred
         val item = registerHandleInstance.registerItem().blockItem(itemName, block, itemItemGroup)
         return BlockItemPair(item, block)
     }
+
     @JvmOverloads
     fun complexBlock(
         name: String, material: Material = Material.IRON, MapColor: MaterialColor = material.color,
@@ -38,6 +42,7 @@ class BlockRegisterInstance(registerInstance: RegisterHandle, register: Deferred
         register.register(name) {
             Block(codeBlock(Properties.create(material, MapColor)))
         }
+
     @JvmOverloads
     fun complexBlockAndItem(
         name: String, material: Material = Material.IRON, MapColor: MaterialColor = material.color,
@@ -51,11 +56,22 @@ class BlockRegisterInstance(registerInstance: RegisterHandle, register: Deferred
         return BlockItemPair(item, block)
     }
 
+    fun liquidBlock(
+        name: String,
+        fluidSource: RegistryObject<ForgeFlowingFluid.Source>,
+        property: (Properties.() -> Unit)? = null
+    ): RegistryObject<FlowingFluidBlock> {
+        return register.register(name) {
+            FlowingFluidBlock({ fluidSource.get() }, Properties.create(Material.WATER).apply { property?.invoke(this) })
+        }
+    }
+
     @JvmOverloads
     fun <T : Block> block(clazz: Class<T>, name: String = fixer(clazz.simpleName)): RegistryObject<T> =
         register.register(name) {
             clazz.getConstructor().newInstance()
         }
+
     @JvmOverloads
     fun <B : Block> blockWithItem(
         clazz: Class<B>, blockName: String = fixer(clazz.simpleName),

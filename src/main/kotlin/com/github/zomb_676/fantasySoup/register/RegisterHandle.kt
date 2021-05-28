@@ -5,6 +5,8 @@ import com.github.zomb_676.fantasySoup.capability.ICapability
 import com.github.zomb_676.fantasySoup.capability.InnerClass
 import com.github.zomb_676.fantasySoup.safeReturn
 import net.minecraft.block.Block
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.RenderTypeLookup
 import net.minecraft.client.settings.KeyBinding
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.entity.EntityType
@@ -25,6 +27,7 @@ import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundEvent
 import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.eventbus.api.IEventBus
+import net.minecraftforge.fml.RegistryObject
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import java.util.*
@@ -61,9 +64,24 @@ class RegisterHandle private constructor(val modID: String) {
 
 
     companion object {
-        val map: HashMap<String, RegisterHandle> = hashMapOf()
+        private val map: HashMap<String, RegisterHandle> = hashMapOf()
         val keyBindings = mutableListOf<KeyBinding>()
+        val renderTypeSet = mutableListOf<()->Unit>()
 
+        fun <T:Block> blindBlockRenderType (block : RegistryObject<T> , renderType: RenderType){
+            renderTypeSet.add{
+                FantasySoup.logger.debug("setting renderType for ${block.get().registryName} -> $renderType")
+                RenderTypeLookup.setRenderLayer(block.get(),renderType)
+            }
+        }
+        fun <T:Fluid> blindFluidRenderType (fluid : RegistryObject<T> , renderType: RenderType){
+           renderTypeSet.add{
+               FantasySoup.logger.debug("setting renderType for ${fluid.get().registryName} -> $renderType")
+               RenderTypeLookup.setRenderLayer(fluid.get(),renderType)
+           }
+        }
+
+        @Throws(IllegalArgumentException::class)
         fun getInstance(modID: String): RegisterHandle {
             if (modID.length < 64 && modID.map { it.isUpperCase() }.isEmpty()) {
                 throw IllegalArgumentException("$modID is not valid , it must length than 64 and all lowercase")
@@ -131,8 +149,7 @@ class RegisterHandle private constructor(val modID: String) {
     fun registerItem() = ItemRegisterInstance(this, itemRegister)
     fun registerTileEntityType() = TileEntityTypeRegisterInstance(this, tileEntityTypeRegister)
     fun registerBlock() = BlockRegisterInstance(this, blockRegister)
-
-
+    fun registerFluid() = FluidRegisterInstance(this,fluidRegister)
 
 }
 

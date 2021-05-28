@@ -1,10 +1,13 @@
 package com.github.zomb_676.fantasySoup.register
 
 import com.github.zomb_676.fantasySoup.dataGen.IDataHandle
+import net.minecraft.block.Block
 import net.minecraft.client.gui.IHasContainer
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.settings.KeyBinding
+import net.minecraft.fluid.Fluid
 import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.Item
@@ -17,15 +20,17 @@ fun <T ,U> ContainerType<T>.bindToScreen(screenFactory : ScreenManager.IScreenFa
     return this
 }
 
-fun <I : Item> RegistryObject<I>.setCustomModel(
-    handle: IDataHandle,
-    model: (IDataHandle) -> Lazy<(BlockStateProvider) -> Unit>
-): RegistryObject<I> {
-    handle.toInitTask.add { handle.dataHandle.addBlockModel { model.invoke(handle).value } }
+fun KeyBinding.register(): KeyBinding {
+    RegisterHandle.keyBindings.add(this)
     return this
 }
 
-fun KeyBinding.register(): KeyBinding {
-    RegisterHandle.keyBindings.add(this)
+fun <T:Block> RegistryObject<T>.blindBlockRenderType(renderType: RenderType): RegistryObject<T> {
+    RegisterHandle.blindBlockRenderType(this,renderType)
+    return this
+}
+
+fun <T: Fluid> RegistryObject<T>.blindFluidRenderType(renderType: RenderType): RegistryObject<T> {
+    RegisterHandle.blindFluidRenderType(this,renderType)
     return this
 }

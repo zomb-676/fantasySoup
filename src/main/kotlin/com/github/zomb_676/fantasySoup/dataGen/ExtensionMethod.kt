@@ -126,6 +126,14 @@ fun <T : Block> RegistryObject<T>.allDifferModel(
     return modelFile
 }
 
+fun <B : Block> RegistryObject<B>.setCustomModel(
+    handle: IDataHandle,
+    model: (IDataHandle) -> Lazy<(BlockStateProvider) -> Unit>
+): RegistryObject<B> {
+    handle.toInitTask.add { handle.dataHandle.addBlockModel { model.invoke(handle).value } }
+    return this
+}
+
 // for block state
 
 fun <T : Block> RegistryObject<T>.noVariantState(
