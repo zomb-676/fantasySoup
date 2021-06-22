@@ -48,7 +48,7 @@ class BlockRegisterInstance(registerInstance: RegisterHandle, register: Deferred
         name: String, material: Material = Material.IRON, MapColor: MaterialColor = material.color,
         itemName: String, itemItemGroup: ItemGroup,
         codeBlock: (Properties) -> Properties,
-        ister: ItemStackTileEntityRenderer? = null
+        ister: ()->()->ItemStackTileEntityRenderer? = {{null}}
     ): BlockItemPair<BlockItem, Block> {
         val block = complexBlock(name, material, MapColor, codeBlock)
         val item = registerHandleInstance.registerItem()
@@ -75,7 +75,7 @@ class BlockRegisterInstance(registerInstance: RegisterHandle, register: Deferred
     @JvmOverloads
     fun <B : Block> blockWithItem(
         clazz: Class<B>, blockName: String = fixer(clazz.simpleName),
-        itemGroup: ItemGroup, itemName: String = blockName, ister: ItemStackTileEntityRenderer? = null
+        itemGroup: ItemGroup, itemName: String = blockName, ister: ()->()->ItemStackTileEntityRenderer? = {{null}}
     ): BlockItemPair<BlockItem, B> {
         val block = block(clazz, blockName)
         val item: RegistryObject<BlockItem> = registerHandleInstance.registerItem()

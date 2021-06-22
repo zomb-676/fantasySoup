@@ -42,7 +42,7 @@ class FluidRegisterInstance(registerHandleInstance: RegisterHandle, register: De
 data class FluidPair(
     val still: RegistryObject<ForgeFlowingFluid.Source>, val flowing: RegistryObject<ForgeFlowingFluid.Flowing>
 ) {
-    fun blindRenderType(renderType: RenderType): FluidPair {
+    fun blindRenderType(renderType:()->()-> RenderType): FluidPair {
         still.blindFluidRenderType(renderType)
         flowing.blindFluidRenderType(renderType)
         return this

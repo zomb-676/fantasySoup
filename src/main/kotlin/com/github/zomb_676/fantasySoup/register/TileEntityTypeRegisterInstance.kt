@@ -6,11 +6,13 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.tileentity.TileEntityType
+import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.RegistryObject
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.registries.DeferredRegister
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -22,7 +24,7 @@ class TileEntityTypeRegisterInstance(
     fun <T : TileEntity> tileEntityBlind(
         tileEntityTypeName: String,
         clazz: Class<T>,
-        render: Class<out TileEntityRenderer<T>>? = null,
+        render: (()->()->Class<out TileEntityRenderer<T>>)? = null,
         vararg validBlocks: RegistryObject<out Block>,
     ): RegistryObject<TileEntityType<T>> {
         val result = register.register(tileEntityTypeName) {
@@ -32,8 +34,8 @@ class TileEntityTypeRegisterInstance(
             )
                 .build(null)
         }
-        if (render != null) {
-            TileEntityRenderHandle.add(result, render)
+        if (FMLEnvironment.dist==Dist.CLIENT && render != null) {
+            TileEntityRenderHandle.add(result, render()())
         }
         return result
     }
@@ -41,7 +43,7 @@ class TileEntityTypeRegisterInstance(
     fun <T : TileEntity> tileEntityBlind(
         tileEntityTypeName: String,
         tileEntityInstance: ()->T,
-        render: Class<out TileEntityRenderer<T>>? = null,
+        render: (()->()->Class<out TileEntityRenderer<T>>)? = null,
         vararg validBlocks: RegistryObject<out Block>,
     ): RegistryObject<TileEntityType<T>> {
         val result = register.register(tileEntityTypeName) {
@@ -51,8 +53,8 @@ class TileEntityTypeRegisterInstance(
             )
                 .build(null)
         }
-        if (render != null) {
-            TileEntityRenderHandle.add(result, render)
+        if (FMLEnvironment.dist==Dist.CLIENT && render != null) {
+            TileEntityRenderHandle.add(result, render()())
         }
         return result
     }

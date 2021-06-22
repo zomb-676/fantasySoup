@@ -23,8 +23,5 @@ object ClientRegisterEventHandle {
 
 @Mod.EventBusSubscriber(Dist.DEDICATED_SERVER, bus = Mod.EventBusSubscriber.Bus.MOD)
 object ServerRegisterEventHandle {
-    @SubscribeEvent
-    @JvmStatic
-    fun registerAllKeyBindings() {
-    }
+
 }

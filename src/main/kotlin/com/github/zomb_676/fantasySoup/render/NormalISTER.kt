@@ -9,6 +9,9 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.state.Property
 import net.minecraft.tileentity.TileEntity
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.fml.DistExecutor
+import net.minecraftforge.fml.loading.FMLEnvironment
 import java.util.*
 import java.util.concurrent.Callable
 import kotlin.collections.HashMap
@@ -31,9 +34,13 @@ class NormalISTER<T:TileEntity>(tileEntity :Class<T>,vararg parameters : Pair<Cl
     }
 }
 
-fun Item.Properties.trySetISTER(ister : (()->ItemStackTileEntityRenderer?)?): Item.Properties {
+fun Item.Properties.trySetISTER(ister : (()->()->()->ItemStackTileEntityRenderer?)?): Item.Properties {
+//    DistExecutor.safeCallWhenOn(Dist.DEDICATED_SERVER)
+    if (FMLEnvironment.dist == Dist.DEDICATED_SERVER){
+        return this
+    }
     if (ister!=null){
-        this.setISTER{ Callable { ister() }}
+        this.setISTER{ Callable { ister()()() }}
     }
     return this
 }

@@ -25,12 +25,12 @@ fun KeyBinding.register(): KeyBinding {
     return this
 }
 
-fun <T:Block> RegistryObject<T>.blindBlockRenderType(renderType: RenderType): RegistryObject<T> {
+fun <T:Block> RegistryObject<T>.blindBlockRenderType(renderType: ()->()->RenderType): RegistryObject<T> {
     RegisterHandle.blindBlockRenderType(this,renderType)
     return this
 }
 
-fun <T: Fluid> RegistryObject<T>.blindFluidRenderType(renderType: RenderType): RegistryObject<T> {
+fun <T: Fluid> RegistryObject<T>.blindFluidRenderType(renderType: ()->()->RenderType): RegistryObject<T> {
     RegisterHandle.blindFluidRenderType(this,renderType)
     return this
 }

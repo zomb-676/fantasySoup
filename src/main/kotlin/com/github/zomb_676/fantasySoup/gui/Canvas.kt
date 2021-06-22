@@ -1,9 +1,11 @@
 package com.github.zomb_676.fantasySoup.gui
 
 import com.github.zomb_676.fantasySoup.shader.program.FullCircleProgram
+import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldVertexBufferUploader
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
@@ -74,17 +76,21 @@ object Canvas {
 //            GL43.GL_RENDERBUFFER,GL43.GL_DEPTH24_STENCIL8,width,height,)
 //
 //    }
-
+    val mainFramebuffer: Framebuffer = Minecraft.getInstance().framebuffer
+    val frameBuffer = Framebuffer(mainFramebuffer.framebufferWidth, mainFramebuffer.framebufferHeight,true,Minecraft.IS_RUNNING_ON_MAC)
     fun drawFullCircle(posX:Float,posY:Float,radius:Float) {
-        val mainFramebuffer = Minecraft.getInstance().framebuffer
+//        frameBuffer.createBuffers(mainFramebuffer.framebufferWidth, mainFramebuffer.framebufferHeight,Minecraft.IS_RUNNING_ON_MAC)
+//        mainFramebuffer.unbindFramebuffer()
+//        frameBuffer.bindFramebuffer(false)
+
 //        runBefore(mainFramebuffer.frameBufferTexture,mainFramebuffer, blitFrameBuffer)
 
 
-        GlStateManager.blendColor(1.0f,1.0f,1.0f,1.0f)
+//        GlStateManager.blendColor(1.0f,1.0f,1.0f,1.0f)
         FullCircleProgram.use()
         FullCircleProgram.setRadius(radius)
         FullCircleProgram.setCenter(posX, posY)
-        uploadMainSampler()
+//        uploadMainSampler()
         upload(posX-radius,posY-radius,posX+radius,posY+radius)
         FullCircleProgram.stop()
     }
@@ -137,6 +143,19 @@ object Canvas {
         RenderSystem.enableTexture()
         RenderSystem.bindTexture(texture)
         RenderSystem.glUniform1i(location,textureUnit)
+    }
+
+    fun renderGuiBackground(
+        screen: Screen,
+        matrixStack: MatrixStack,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        colorFrom: Int,
+        colorTo: Int
+    ) {
+
     }
 }
 

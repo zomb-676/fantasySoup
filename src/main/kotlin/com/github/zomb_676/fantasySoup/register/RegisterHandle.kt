@@ -25,9 +25,11 @@ import net.minecraft.potion.Potion
 import net.minecraft.stats.StatType
 import net.minecraft.tileentity.TileEntityType
 import net.minecraft.util.SoundEvent
+import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.fml.RegistryObject
+import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import java.util.*
@@ -68,16 +70,22 @@ class RegisterHandle private constructor(val modID: String) {
         val keyBindings = mutableListOf<KeyBinding>()
         val renderTypeSet = mutableListOf<()->Unit>()
 
-        fun <T:Block> blindBlockRenderType (block : RegistryObject<T> , renderType: RenderType){
+        fun <T:Block> blindBlockRenderType (block : RegistryObject<T> , renderType: ()->()->RenderType){
+            if (FMLEnvironment.dist==Dist.DEDICATED_SERVER){
+                return
+            }
             renderTypeSet.add{
                 FantasySoup.logger.debug("setting renderType for ${block.get().registryName} -> $renderType")
-                RenderTypeLookup.setRenderLayer(block.get(),renderType)
+                RenderTypeLookup.setRenderLayer(block.get(),renderType()())
             }
         }
-        fun <T:Fluid> blindFluidRenderType (fluid : RegistryObject<T> , renderType: RenderType){
+        fun <T:Fluid> blindFluidRenderType (fluid : RegistryObject<T> , renderType: ()->()->RenderType){
+            if (FMLEnvironment.dist==Dist.DEDICATED_SERVER){
+                return
+            }
            renderTypeSet.add{
                FantasySoup.logger.debug("setting renderType for ${fluid.get().registryName} -> $renderType")
-               RenderTypeLookup.setRenderLayer(fluid.get(),renderType)
+               RenderTypeLookup.setRenderLayer(fluid.get(),renderType()())
            }
         }
 
