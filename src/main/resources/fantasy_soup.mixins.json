@@ -1,13 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "compatibilityLevel": "JAVA_11",
+  "compatibilityLevel": "JAVA_8",
   "package": "com.github.zomb_676.fantasySoup.mixin",
   "refmap": "fantasy_soup.refmap.json",
   "mixins": [
   ],
   "client": [
-    "LoadTest"
   ],
   "server": [
   ],
