@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.vector.Vector3f
 
-class RenderWithTextureAndModelISTER(
+open class RenderWithTextureAndModelISTER(
     val texture: ResourceLocation,
     val model: Model,
 ) :
