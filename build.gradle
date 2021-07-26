@@ -1,17 +1,18 @@
 buildscript {
     repositories {
+        maven{ url = 'https://sizableshrimp.me/maven'}
         maven { url = 'https://maven.minecraftforge.net/' }
         mavenCentral()
-        jcenter()
-        maven {
-            name "Sponge"
-            url "https://repo.spongepowered.org/repository/maven-public/"
-            content { includeGroup "org.spongepowered" }
-        }
+//        maven {
+//            name "Sponge"
+//            url "https://repo.spongepowered.org/repository/maven-public/"
+//            content { includeGroup "org.spongepowered" }
+//        }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+//        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'me.sizableshrimp.parchmenttest', name: 'ForgeGradle', version: '5.1.+', changing: true
+//        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
@@ -24,25 +25,26 @@ apply plugin: 'kotlin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
+//apply plugin: 'org.spongepowered.mixin'
 
-mixin {
-    add sourceSets.main, "fantasy_soup.refmap.json"
-}
+//mixin {
+//    add sourceSets.main, "fantasy_soup.refmap.json"
+//}
 
 group = 'com.github.zomb_676'
 version = '1.0'
 archivesBaseName = 'fantasySoup'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "16"
 }
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'snapshot', version: '20210309-1.16.5'
+//    mappings channel: 'snapshot', version: '20210309-1.16.5'
+    mappings channel: 'parchment', version: '2021.07.21-1.17'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
@@ -84,12 +86,26 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+repositories {
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+
+}
+
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.4'
-    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
-    runtime "org.jetbrains.kotlin:kotlin-stdlib"
-    runtime group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.5.0'
-    runtimeOnly group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.5.0'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.9'
+//    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.21"
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.5.1'
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.5.21'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -122,7 +138,7 @@ jar {
                 "Implementation-Vendor"   : "zomb_676",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 'FMLAT'                   : 'accesstransformer.cfg',
-                "MixinConnector"          : "com.github.zomb_676.fantasySoup.mixin.MixinConnector"
+//                "MixinConnector"          : "com.github.zomb_676.fantasySoup.mixin.MixinConnector"
         ])
     }
 }
