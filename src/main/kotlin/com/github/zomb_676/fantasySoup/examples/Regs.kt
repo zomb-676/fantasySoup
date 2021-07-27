@@ -9,8 +9,5 @@ import net.minecraftforge.fml.common.Mod
 
 object Regs{
     private val instance: RegisterHandle = RegisterHandle.gerOrCreate(FantasySoup.modId,FantasySoup.modName)
-    private val blockRegister = instance.RegBlock()
-    private val itemRegister = instance.RegItem()
-    val exampleBlock = blockRegister.stringBlock("")
-    val exampleItem = itemRegister.stringItem("")
+
 }
