@@ -2,6 +2,9 @@ package com.github.zomb_676.fantasySoup.utils
 
 import com.github.zomb_676.fantasySoup.FantasySoup
 import java.lang.reflect.Constructor
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.reflect.KClass
 
 /**
@@ -27,7 +30,7 @@ fun <T : Any> KClass<T>.manuallyInitClass() {
 }
 
 @Throws(RuntimeException::class)
-fun < T : Any> Class<T>.getEmptyOrSpecificConstructor(vararg parameters: Any): Constructor<T> {
+fun <T : Any> Class<T>.getEmptyOrSpecificConstructor(vararg parameters: Any): Constructor<T> {
     var constructor: Constructor<T>
     try {
         constructor = this.getConstructor()
@@ -57,4 +60,17 @@ fun < T : Any> Class<T>.getEmptyOrSpecificConstructor(vararg parameters: Any): C
 fun <T : Any> Class<T>.newInstanceForEmptyOrSpecificConstructor(vararg parameters: Any): T =
     getEmptyOrSpecificConstructor(parameters).newInstance(parameters)
 
-fun <T:Any> Class<T>.emptyNewInstance():T=this.getConstructor().newInstance()
+fun <T : Any> Class<T>.emptyNewInstance(): T = this.getConstructor().newInstance()
+
+
+@OptIn(ExperimentalContracts::class)
+inline fun<T : Any> T.takeIfOrReturn(predicate:(T)->Boolean,codeBlock: (T) -> Unit):T {
+    contract {
+        callsInPlace(predicate, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(codeBlock, InvocationKind.EXACTLY_ONCE)
+    }
+    if (predicate(this)){
+        codeBlock(this)
+    }
+    return this
+}

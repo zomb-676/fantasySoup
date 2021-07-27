@@ -205,32 +205,40 @@ class RegisterHandle private constructor(private val modID: String, private val 
         FantasySoup.logger.debug(registerMarker, "add event to all DeferredRegisters for mod : $modName")
     }
 
-    fun stringBlock(blockName: String, blockProperty: BlockProperty? = null) =
+    fun stringBlock(blockName: String, blockProperty: BlockProperty? = null): RegistryObject<Block> =
         registersHolder.blockRegister.register(blockName)
         { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
         BlockBehaviour.Properties.of(Material.STONE)) }
 
-    fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null ,blockProperty: BlockProperty? = null) =
+    fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null
+            ,blockProperty: BlockProperty? = null): RegistryObject<Block> =
         registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
         { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
         BlockBehaviour.Properties.of(Material.STONE)) }
 
-    fun stringBlock(blockName: String, blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty) =
+    @Suppress("UNCHECKED_CAST")
+    fun stringBlockWithItem(blockName: String, blockProperty: BlockProperty? = null
+             ,itemName: String?=null,itemProperty: ItemProperty?=null) =
         stringBlock(blockName, blockProperty).run { BlockItemPair(this,
-            registersHolder.itemRegister.register(itemName?:blockName)
-            {BlockItem(this.get(),itemProperty.invoke(Item.Properties()))})}
+            supplierItem(itemName?:blockName
+                ,{BlockItem(this.get(),it)},itemProperty) as RegistryObject<BlockItem>)}
 
-    fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null
-        ,blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty) =
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Block> classBlockWithItem(blockClass: Class<T>, blockName: String? = null
+        ,blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty?=null) =
         registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
         { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
         BlockBehaviour.Properties.of(Material.STONE)) }.run { BlockItemPair(this,
-            registersHolder.itemRegister.register(itemName?:blockName)
-            {BlockItem(this.get(),itemProperty.invoke(Item.Properties()))})}
+            supplierItem(itemName?:blockName?:blockClass.simpleName.lowercase()
+                ,{BlockItem(this.get(),it)},itemProperty) as RegistryObject<BlockItem>)
+        }
 
     fun stringItem(itemName: String, itemProperty: ItemProperty? = null): RegistryObject<Item> =
         registersHolder.itemRegister.register(itemName)
         { Item(itemProperty?.invoke(Item.Properties()) ?: Item.Properties()) }
+
+    fun supplierItem(itemName: String, item:(Item.Properties)->Item ,itemProperty: ItemProperty? = null): RegistryObject<Item> =
+        registersHolder.itemRegister.register(itemName){item.invoke(itemProperty?.invoke(Item.Properties())?:Item.Properties())}
 
     fun <T :Item> classItem(itemClass: Class<T>, itemName: String? = null, itemProperty: ItemProperty? = null): RegistryObject<T> =
         registersHolder.itemRegister.register(itemName ?: itemClass.simpleName.lowercase(Locale.getDefault()))
@@ -242,12 +250,12 @@ class RegisterHandle private constructor(private val modID: String, private val 
         blockEntityTypeClass: Class<T>,
         blockEntityRenderContext: (()->()->(BlockEntityRendererProvider.Context) -> BlockEntityRenderer<T>)? = null,
         vararg validBlocks: RegistryObject<out Block>
-    ) =
+    ): RegistryObject<BlockEntityType<T>> =
         registersHolder.tileEntityTypeRegister.register(blockEntityName) {
             BlockEntityType.Builder.of({ pos, state
                 -> blockEntityTypeClass.newInstanceForEmptyOrSpecificConstructor(pos, state) },
                 *(validBlocks.map { it.get() }.toTypedArray())
             ).build(null)
-        }.takeIf { FMLEnvironment.dist == Dist.CLIENT}?.also { blockEntityRenderContext
-            ?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)} }
+        }.takeIfOrReturn({ FMLEnvironment.dist == Dist.CLIENT},{ blockEntityRenderContext
+            ?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)} })!!
 }
