@@ -6,8 +6,6 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.material.Fluid
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.fmllegacy.RegistryObject
 
 @JvmName("bindRenderTypeBlock")

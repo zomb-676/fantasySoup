@@ -64,7 +64,6 @@ fun <T : Any> Class<T>.newInstanceForEmptyOrSpecificConstructor(vararg parameter
 
 fun <T : Any> Class<T>.emptyNewInstance(): T = this.getConstructor().newInstance()
 
-
 @OptIn(ExperimentalContracts::class)
 inline fun<T : Any> T.takeIfOrReturn(predicate:(T)->Boolean,codeBlock: (T) -> Unit):T {
     contract {

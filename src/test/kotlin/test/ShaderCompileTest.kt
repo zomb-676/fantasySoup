@@ -1,3 +1,5 @@
+package test
+
 import org.apache.logging.log4j.LogManager
 import org.junit.Test
 import org.lwjgl.glfw.GLFW
@@ -6,7 +8,6 @@ import org.lwjgl.opengl.GL43
 import java.io.File
 import java.io.FileReader
 import java.io.IOException
-import kotlin.math.log
 import kotlin.system.measureNanoTime
 
 
