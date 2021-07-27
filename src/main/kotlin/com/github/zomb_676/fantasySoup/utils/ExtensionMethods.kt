@@ -46,8 +46,10 @@ fun < T : Any> Class<T>.getEmptyOrSpecificConstructor(vararg parameters: Any): C
 
     }
     FantasySoup.logger.fatal(FantasySoup.coreMarker, "failed to get constructor for class ${this.name}")
-    FantasySoup.logger.fatal(FantasySoup.coreMarker, "parameters are as follows")
-    classes.map { it.name }.joinToString { "\n" }.forEach { FantasySoup.logger.fatal(FantasySoup.coreMarker, it) }
+    if (parameters.isNotEmpty()) {
+        FantasySoup.logger.fatal(FantasySoup.coreMarker, "parameters are as follows")
+        classes.map { it.name }.joinToString { "\n" }.forEach { FantasySoup.logger.fatal(FantasySoup.coreMarker, it) }
+    }
     throw RuntimeException("failed to get constructor for class ${this.name} ")
 
 }

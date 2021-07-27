@@ -3,6 +3,8 @@ package com.github.zomb_676.fantasySoup.register
 import com.github.zomb_676.fantasySoup.FantasySoup
 import com.github.zomb_676.fantasySoup.register.RegisterHandle.Companion.gerOrCreate
 import com.github.zomb_676.fantasySoup.utils.*
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.particles.ParticleType
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.stats.StatType
@@ -39,11 +41,14 @@ import net.minecraft.world.level.levelgen.placement.FeatureDecorator
 import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder
 import net.minecraft.world.level.material.Fluid
 import net.minecraft.world.level.material.Material
+import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer
 import net.minecraftforge.common.world.ForgeWorldType
 import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.fml.common.Mod
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
+import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.fmllegacy.RegistryObject
 import net.minecraftforge.registries.DataSerializerEntry
 import net.minecraftforge.registries.DeferredRegister
@@ -200,50 +205,49 @@ class RegisterHandle private constructor(private val modID: String, private val 
         FantasySoup.logger.debug(registerMarker, "add event to all DeferredRegisters for mod : $modName")
     }
 
-    inner class RegBlock{
-        fun stringBlock(blockName: String, blockProperty: BlockProperty? = null) =
-            registersHolder.blockRegister.register(blockName)
-            { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
-            BlockBehaviour.Properties.of(Material.STONE)) }
+    fun stringBlock(blockName: String, blockProperty: BlockProperty? = null) =
+        registersHolder.blockRegister.register(blockName)
+        { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
+        BlockBehaviour.Properties.of(Material.STONE)) }
 
+    fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null ,blockProperty: BlockProperty? = null) =
+        registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
+        { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
+        BlockBehaviour.Properties.of(Material.STONE)) }
 
-        fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null ,blockProperty: BlockProperty? = null) =
-            registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
-            { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
-                BlockBehaviour.Properties.of(Material.STONE)) }
+    fun stringBlock(blockName: String, blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty) =
+        stringBlock(blockName, blockProperty).run { BlockItemPair(this,
+            registersHolder.itemRegister.register(itemName?:blockName)
+            {BlockItem(this.get(),itemProperty.invoke(Item.Properties()))})}
 
-        fun stringBlock(blockName: String, blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty) =
-            stringBlock(blockName, blockProperty).run { BlockItemPair(this,
-                registersHolder.itemRegister.register(itemName?:blockName){BlockItem(this.get(),itemProperty.invoke(Item.Properties()))})}
+    fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null
+        ,blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty) =
+        registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
+        { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
+        BlockBehaviour.Properties.of(Material.STONE)) }.run { BlockItemPair(this,
+            registersHolder.itemRegister.register(itemName?:blockName)
+            {BlockItem(this.get(),itemProperty.invoke(Item.Properties()))})}
 
+    fun stringItem(itemName: String, itemProperty: ItemProperty? = null): RegistryObject<Item> =
+        registersHolder.itemRegister.register(itemName)
+        { Item(itemProperty?.invoke(Item.Properties()) ?: Item.Properties()) }
 
-        fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null
-                                   ,blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty) =
-            registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
-            { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
-            BlockBehaviour.Properties.of(Material.STONE)) }.run { BlockItemPair(this,
-                registersHolder.itemRegister.register(itemName?:blockName){BlockItem(this.get(),itemProperty.invoke(Item.Properties()))})}
-    }
+    fun <T :Item> classItem(itemClass: Class<T>, itemName: String? = null, itemProperty: ItemProperty? = null): RegistryObject<T> =
+        registersHolder.itemRegister.register(itemName ?: itemClass.simpleName.lowercase(Locale.getDefault()))
+        {  itemClass.newInstanceForEmptyOrSpecificConstructor(itemProperty?.invoke(Item.Properties()) ?: Item.Properties()) }
 
-    inner class RegItem {
-        fun stringItem(itemName: String, itemProperty: ItemProperty? = null): RegistryObject<Item> =
-            registersHolder.itemRegister.register(itemName)
-            { Item(itemProperty?.invoke(Item.Properties()) ?: Item.Properties()) }
-
-        fun <T :Item> classItem(itemClass: Class<T>, itemName: String? = null, itemProperty: ItemProperty? = null): RegistryObject<T> =
-            registersHolder.itemRegister.register(itemName ?: itemClass.simpleName.lowercase(Locale.getDefault()))
-            {  itemClass.newInstanceForEmptyOrSpecificConstructor(itemProperty?.invoke(Item.Properties()) ?: Item.Properties()) }
-    }
-
-    private data class TileEntityBind(){}
-
-    inner class RegBlockEntityType(){
-        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-        fun <T:BlockEntity> reg(blockEntityName:String,blockEntityTypeClass : Class<T>, vararg validBlocks:RegistryObject<out Block>){
-            registersHolder.tileEntityTypeRegister.register(blockEntityName) {
-                BlockEntityType.Builder.of( {_,_->blockEntityTypeClass.emptyNewInstance()},
-                    *(validBlocks.map { it.get() }.toTypedArray())).build(null)
-            }
-        }
-    }
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")//safe
+    fun <T : BlockEntity> regBlockEntityType(
+        blockEntityName: String,
+        blockEntityTypeClass: Class<T>,
+        blockEntityRenderContext: (()->()->(BlockEntityRendererProvider.Context) -> BlockEntityRenderer<T>)? = null,
+        vararg validBlocks: RegistryObject<out Block>
+    ) =
+        registersHolder.tileEntityTypeRegister.register(blockEntityName) {
+            BlockEntityType.Builder.of({ pos, state
+                -> blockEntityTypeClass.newInstanceForEmptyOrSpecificConstructor(pos, state) },
+                *(validBlocks.map { it.get() }.toTypedArray())
+            ).build(null)
+        }.takeIf { FMLEnvironment.dist == Dist.CLIENT}?.also { blockEntityRenderContext
+            ?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)} }
 }
