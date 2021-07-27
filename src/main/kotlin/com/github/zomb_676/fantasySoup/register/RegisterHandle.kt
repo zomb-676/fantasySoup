@@ -3,6 +3,7 @@ package com.github.zomb_676.fantasySoup.register
 import com.github.zomb_676.fantasySoup.FantasySoup
 import com.github.zomb_676.fantasySoup.register.RegisterHandle.Companion.gerOrCreate
 import com.github.zomb_676.fantasySoup.utils.*
+import net.minecraft.client.KeyMapping
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.particles.ParticleType
@@ -19,8 +20,7 @@ import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.entity.schedule.Activity
 import net.minecraft.world.entity.schedule.Schedule
 import net.minecraft.world.inventory.MenuType
-import net.minecraft.world.item.BlockItem
-import net.minecraft.world.item.Item
+import net.minecraft.world.item.*
 import net.minecraft.world.item.alchemy.Potion
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.enchantment.Enchantment
@@ -46,9 +46,9 @@ import net.minecraftforge.common.loot.GlobalLootModifierSerializer
 import net.minecraftforge.common.world.ForgeWorldType
 import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 import net.minecraftforge.fml.loading.FMLEnvironment
+import net.minecraftforge.fmlclient.registry.ClientRegistry
 import net.minecraftforge.fmllegacy.RegistryObject
 import net.minecraftforge.registries.DataSerializerEntry
 import net.minecraftforge.registries.DeferredRegister
@@ -205,6 +205,10 @@ class RegisterHandle private constructor(private val modID: String, private val 
         FantasySoup.logger.debug(registerMarker, "add event to all DeferredRegisters for mod : $modName")
     }
 
+    fun tab(labelName:String, icon:ItemStack): CreativeModeTab = object :CreativeModeTab(labelName){
+        override fun makeIcon(): ItemStack = icon
+    }
+
     fun stringBlock(blockName: String, blockProperty: BlockProperty? = null): RegistryObject<Block> =
         registersHolder.blockRegister.register(blockName)
         { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
@@ -225,7 +229,8 @@ class RegisterHandle private constructor(private val modID: String, private val 
 
     @Suppress("UNCHECKED_CAST")
     fun <T : Block> classBlockWithItem(blockClass: Class<T>, blockName: String? = null
-        ,blockProperty: BlockProperty? = null,itemName: String?=null,itemProperty: ItemProperty?=null) =
+        ,blockProperty: BlockProperty? = null,itemName: String?=null
+             ,itemProperty: ItemProperty?=null): BlockItemPair<Block, BlockItem> =
         registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
         { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
         BlockBehaviour.Properties.of(Material.STONE)) }.run { BlockItemPair(this,
@@ -256,6 +261,9 @@ class RegisterHandle private constructor(private val modID: String, private val 
                 -> blockEntityTypeClass.newInstanceForEmptyOrSpecificConstructor(pos, state) },
                 *(validBlocks.map { it.get() }.toTypedArray())
             ).build(null)
-        }.takeIfOrReturn({ FMLEnvironment.dist == Dist.CLIENT},{ blockEntityRenderContext
-            ?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)} })!!
+        }.takeIfOnClient{ blockEntityRenderContext?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)}}
+
+    fun keyBinding(keyMapping: KeyMapping)=ClientBlockRegisterEventHandle
+        .addTask { ClientRegistry.registerKeyBinding(keyMapping) }
+
 }

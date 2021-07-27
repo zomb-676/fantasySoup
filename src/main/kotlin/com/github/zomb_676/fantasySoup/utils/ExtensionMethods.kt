@@ -1,6 +1,8 @@
 package com.github.zomb_676.fantasySoup.utils
 
 import com.github.zomb_676.fantasySoup.FantasySoup
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.fml.loading.FMLEnvironment
 import java.lang.reflect.Constructor
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -72,5 +74,18 @@ inline fun<T : Any> T.takeIfOrReturn(predicate:(T)->Boolean,codeBlock: (T) -> Un
     if (predicate(this)){
         codeBlock(this)
     }
+    return this
+}
+
+inline fun runOnClientJar(codeBlock: () -> Unit) {
+    if (FMLEnvironment.dist == Dist.CLIENT) codeBlock() else return
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun<T : Any> T.takeIfOnClient(codeBlock: (T) -> Unit):T{
+    contract {
+        callsInPlace(codeBlock, InvocationKind.EXACTLY_ONCE)
+    }
+    runOnClientJar { codeBlock(this) }
     return this
 }
