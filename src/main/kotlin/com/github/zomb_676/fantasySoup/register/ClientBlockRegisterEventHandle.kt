@@ -14,6 +14,7 @@ class ClientBlockRegisterEventHandle {
          fun addTask(codeBlock:()->Unit)= tasks.add(codeBlock)
 
         @SubscribeEvent
-        fun renderTypeBind(event: FMLClientSetupEvent): CompletableFuture<Void> =event.enqueueWork { tasks.forEach{it.invoke()} }
+        fun renderTypeBind(event: FMLClientSetupEvent): CompletableFuture<Void> =
+            event.enqueueWork { tasks.forEach{it.invoke()} }
     }
 }

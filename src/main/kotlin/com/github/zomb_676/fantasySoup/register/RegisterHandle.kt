@@ -66,7 +66,7 @@ typealias BlockProperty = ((BlockBehaviour.Properties).() -> BlockBehaviour.Prop
  *
  * must call [registerAllRegistersToEvent]
  */
-class RegisterHandle private constructor(private val modID: String, private val modName: String) {
+class RegisterHandle private constructor(private val modID: String, internal val modName: String) {
     companion object {
         internal val registerMarker = MarkerManager.getMarker("Register")
 
@@ -82,12 +82,12 @@ class RegisterHandle private constructor(private val modID: String, private val 
             instances[modID] ?: RegisterHandle(modID, modName).apply { instances[modID] = this }
     }
 
-    private val registersHolder: RegisterHolder = RegisterHolder(modID)
+    internal val registersHolder: RegisterHolder = RegisterHolder(modID)
 
     /**
      * class for store all DeferredRegisters
      */
-    private inner class RegisterHolder(modID: String) {
+    internal inner class RegisterHolder(modID: String) {
         // Game objects
         val blockRegister: DeferredRegister<Block> = DeferredRegister.create(ForgeRegistries.BLOCKS, modID)
         val fluidRegister: DeferredRegister<Fluid> = DeferredRegister.create(ForgeRegistries.FLUIDS, modID)
@@ -208,60 +208,6 @@ class RegisterHandle private constructor(private val modID: String, private val 
     fun tab(labelName:String, icon:ItemStack): CreativeModeTab = object :CreativeModeTab(labelName){
         override fun makeIcon(): ItemStack = icon
     }
-
-    fun stringBlock(blockName: String, blockProperty: BlockProperty? = null): RegistryObject<Block> =
-        registersHolder.blockRegister.register(blockName)
-        { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
-        BlockBehaviour.Properties.of(Material.STONE)) }
-
-    fun <T : Block> classBlock(blockClass: Class<T>, blockName: String? = null
-            ,blockProperty: BlockProperty? = null): RegistryObject<Block> =
-        registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
-        { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
-        BlockBehaviour.Properties.of(Material.STONE)) }
-
-    @Suppress("UNCHECKED_CAST")
-    fun stringBlockWithItem(blockName: String, blockProperty: BlockProperty? = null
-             ,itemName: String?=null,itemProperty: ItemProperty?=null) =
-        stringBlock(blockName, blockProperty).run { BlockItemPair(this,
-            supplierItem(itemName?:blockName
-                ,{BlockItem(this.get(),it)},itemProperty) as RegistryObject<BlockItem>)}
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Block> classBlockWithItem(blockClass: Class<T>, blockName: String? = null
-        ,blockProperty: BlockProperty? = null,itemName: String?=null
-             ,itemProperty: ItemProperty?=null): BlockItemPair<Block, BlockItem> =
-        registersHolder.blockRegister.register(blockName ?: blockClass.simpleName.lowercase())
-        { Block(blockProperty?.invoke(BlockBehaviour.Properties.of(Material.STONE)) ?:
-        BlockBehaviour.Properties.of(Material.STONE)) }.run { BlockItemPair(this,
-            supplierItem(itemName?:blockName?:blockClass.simpleName.lowercase()
-                ,{BlockItem(this.get(),it)},itemProperty) as RegistryObject<BlockItem>)
-        }
-
-    fun stringItem(itemName: String, itemProperty: ItemProperty? = null): RegistryObject<Item> =
-        registersHolder.itemRegister.register(itemName)
-        { Item(itemProperty?.invoke(Item.Properties()) ?: Item.Properties()) }
-
-    fun supplierItem(itemName: String, item:(Item.Properties)->Item ,itemProperty: ItemProperty? = null): RegistryObject<Item> =
-        registersHolder.itemRegister.register(itemName){item.invoke(itemProperty?.invoke(Item.Properties())?:Item.Properties())}
-
-    fun <T :Item> classItem(itemClass: Class<T>, itemName: String? = null, itemProperty: ItemProperty? = null): RegistryObject<T> =
-        registersHolder.itemRegister.register(itemName ?: itemClass.simpleName.lowercase(Locale.getDefault()))
-        {  itemClass.newInstanceForEmptyOrSpecificConstructor(itemProperty?.invoke(Item.Properties()) ?: Item.Properties()) }
-
-    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")//safe
-    fun <T : BlockEntity> regBlockEntityType(
-        blockEntityName: String,
-        blockEntityTypeClass: Class<T>,
-        blockEntityRenderContext: (()->()->(BlockEntityRendererProvider.Context) -> BlockEntityRenderer<T>)? = null,
-        vararg validBlocks: RegistryObject<out Block>
-    ): RegistryObject<BlockEntityType<T>> =
-        registersHolder.tileEntityTypeRegister.register(blockEntityName) {
-            BlockEntityType.Builder.of({ pos, state
-                -> blockEntityTypeClass.newInstanceForEmptyOrSpecificConstructor(pos, state) },
-                *(validBlocks.map { it.get() }.toTypedArray())
-            ).build(null)
-        }.takeIfOnClient{ blockEntityRenderContext?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)}}
 
     fun keyBinding(keyMapping: KeyMapping)=ClientBlockRegisterEventHandle
         .addTask { ClientRegistry.registerKeyBinding(keyMapping) }
