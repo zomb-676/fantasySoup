@@ -1,7 +1,7 @@
 package com.github.zomb_676.fantasySoup.register
 
 import com.github.zomb_676.fantasySoup.utils.newInstanceForEmptyOrSpecificConstructor
-import com.github.zomb_676.fantasySoup.utils.takeIfOnClient
+import com.github.zomb_676.fantasySoup.utils.takeIfOnClientJar
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.world.level.block.Block
@@ -22,5 +22,5 @@ interface BlockEntityBindMethods {
                 -> blockEntityTypeClass.newInstanceForEmptyOrSpecificConstructor(pos, state) },
                 *(validBlocks.map { it.get() }.toTypedArray())
             ).build(null)
-        }.takeIfOnClient{ blockEntityRenderContext?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)}}
+        }.takeIfOnClientJar{ blockEntityRenderContext?.apply { BlockEntityRenderBlind.bind(it, this()(), modName)}}
 }
