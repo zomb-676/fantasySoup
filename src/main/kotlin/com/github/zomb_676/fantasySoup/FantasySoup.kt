@@ -13,6 +13,7 @@ class FantasySoup {
 
     init {
         Regs::class.manuallyInitClass()
+        Regs.javaClass
     }
 
     companion object {

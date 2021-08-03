@@ -92,11 +92,11 @@ class RegisterHandle private constructor(private val modID: String, internal val
         val blockRegister: DeferredRegister<Block> = DeferredRegister.create(ForgeRegistries.BLOCKS, modID)
         val fluidRegister: DeferredRegister<Fluid> = DeferredRegister.create(ForgeRegistries.FLUIDS, modID)
         val itemRegister: DeferredRegister<Item> = DeferredRegister.create(ForgeRegistries.ITEMS, modID)
-        val potionsRegister: DeferredRegister<MobEffect> = DeferredRegister.create(ForgeRegistries.POTIONS, modID)
+        val potionsRegister: DeferredRegister<Potion> = DeferredRegister.create(ForgeRegistries.POTIONS, modID)
         val soundEventRegister: DeferredRegister<SoundEvent> =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, modID)
-        val potionTypeRegister: DeferredRegister<Potion> =
-            DeferredRegister.create(ForgeRegistries.POTION_TYPES, modID)
+//        val potionTypeRegister =
+//            DeferredRegister.create(ForgeRegistries.POTION_TYPES, modID)
         val enchantmentRegister: DeferredRegister<Enchantment> =
             DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, modID)
         val entityRegister: DeferredRegister<EntityType<*>> =
@@ -172,7 +172,7 @@ class RegisterHandle private constructor(private val modID: String, internal val
         registersHolder.itemRegister.register(event)
         registersHolder.potionsRegister.register(event)
         registersHolder.soundEventRegister.register(event)
-        registersHolder.potionTypeRegister.register(event)
+//        registersHolder.potionTypeRegister.register(event)
         registersHolder.enchantmentRegister.register(event)
         registersHolder.entityRegister.register(event)
         registersHolder.tileEntityTypeRegister.register(event)

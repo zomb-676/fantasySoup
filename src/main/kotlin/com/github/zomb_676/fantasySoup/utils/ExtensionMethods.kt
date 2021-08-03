@@ -35,32 +35,42 @@ fun <T : Any> KClass<T>.manuallyInitClass() {
 fun <T : Any> Class<T>.getEmptyOrSpecificConstructor(vararg parameters: Any): Constructor<T> {
     var constructor: Constructor<T>
     try {
-        constructor = this.getConstructor()
-        return constructor
-    } catch (e: NoSuchMethodException) {
-
-    } catch (e: SecurityException) {
-
-    }
-    try {
         constructor = this.getConstructor(* parameters.map { it.javaClass }.toTypedArray())
         return constructor
-    } catch (e: NoSuchMethodException) {
-
-    } catch (e: SecurityException) {
-
-    }
+    } catch (e: NoSuchMethodException) {} catch (e: SecurityException) {}
+    try {
+        constructor = this.getConstructor()
+        return constructor
+    } catch (e: NoSuchMethodException) {} catch (e: SecurityException) {}
     FantasySoup.logger.fatal(FantasySoup.coreMarker, "failed to get constructor for class ${this.name}")
     if (parameters.isNotEmpty()) {
         FantasySoup.logger.fatal(FantasySoup.coreMarker, "parameters are as follows")
-        classes.map { it.name }.joinToString { "\n" }.forEach { FantasySoup.logger.fatal(FantasySoup.coreMarker, it) }
+        parameters.map { it.javaClass.name }.forEach { FantasySoup.logger.fatal(FantasySoup.coreMarker, it) }
     }
     throw RuntimeException("failed to get constructor for class ${this.name} ")
 
 }
 
-fun <T : Any> Class<T>.newInstanceForEmptyOrSpecificConstructor(vararg parameters: Any): T =
-    getEmptyOrSpecificConstructor(parameters).newInstance(parameters)
+fun <T : Any> Class<T>.newInstanceForEmptyOrSpecificConstructor(vararg parameters: Any): T {
+    val constructor:Constructor<T> = getEmptyOrSpecificConstructor(parameters)
+    try {
+        return if (constructor.parameters.isNotEmpty())  constructor.newInstance(parameters) else constructor.newInstance()
+    } catch (e: IllegalArgumentException) {
+        FantasySoup.logger.fatal(FantasySoup.coreMarker, "wrong number of arguments for class ${this.name}")
+        if (parameters.isNotEmpty()){
+            FantasySoup.logger.fatal(FantasySoup.coreMarker, "parameters are as follows")
+            parameters.map { it.javaClass.name to it }.forEach {
+                FantasySoup.logger.fatal(FantasySoup.coreMarker, "${it.second} -> ${it.first}") }
+        }
+        FantasySoup.logger.fatal(FantasySoup.coreMarker,"constructor parameters are as follows")
+        constructor.parameters.map { it.name }.forEach { FantasySoup.logger.fatal(FantasySoup.coreMarker,it) }
+        FantasySoup.logger.fatal(FantasySoup.coreMarker,"available constructors are as follows")
+        this.declaredConstructors.forEach { _constructor->
+            FantasySoup.logger.fatal(FantasySoup.coreMarker,_constructor.parameters.map { it.name })
+        }
+        throw e
+    }
+}
 
 fun <T : Any> Class<T>.emptyNewInstance(): T = this.getConstructor().newInstance()
 
