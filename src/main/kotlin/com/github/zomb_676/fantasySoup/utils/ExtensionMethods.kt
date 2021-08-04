@@ -64,7 +64,7 @@ fun <T : Any> Class<T>.newInstanceForEmptyOrSpecificConstructor(vararg parameter
         }else{
             //log some info
             if (parameters.isNotEmpty()) {
-                FantasySoup.logger.debug(FantasySoup.coreMarker,
+                FantasySoup.logger.fatal(FantasySoup.coreMarker,
                     "use empty constructor with none empty parameter")
                 logParametersWithTypeAndValue(* parameters)
             }
