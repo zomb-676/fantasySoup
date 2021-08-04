@@ -9,7 +9,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
 import java.util.concurrent.CompletableFuture
 
 @Mod.EventBusSubscriber(Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-class ClientBlockRegisterEventHandle {
+class ClientRegisterEventHandle {
     companion object {
         private val tasks = arrayListOf<() -> Unit>()
 

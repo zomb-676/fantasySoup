@@ -2,10 +2,7 @@ package com.github.zomb_676.fantasySoup.register
 
 import com.github.zomb_676.fantasySoup.FantasySoup
 import com.github.zomb_676.fantasySoup.register.RegisterHandle.Companion.gerOrCreate
-import com.github.zomb_676.fantasySoup.utils.*
 import net.minecraft.client.KeyMapping
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.particles.ParticleType
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.stats.StatType
@@ -26,7 +23,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.chunk.ChunkStatus
@@ -40,21 +36,16 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorTy
 import net.minecraft.world.level.levelgen.placement.FeatureDecorator
 import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder
 import net.minecraft.world.level.material.Fluid
-import net.minecraft.world.level.material.Material
-import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer
 import net.minecraftforge.common.world.ForgeWorldType
 import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
-import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.fmlclient.registry.ClientRegistry
-import net.minecraftforge.fmllegacy.RegistryObject
 import net.minecraftforge.registries.DataSerializerEntry
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.MarkerManager
-import java.util.*
 
 typealias ItemProperty = ((Item.Properties).() -> Item.Properties)
 typealias BlockProperty = ((BlockBehaviour.Properties).() -> BlockBehaviour.Properties)
@@ -93,6 +84,7 @@ class RegisterHandle private constructor(private val modID: String, internal val
         val fluidRegister: DeferredRegister<Fluid> = DeferredRegister.create(ForgeRegistries.FLUIDS, modID)
         val itemRegister: DeferredRegister<Item> = DeferredRegister.create(ForgeRegistries.ITEMS, modID)
         val potionsRegister: DeferredRegister<Potion> = DeferredRegister.create(ForgeRegistries.POTIONS, modID)
+        val mobEffectRegister: DeferredRegister<MobEffect> = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS,modID)
         val soundEventRegister: DeferredRegister<SoundEvent> =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, modID)
 //        val potionTypeRegister =
@@ -171,6 +163,7 @@ class RegisterHandle private constructor(private val modID: String, internal val
         registersHolder.fluidRegister.register(event)
         registersHolder.itemRegister.register(event)
         registersHolder.potionsRegister.register(event)
+        registersHolder.mobEffectRegister.register(event)
         registersHolder.soundEventRegister.register(event)
 //        registersHolder.potionTypeRegister.register(event)
         registersHolder.enchantmentRegister.register(event)
@@ -209,7 +202,7 @@ class RegisterHandle private constructor(private val modID: String, internal val
         override fun makeIcon(): ItemStack = icon
     }
 
-    fun keyBinding(keyMapping: KeyMapping)=ClientBlockRegisterEventHandle
+    fun keyBinding(keyMapping: KeyMapping)=ClientRegisterEventHandle
         .addTask { ClientRegistry.registerKeyBinding(keyMapping) }
 
 }

@@ -3,8 +3,13 @@ package com.github.zomb_676.fantasySoup.examples
 import com.github.zomb_676.fantasySoup.FantasySoup
 import com.github.zomb_676.fantasySoup.register.AllInMethods
 import com.github.zomb_676.fantasySoup.register.RegisterHandle
+import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
+import net.minecraftforge.fmllegacy.RegistryObject
 
 
 object Regs :AllInMethods{
@@ -23,7 +28,12 @@ object Regs :AllInMethods{
             validBlocks = arrayOf(block.block, block2.block)
         )
 
-//    val container = instance
+    val container: RegistryObject<MenuType<AbstractContainerMenu>> = instance
+        .regContainer("example_container"){ windowId: Int, inventory: Inventory, data: FriendlyByteBuf ->
+            val pos = data.readBlockPos()
+            val level = inventory.player.commandSenderWorld
+            container(windowId,level,pos,inv,inv.player)
+        }
 
 
 }

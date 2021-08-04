@@ -14,6 +14,10 @@ import net.minecraftforge.fmllegacy.RegistryObject
 @Mod.EventBusSubscriber(Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 object BlockEntityRenderBlind {
     private val data = mutableListOf<BindData<*>>()
+
+    /**
+     * @param
+     */
     fun <T : BlockEntity> bind(
         blockEntityType: RegistryObject<BlockEntityType<T>>,
         blockEntityRenderer: BlockEntityRendererProvider<T>,

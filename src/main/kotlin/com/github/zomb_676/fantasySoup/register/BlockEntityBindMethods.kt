@@ -8,7 +8,15 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraftforge.fmllegacy.RegistryObject
+import net.minecraft.world.level.block.state.BlockBehaviour
 
+/**
+ * implement this interface to access these extension methods , in order not to pollute the global variable
+ *
+ * if BlockEntityRender is set , make sure its [BlockBehaviour.Properties.noOcclusion] is set
+ * or its [BlockBehaviour.Properties.canOcclude] is true
+ * otherwise , [BlockEntityRenderer] will render block object , as its light is influenced by that
+ */
 interface BlockEntityBindMethods {
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")//safe
     fun <T : BlockEntity> RegisterHandle.regBlockEntityType(
