@@ -28,12 +28,12 @@ object Regs :AllInMethods{
             validBlocks = arrayOf(block.block, block2.block)
         )
 
-    val container: RegistryObject<MenuType<AbstractContainerMenu>> = instance
+    val container: RegistryObject<MenuType<ExampleContainer>> = instance
         .regContainer("example_container"){ windowId: Int, inventory: Inventory, data: FriendlyByteBuf ->
             val pos = data.readBlockPos()
             val level = inventory.player.commandSenderWorld
-            container(windowId,level,pos,inv,inv.player)
-        }
+            ExampleContainer(windowId,level,pos,inventory,inventory.player)
+        }.bind(::ExampleScreen)
 
 
 }

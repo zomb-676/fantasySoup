@@ -16,10 +16,9 @@ import java.util.function.Function
  * * this configuration determines whether this block is transparent or not.
  *
  * * configuration which determines whether neighbour's face should be clipped is at
- * [BlockBehaviour.BlockStateBase.canOcclude] and [BlockBehaviour.Properties.noOcclusion]
- *
- * @see <img src="https://i.imgur.com/GPzGu1N.png" />
- * @see <img src="block.jpg" />
+ * [BlockBehaviour.BlockStateBase.canOcclude] and [BlockBehaviour.Properties.noOcclusion] first vertical line
+ * @see <img src="https://raw.githubusercontent.com/zomb-676/fantasySoup/master/image/block.png" alt=""
+ *      width=320 height=180 > made by 3t
  */
 interface RenderTypeSetMethods{
 //    @JvmName("bindRenderTypeBlock")

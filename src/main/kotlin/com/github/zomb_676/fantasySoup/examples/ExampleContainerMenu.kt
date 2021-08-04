@@ -13,8 +13,7 @@ import net.minecraft.world.level.Level
 import net.minecraftforge.common.ForgeHooks
 import net.minecraftforge.fmllegacy.network.NetworkHooks
 
-abstract class ExampleContainer(windowId:Int, level: Level, pos:BlockPos, playerInventory: Inventory, player:Player)
-    : AbstractContainerMenu()
-) {
-
+class ExampleContainer(windowId:Int, level: Level, pos:BlockPos, playerInventory: Inventory, player:Player)
+    : AbstractContainerMenu(Regs.container.get(),windowId) {
+    override fun stillValid(arg: Player): Boolean = true
 }
