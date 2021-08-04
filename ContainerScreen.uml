@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>net.minecraft.client.gui.screens.inventory.ContainerScreen</OriginalElement>
+  <nodes>
+    <node x="530.5035539215686" y="0.0">net.minecraft.client.gui.components.events.GuiEventListener</node>
+    <node x="751.5542892156863" y="82.0">net.minecraft.client.gui.GuiComponent</node>
+    <node x="259.5" y="166.0">net.minecraftforge.api.distmarker.OnlyIn</node>
+    <node x="126.80428921568625" y="436.0">net.minecraft.client.gui.screens.inventory.ContainerScreen</node>
+    <node x="535.995343137255" y="166.0">net.minecraft.client.gui.components.events.AbstractContainerEventHandler</node>
+    <node x="377.5" y="166.0">net.minecraft.client.gui.components.Widget</node>
+    <node x="21.5" y="166.0">net.minecraft.world.inventory.AbstractContainerMenu</node>
+    <node x="409.30428921568625" y="270.0">net.minecraft.client.gui.screens.Screen</node>
+    <node x="151.55428921568625" y="354.0">net.minecraft.client.gui.screens.inventory.AbstractContainerScreen</node>
+    <node x="518.5542892156863" y="82.0">net.minecraft.client.gui.components.events.ContainerEventHandler</node>
+    <node x="0.0" y="270.0">net.minecraft.client.gui.screens.inventory.MenuAccess</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="net.minecraft.client.gui.components.events.AbstractContainerEventHandler" target="net.minecraft.client.gui.components.events.ContainerEventHandler" relationship="REALIZATION">
+      <point x="-33.87500000000006" y="-15.0" />
+      <point x="637.6203431372548" y="139.0" />
+      <point x="624.5542892156863" y="139.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.inventory.AbstractContainerScreen" target="net.minecraft.world.inventory.AbstractContainerMenu" relationship="DEPENDENCY">
+      <point x="-31.5" y="-15.0" />
+      <point x="246.05428921568625" y="322.0" />
+      <point x="177.5" y="322.0" />
+      <point x="177.5" y="248.0" />
+      <point x="130.5" y="248.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.components.events.ContainerEventHandler" target="net.minecraft.client.gui.components.events.GuiEventListener" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-15.0" />
+      <point x="624.5542892156863" y="61.0" />
+      <point x="614.0035539215686" y="61.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.Screen" target="net.minecraft.client.gui.components.Widget" relationship="TO_MANY">
+      <point x="0.0" y="-15.0" />
+      <point x="458.30428921568625" y="248.0" />
+      <point x="436.3703431372549" y="248.0" />
+      <point x="436.3703431372549" y="228.0" />
+      <point x="455.5" y="228.0" />
+      <point x="26.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.Screen" target="net.minecraftforge.api.distmarker.OnlyIn" relationship="ANNOTATION">
+      <point x="-39.19999999999999" y="-15.0" />
+      <point x="419.1042892156863" y="248.0" />
+      <point x="308.5" y="248.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.Screen" target="net.minecraft.client.gui.components.events.GuiEventListener" relationship="DEPENDENCY">
+      <point x="39.200000000000045" y="-15.0" />
+      <point x="497.5042892156863" y="248.0" />
+      <point x="919.0542892156863" y="248.0" />
+      <point x="919.0542892156863" y="61.0" />
+      <point x="819.5035539215686" y="61.0" />
+      <point x="819.5035539215686" y="51.0" />
+      <point x="669.6702205882352" y="51.0" />
+      <point x="55.66666666666663" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.components.events.AbstractContainerEventHandler" target="net.minecraft.client.gui.components.events.GuiEventListener" relationship="DEPENDENCY">
+      <point x="33.87499999999994" y="-15.0" />
+      <point x="705.3703431372548" y="139.0" />
+      <point x="741.0542892156863" y="139.0" />
+      <point x="741.0542892156863" y="61.0" />
+      <point x="819.5035539215686" y="61.0" />
+      <point x="819.5035539215686" y="51.0" />
+      <point x="669.6702205882352" y="51.0" />
+      <point x="55.66666666666663" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.inventory.AbstractContainerScreen" target="net.minecraftforge.api.distmarker.OnlyIn" relationship="ANNOTATION">
+      <point x="31.5" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.components.events.AbstractContainerEventHandler" target="net.minecraft.client.gui.GuiComponent" relationship="GENERALIZATION">
+      <point x="101.62499999999994" y="-15.0" />
+      <point x="773.1203431372548" y="139.0" />
+      <point x="830.0542892156863" y="139.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.Screen" target="net.minecraft.client.gui.components.Widget" relationship="REALIZATION">
+      <point x="-19.600000000000023" y="-15.0" />
+      <point x="438.70428921568623" y="218.0" />
+      <point x="403.5" y="218.0" />
+      <point x="-26.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.components.events.AbstractContainerEventHandler" target="net.minecraft.client.gui.components.events.GuiEventListener" relationship="TO_ONE">
+      <point x="-101.62500000000006" y="-15.0" />
+      <point x="569.8703431372548" y="139.0" />
+      <point x="508.05428921568625" y="139.0" />
+      <point x="508.05428921568625" y="61.0" />
+      <point x="492.05085784313746" y="61.0" />
+      <point x="492.05085784313746" y="51.0" />
+      <point x="558.336887254902" y="51.0" />
+      <point x="-55.66666666666663" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.inventory.AbstractContainerScreen" target="net.minecraft.client.gui.screens.Screen" relationship="GENERALIZATION">
+      <point x="94.5" y="-15.0" />
+      <point x="372.05428921568625" y="332.0" />
+      <point x="458.30428921568625" y="332.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.inventory.ContainerScreen" target="net.minecraft.client.gui.screens.inventory.AbstractContainerScreen" relationship="GENERALIZATION">
+      <point x="41.25" y="-15.0" />
+      <point x="250.55428921568625" y="410.0" />
+      <point x="277.55428921568625" y="410.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.Screen" target="net.minecraft.client.gui.components.events.GuiEventListener" relationship="TO_MANY">
+      <point x="0.0" y="-15.0" />
+      <point x="458.30428921568625" y="248.0" />
+      <point x="436.3703431372549" y="248.0" />
+      <point x="436.3703431372549" y="228.0" />
+      <point x="492.0" y="228.0" />
+      <point x="492.05085784313746" y="51.0" />
+      <point x="558.336887254902" y="51.0" />
+      <point x="-55.66666666666663" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.Screen" target="net.minecraft.client.gui.components.events.AbstractContainerEventHandler" relationship="GENERALIZATION">
+      <point x="19.600000000000023" y="-15.0" />
+      <point x="477.9042892156863" y="238.0" />
+      <point x="671.495343137255" y="238.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.inventory.MenuAccess" target="net.minecraft.world.inventory.AbstractContainerMenu" relationship="DEPENDENCY">
+      <point x="0.0" y="-15.0" />
+      <point x="83.5" y="248.0" />
+      <point x="130.5" y="248.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.inventory.ContainerScreen" target="net.minecraft.client.gui.screens.inventory.MenuAccess" relationship="REALIZATION">
+      <point x="-41.25" y="-15.0" />
+      <point x="168.05428921568625" y="410.0" />
+      <point x="83.5" y="410.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="net.minecraft.client.gui.screens.inventory.AbstractContainerScreen" target="net.minecraft.client.gui.screens.inventory.MenuAccess" relationship="REALIZATION">
+      <point x="-94.5" y="-15.0" />
+      <point x="183.05428921568625" y="332.0" />
+      <point x="83.5" y="332.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="true" x="460.0" y="233.0" />
+  <SelectedNodes>
+    <node>net.minecraft.world.inventory.AbstractContainerMenu</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
