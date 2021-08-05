@@ -24,18 +24,18 @@ fun analyzeMdFile(path:String) {
         FantasySoup.logger.info("splinted data $splintedText")
         val widgetType = ActualType.roughMath(splintedText[0])
         val widgetName = splintedText[1]
-        val picName = splintedText[2]
         val u :Int?
         val v :Int?
-        splintedText[3].takeIf { it.contains(',') }?.split(",")?.map { it.toIntOrNull() }.apply {
+        splintedText[2].takeIf { it.contains(',') }?.split(",")?.map { it.toIntOrNull() }.apply {
             u = this?.component1()
             v = this?.component2()
         }
-        val width = splintedText[4].toIntOrNull()
-        val height = splintedText[5].toIntOrNull()
+        val width = splintedText[3].toIntOrNull()
+        val height = splintedText[4].toIntOrNull()
+        val picType = splintedText[5]
         val dataType = splintedText[6]
         val extraData = splintedText[7]
-        val dataInstance = MdFileDescriptor(widgetType,widgetName,picName,u,v,width,height,dataType,extraData)
+        val dataInstance = MdFileDescriptor(widgetType,widgetName,u,v,width,height,picType,dataType,extraData)
         FantasySoup.logger.info("data:")
         FantasySoup.logger.info(dataInstance)
         FantasySoup.logger.info("analyze line $lineNumber finished")
@@ -45,10 +45,10 @@ fun analyzeMdFile(path:String) {
 
 private data class MdFileDescriptor
     (
-    val widgetType: ActualType?, val widgetName:String?,val fileName: String?,
-    val u: Int?, val v: Int?, val width: Int?, val height: Int?, val dataType: String?, val data: String?
+    val widgetType: ActualType?, val widgetName:String?,
+    val u: Int?, val v: Int?, val width: Int?, val height: Int?,val picType:String?,val dataType: String?, val data: String?
 )
 
 fun main() {
-    analyzeMdFile("./src/main/resources/assets/fantasy_soup/textures/gui/line_style/README.md")
+    analyzeMdFile("./src/main/resources/assets/fantasy_soup/textures/gui/line_style/UVmap.md")
 }

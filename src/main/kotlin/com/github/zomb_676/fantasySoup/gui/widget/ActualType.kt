@@ -56,7 +56,7 @@ enum class ActualType(private val typeName: String, private vararg val validAddi
     /**
      * scroll bar , interactive widgets
      */
-    SLIDE("slide"),
+    SLIDER("slider"),
 
     /**
      * gauge , show specific percentage info
@@ -76,12 +76,27 @@ enum class ActualType(private val typeName: String, private vararg val validAddi
     /**
      * style present icon
      */
-    STYLE_ICON("style_icon"),
+    STYLE_ICON("category_icon"),
+
+    /**
+     *
+     */
+    OPERATION_ICON("operation_icon"),
 
     /**
      * TYPE_ICON
      */
-    TYPE_ICON("type_icon");
+    TYPE_ICON("type_icon"),
+
+    /**
+     * item container
+     */
+    SLOT("slot"),
+
+    /**
+     * multi slots , can work like inventory
+     */
+    MULTI_SLOT("multi_slot");
 
     val roughName: String = typeName.rough()
 

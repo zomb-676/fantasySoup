@@ -11,4 +11,6 @@ import net.minecraft.world.level.Level
 abstract class IContainer(menuType:MenuType<*>,windowId: Int, level: Level, pos: BlockPos, playerInventory: Inventory, player: Player) :
     AbstractContainerMenu(menuType, windowId) {
 
+
+
 }
