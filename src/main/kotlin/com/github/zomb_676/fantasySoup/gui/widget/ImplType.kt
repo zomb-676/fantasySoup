@@ -1,4 +1,4 @@
-import ActualType.*
+package com.github.zomb_676.fantasySoup.gui.widget
 
 /**
  * indicate all the widget types classified by its internal implementation

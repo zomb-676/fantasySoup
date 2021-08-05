@@ -1,7 +1,9 @@
+package test
+
 import java.io.File
 
 fun main() {
-    val file = File("./src/main/resources/assets/rotarism/textures/gui/line_style/README.md")
+    val file = File("./src/main/resources/assets/fantasy_soup/textures/gui/line_style/README.md")
     val content = file.readLines().map { it.replace(" ", "") }
     val data = mutableListOf<WidgetDescribe>()
     var currentInfo : String? = null

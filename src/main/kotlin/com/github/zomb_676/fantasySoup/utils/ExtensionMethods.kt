@@ -1,9 +1,11 @@
 package com.github.zomb_676.fantasySoup.utils
 
 import com.github.zomb_676.fantasySoup.FantasySoup
+import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.fml.loading.FMLEnvironment
 import java.lang.reflect.Constructor
+import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -128,3 +130,8 @@ inline fun<T : Any> T.takeIfOnClientJar(codeBlock: (T) -> Unit):T{
     runOnClientJar { codeBlock(this) }
     return this
 }
+
+fun modResourcesLocation(path:String) = ResourceLocation(FantasySoup.modId,path)
+
+fun String.rough()=this.lowercase(Locale.getDefault())
+    .replace(Regex("_"),"")
