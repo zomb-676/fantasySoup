@@ -10,7 +10,7 @@ enum class ActualType(private val typeName: String, private vararg val validAddi
     /**
      * only for decorations or split contents, like simple and some embellishments
      */
-    DECORATIONS("decorations"),
+    DECORATIONS("decoration"),
 
     /**
      * button , has float , hover and pressed state
