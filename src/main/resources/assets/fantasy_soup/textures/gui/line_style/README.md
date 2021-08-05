@@ -2,9 +2,9 @@
 | ---------------------- | ------------------- | --------- | ---------- | ------------------------------------------------- | -------------- | -------- |
 | all_in_one_inventory   | 0,0                 | 256       | 512        | *Tooooo large to preview*                         | null           |          |
 | icon                   | 22,245              | 16        | 16         | ![icon](icon.png)                                 | null           |          |
-| universal_ui           | 0,0                 | 164       | 131        | ![universal_ui](universal_ui.png)                 | holder         |          |
+| universal_ui           | 0,0                 | 164       | 131        | ![universal_ui](universal_ui.png)                 | div            |          |
 | inventory_alone        | 0,140               | 168       | 83         | ![inventory_alone](inventory_alone.png)           | container      |          |
-| preview_bar_3d         | 165,0               | 87        | 68         | ![preview_bar_3d](preview_bar_3d.png)             | holder         |          |
+| preview_bar_3d         | 165,0               | 87        | 68         | ![preview_bar_3d](preview_bar_3d.png)             | div            |          |
 | fluid_tank             | 165,69              | 22        | 70         | ![fluid_tank](fluid_tank.png)                     | container      |          |
 | item_slot              | 188,69              | 18        | 18         | ![item_slot](item_slot.png)                       | container      |          |
 | item_slot_large        | 207,96              | 24        | 23         | ![item_slot_large](item_slot_large.png)           | container      |          |
