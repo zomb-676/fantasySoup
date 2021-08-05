@@ -104,6 +104,22 @@ Gauge provide visual information that indicates the energy state in your machine
 
 ------
 
+
+
+## STYLE_ICON (style_icon)
+
+Icons, shows the style of your UI file
+
+------
+
+
+
+## TYPE_ICON (type_icon)
+
+Icons of the editor menu. 
+
+-----
+
 | Label Name                                      | Required State | Optional State  |
 | ----------------------------------------------- | -------------- | --------------- |
 | <a href='#decoration-decoration'>DECORATION</a> | default        | none            |
@@ -119,4 +135,6 @@ Gauge provide visual information that indicates the energy state in your machine
 | <a href='#meter-meter'>METER</a>                | initial, final | none            |
 | <a href='#tank-tank'>TANK</a>                   | default        | none            |
 | <a href='#energy-energy'>ENERGY</a>             | default        | none            |
+| <a href='#styleicon-styleicon'>STYLE_ICON</a>   | default        | none            |
+| <a href='#typeicon-typeicon'>TYPE_ICON</a>      | default        | none            |
 
