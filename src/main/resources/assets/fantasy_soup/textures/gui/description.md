@@ -1,6 +1,6 @@
-## SPLIT (split)
+## DECORATION (decoration)
 
-Simple lines, help you to split contents apart.
+Decorations make your UI looks better.
 
 ------
 
@@ -104,19 +104,19 @@ Gauge provide visual information that indicates the energy state in your machine
 
 ------
 
-| Label Name                             | Required State | Optional State  |
-| -------------------------------------- | -------------- | --------------- |
-| [SPLIT](##SPLIT \(split\))             | default        | none            |
-| [BUTTON](##BUTTON \(button\))          | float          | hover, pressed  |
-| [TEXT](##TEXT \(text\))                | default        | none            |
-| [INPUT](##INPUT \(input\))             | default        | focus           |
-| [CHECKBOX](##CHECKBOX \(checkbox\))    | default        | banned, checked |
-| [PROCESS](##PROCESS \(process\))       | initial, final | none            |
-| [DIV](##DIV \(div\))                   | default        | none            |
-| [THREE DIM](##THREE_DIM \(three_dim\)) | default        | none            |
-| [MISC](##MISC \(misc\))                | initial, final | none            |
-| [SLIDER](##SLIDER \(slider\))          | rail, slider   | none            |
-| [METER](##METER \(meter\))             | initial, final | none            |
-| [TANK](##TANK \(tank\))                | default        | none            |
-| [ENERGY](##ENERGY \(energy\))          | default        | none            |
+| Label Name                                      | Required State | Optional State  |
+| ----------------------------------------------- | -------------- | --------------- |
+| <a href='#decoration-decoration'>DECORATION</a> | default        | none            |
+| <a href='#button-button'>BUTTON</a>             | float          | hover, pressed  |
+| <a href='#text-text'>TEXT</a>                   | default        | none            |
+| <a href='#input-input'>INPUT</a>                | default        | focus           |
+| <a href='#checkbox-checkbox'>CHECKBOX</a>       | default        | banned, checked |
+| <a href='#process-process'>PROCESS</a>          | initial, final | none            |
+| <a href='#div-div'>DIV</a>                      | default        | none            |
+| <a href='#threedim-threedim'>THREE DIM</a>      | default        | none            |
+| <a href='#misc-misc'>MISC</a>                   | initial, final | none            |
+| <a href='#slider-slider'>SLIDER</a>             | rail, slider   | none            |
+| <a href='#meter-meter'>METER</a>                | initial, final | none            |
+| <a href='#tank-tank'>TANK</a>                   | default        | none            |
+| <a href='#energy-energy'>ENERGY</a>             | default        | none            |
 
