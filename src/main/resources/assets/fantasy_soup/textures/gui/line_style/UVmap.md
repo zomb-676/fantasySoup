@@ -1,34 +1,34 @@
 | Class          | Widget Name         | UV      | Width | Height | Pic Type | Data Type | Data     | Remark |
 | -------------- | ------------------- | ------- | ----- | ------ | -------- | --------- | -------- | ------ |
-| uvmap          | map                 | 0,0     | 256   | 512    | default  |           |          |        |
-| style_icon     | icon                | 22,245  | 16    | 16     | default  |           |          |        |
-| div            | universal_ui        | 0,0     | 164   | 131    | default  |           |          |        |
-| multi_slot     | inventory           | 0,140   | 168   | 83     | default  |           |          |        |
-| div            | preview_bar_3d      | 165,0   | 87    | 68     | default  |           |          |        |
-| tank           | fluid_tank          | 165,69  | 22    | 70     | default  | region    |          |        |
-| slot           | item_slot           | 188,69  | 18    | 18     | default  | offset    |          |        |
-| slot           | item_slot_large     | 207,96  | 24    | 23     | default  | offset    |          |        |
-| process        | Rotate Meter        | 233,69  | 18    | 18     | default  |           |          |        |
+| uvmap          | uvmap               | 0,0     | 256   | 512    | default  |           |          |        |
+| style_icon     | Icon                | 22,245  | 16    | 16     | default  |           |          |        |
+| div            | Background          | 0,0     | 164   | 131    | default  |           |          |        |
+| multi_slot     | Player Inventory    | 0,140   | 168   | 83     | default  |           |          |        |
+| div            | 3D Preview Bar      | 165,0   | 87    | 68     | default  |           |          |        |
+| tank           | Fluid Tank          | 165,69  | 22    | 70     | default  | region    |          |        |
+| slot           | Item Slot           | 188,69  | 18    | 18     | default  | offset    |          |        |
+| slot           | Large Item Slot     | 207,96  | 24    | 23     | default  | offset    |          |        |
+| process        | Rotate Meter        | 233,69  | 18    | 18     | default  | pivot     |          |        |
 |                |                     | 253,73  | 1     | 12     | fill     |           |          |        |
-| process        | Rail Meter          | 188,93  | 52    | 12     | default  |           |          |        |
+| process        | Rail Meter          | 188,93  | 52    | 12     | default  | rail      |          |        |
 |                |                     | 241,93  | 2     | 5      | fill     |           |          |        |
-| process        | meter_style_3       | 189,106 | 52    | 9      | default  |           |          |        |
+| process        | Fill Meter          | 189,106 | 52    | 9      | default  | region    |          |        |
 |                |                     | 189,116 | 50    | 7      | fill     |           |          |        |
-| button         | button_small        | 189,125 | 12    | 12     | default  |           |          |        |
+| button         | Small Button        | 189,125 | 12    | 12     | default  |           |          |        |
 |                |                     | 201,125 | 12    | 12     | pressed  |           |          |        |
 |                |                     | 169,195 | 12    | 12     | hover    |           |          |        |
-| slider         | slider              | 215,125 | 27    | 5      | rail     |           |          |        |
+| slider         | Slider              | 215,125 | 27    | 5      | rail     | rail      |          |        |
 |                |                     | 243,125 | 3     | 6      | button   |           |          |        |
-| input          | text_bar            | 169,140 | 82    | 12     | default  | region    | 5,1,70,8 |        |
+| input          | Text bar            | 169,140 | 82    | 12     | default  | region    | 5,1,70,8 |        |
 |                |                     | 0,231   | 82    | 12     | focus    |           |          |        |
-| decoration     | deco_1              | 0,224   | 152   | 6      | default  |           |          |        |
-| decoration     | deco_2              | 169,153 | 37    | 37     | default  |           |          |        |
-| decoration     | deco_3              | 208,154 | 37    | 37     | default  |           |          |        |
-| decoration     | deco_4              | 169,191 | 32    | 3      | default  |           |          |        |
-| button         | button_long         | 182,195 | 68    | 12     | default  |           |          |        |
+| decoration     | Deco 1              | 0,224   | 152   | 6      | default  |           |          |        |
+| decoration     | Deco 2              | 169,153 | 37    | 37     | default  |           |          |        |
+| decoration     | Deco 3              | 208,154 | 37    | 37     | default  |           |          |        |
+| decoration     | Deco 4              | 169,191 | 32    | 3      | default  |           |          |        |
+| button         | Long Button         | 182,195 | 68    | 12     | default  |           |          |        |
 |                |                     | 182,207 | 68    | 12     | hover    |           |          |        |
 |                |                     | 182,219 | 68    | 12     | pressed  |           |          |        |
-| checkbox       | checkbox            | 169,232 | 12    | 12     | banned   |           |          |        |
+| checkbox       | Checkbox            | 169,232 | 12    | 12     | banned   |           |          |        |
 |                |                     | 169,220 | 12    | 12     | checked  |           |          |        |
 |                |                     | 169,208 | 12    | 12     | default  |           |          |        |
 | operation_icon | widget_rotate       | 159,272 | 10    | 10     | default  |           |          |        |
