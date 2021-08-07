@@ -1,6 +1,6 @@
 | Class          | Widget Name         | UV      | Width | Height | Pic Type | Data Type | Data     | Remark |
 | -------------- | ------------------- | ------- | ----- | ------ | -------- | --------- | -------- | ------ |
-| uvmap          | uvmap               | 0,0     | 256   | 512    | default  |           |          |        |
+| uv_map          | UVmap               | 0,0     | 256   | 512    | default  |           |          |        |
 | style_icon     | Icon                | 22,245  | 16    | 16     | default  |           |          |        |
 | div            | Background          | 0,0     | 164   | 131    | default  |           |          |        |
 | multi_slot     | Player Inventory    | 0,140   | 168   | 83     | default  |           |          |        |
@@ -31,45 +31,45 @@
 | checkbox       | Checkbox            | 169,232 | 12    | 12     | banned   |           |          |        |
 |                |                     | 169,220 | 12    | 12     | checked  |           |          |        |
 |                |                     | 169,208 | 12    | 12     | default  |           |          |        |
-| operation_icon | widget_rotate       | 159,272 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_remove       | 159,261 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_add          | 159,250 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_export       | 65,250  | 93    | 10     | default  | region    | 6,1,70,8 |        |
-| operation_icon | widget_export_focus | 65,261  | 93    | 10     | focus    |           |          |        |
-| operation_icon | widget_warning      | 160,350 | 20    | 20     | default  |           |          |        |
-| operation_icon | widget_save         | 159,327 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_discard      | 159,338 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_next         | 159,305 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_last         | 159,316 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_import       | 159,294 | 10    | 10     | default  |           |          |        |
-| operation_icon | widget_autoscale    | 160,283 | 10    | 10     | default  |           |          |        |
-| operation_icon | layer_up            | 172,279 | 7     | 7      | default  |           |          |        |
-| operation_icon | layer_down          | 172,287 | 7     | 7      | default  |           |          |        |
-| operation_icon | layer_vis_on        | 172,263 | 7     | 7      | default  |           |          |        |
-| operation_icon | layer_vis_off       | 172,271 | 7     | 7      | default  |           |          |        |
-| operation_icon | layer_lock_on       | 172,247 | 7     | 7      | default  |           |          |        |
-| operation_icon | layer_lock_off      | 172,255 | 7     | 7      | default  |           |          |        |
-| operation_icon | layer_info          | 84,231  | 66    | 11     | default  |           |          |        |
-| operation_icon | editor_layer_box    | 182,233 | 70    | 136    | default  |           |          |        |
-| operation_icon | editor_label        | 156,224 | 9     | 12     | default  |           |          |        |
+| operation_icon | Widget Rotate       | 159,272 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Remove       | 159,261 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Add          | 159,250 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Export       | 65,250  | 93    | 10     | default  | region    | 6,1,70,8 |        |
+| operation_icon | Widget Export Focus | 65,261  | 93    | 10     | focus    |           |          |        |
+| operation_icon | Widget Warning      | 160,350 | 20    | 20     | default  |           |          |        |
+| operation_icon | Widget Save         | 159,327 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Discard      | 159,338 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Next         | 159,305 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Last         | 159,316 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Import       | 159,294 | 10    | 10     | default  |           |          |        |
+| operation_icon | Widget Autoscale    | 160,283 | 10    | 10     | default  |           |          |        |
+| operation_icon | Layer Up            | 172,279 | 7     | 7      | default  |           |          |        |
+| operation_icon | Layer Down          | 172,287 | 7     | 7      | default  |           |          |        |
+| operation_icon | Layer Visible On         | 172,263 | 7     | 7      | default  |           |          |        |
+| operation_icon | Layer Visible Off        | 172,271 | 7     | 7      | default  |           |          |        |
+| operation_icon | Layer Lock On        | 172,247 | 7     | 7      | default  |           |          |        |
+| operation_icon | Layer Lock Off       | 172,255 | 7     | 7      | default  |           |          |        |
+| operation_icon | Layer Info          | 84,231  | 66    | 11     | default  |           |          |        |
+| operation_icon | Editor Layer Box    | 182,233 | 70    | 136    | default  |           |          |        |
+| operation_icon | Editor Label        | 156,224 | 9     | 12     | default  |           |          |        |
 |                |                     | 156,236 | 9     | 12     | hover    |           |          |        |
-| operation_icon | icon_missing        | 22,264  | 16    | 16     | default  |           |          |        |
-| operation_icon | icon_style_select   | 0,244   | 20    | 58     | default  |           |          |        |
-| operation_icon | icon_focus          | 21,282  | 18    | 18     | default  |           |          |        |
-| category_icon  | menu_three_dim      | 41,289  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_div            | 52,278  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_misc           | 52,289  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_process        | 52,267  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_slot           | 41,278  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_checkbox       | 41,267  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_input          | 52,256  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_text           | 41,256  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_decoration     | 41,245  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_button         | 52,245  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_slider         | 41,300  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_meter          | 52,300  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_tank           | 41,311  | 10    | 10     | default  |           |          |        |
-| category_icon  | menu_energy         | 52,311  | 10    | 10     | default  |           |          |        |
+| operation_icon | Icon Missing         | 22,264  | 16    | 16     | default  |           |          |        |
+| operation_icon | Icon Style Select    | 0,244   | 20    | 58     | default  |           |          |        |
+| operation_icon | Icon Focus          | 21,282  | 18    | 18     | default  |           |          |        |
+| category_icon  | Menu Three Dim       | 41,289  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Div            | 52,278  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Misc           | 52,289  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Process        | 52,267  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Slot           | 41,278  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Checkbox       | 41,267  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Input          | 52,256  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Text           | 41,256  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Decoration     | 41,245  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Button         | 52,245  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Slider         | 41,300  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Meter          | 52,300  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Tank           | 41,311  | 10    | 10     | default  |           |          |        |
+| category_icon  | Menu Energy         | 52,311  | 10    | 10     | default  |           |          |        |
 |                |                     |         |       |        |          |           |          |        |
 |                |                     |         |       |        |          |           |          |        |
 |                |                     |         |       |        |          |           |          |        |

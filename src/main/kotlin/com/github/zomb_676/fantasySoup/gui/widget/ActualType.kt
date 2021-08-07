@@ -76,17 +76,17 @@ enum class ActualType(private val typeName: String, private vararg val validAddi
     /**
      * style present icon
      */
-    STYLE_ICON("category_icon"),
+    STYLE_ICON("style_icon"),
 
     /**
-     *
+     * represents a style
      */
     OPERATION_ICON("operation_icon"),
 
     /**
      * TYPE_ICON
      */
-    TYPE_ICON("type_icon"),
+    CATEGORY_ICON("category_icon"),
 
     /**
      * item container
@@ -96,7 +96,9 @@ enum class ActualType(private val typeName: String, private vararg val validAddi
     /**
      * multi slots , can work like inventory
      */
-    MULTI_SLOT("multi_slot");
+    MULTI_SLOT("multi_slot"),
+
+    UV_MAP("uv_map");
 
     val roughName: String = typeName.rough()
 
@@ -115,7 +117,7 @@ enum class ActualType(private val typeName: String, private vararg val validAddi
 
         fun strictMath(name: String): ActualType? = strictMap[name]
 
-        fun roughMath(name: String): ActualType? = roughMap[name]
+        fun roughMath(name: String): ActualType? = roughMap[name.rough()]
 
     }
 
