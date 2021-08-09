@@ -9,9 +9,9 @@
 | slot           | Item Slot           | 188,69  | 18    | 18     | default  | offset    |          |        |
 | slot           | Large Item Slot     | 207,96  | 24    | 23     | default  | offset    |          |        |
 | process        | Rotate Meter        | 233,69  | 18    | 18     | default  | pivot     |          |        |
-|                |                     | 253,73  | 1     | 12     | fill     |           |          |        |
+|                |                     | 253,73  | 1     | 12     | pointer  |           |          |        |
 | process        | Rail Meter          | 188,93  | 52    | 12     | default  | rail      |          |        |
-|                |                     | 241,93  | 2     | 5      | fill     |           |          |        |
+|                |                     | 241,93  | 2     | 5      | pointer  |           |          |        |
 | process        | Fill Meter          | 189,106 | 52    | 9      | default  | region    |          |        |
 |                |                     | 189,116 | 50    | 7      | fill     |           |          |        |
 | button         | Small Button        | 189,125 | 12    | 12     | default  |           |          |        |
