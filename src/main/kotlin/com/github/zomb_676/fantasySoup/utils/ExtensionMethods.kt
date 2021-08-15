@@ -40,18 +40,22 @@ fun <T : Any> Class<T>.getEmptyOrSpecificConstructor(vararg parameters: Any): Co
     try {
         constructor = this.getDeclaredConstructor(* parameters.map { it.javaClass }.toTypedArray())
         return constructor
-    } catch (e: NoSuchMethodException) {} catch (e: SecurityException) {}
+    } catch (e: NoSuchMethodException) {
+    } catch (e: SecurityException) {
+    }
     try {
         constructor = this.getDeclaredConstructor()
         return constructor
-    } catch (e: NoSuchMethodException) {} catch (e: SecurityException) {}
+    } catch (e: NoSuchMethodException) {
+    } catch (e: SecurityException) {
+    }
 
     //if no constructor is got , throw an exception
 
     //log parameters with their value and type
     FantasySoup.logger.fatal(FantasySoup.coreMarker, "failed to get constructor for class ${this.name}")
     if (parameters.isNotEmpty()) {
-        logParametersWithTypeAndValue(* parameters )
+        logParametersWithTypeAndValue(* parameters)
     }
     logDeclaredConstructors()
     throw RuntimeException("failed to get constructor for class ${this.name} ")
@@ -59,15 +63,17 @@ fun <T : Any> Class<T>.getEmptyOrSpecificConstructor(vararg parameters: Any): Co
 }
 
 fun <T : Any> Class<T>.newInstanceForEmptyOrSpecificConstructor(vararg parameters: Any): T {
-    val constructor:Constructor<T> = getEmptyOrSpecificConstructor( * parameters )
+    val constructor: Constructor<T> = getEmptyOrSpecificConstructor(* parameters)
     try {
         return if (constructor.parameters.isNotEmpty()) {
             constructor.newInstance(*parameters)
-        }else{
+        } else {
             //log some info
             if (parameters.isNotEmpty()) {
-                FantasySoup.logger.fatal(FantasySoup.coreMarker,
-                    "use empty constructor with none empty parameter")
+                FantasySoup.logger.fatal(
+                    FantasySoup.coreMarker,
+                    "use empty constructor with none empty parameter"
+                )
                 logParametersWithTypeAndValue(* parameters)
             }
             constructor.newInstance()
@@ -75,20 +81,20 @@ fun <T : Any> Class<T>.newInstanceForEmptyOrSpecificConstructor(vararg parameter
     } catch (e: IllegalArgumentException) {
         FantasySoup.logger.fatal(FantasySoup.coreMarker, "wrong number of arguments for class ${this.name}")
         //log parameters with their type and value
-        if (parameters.isNotEmpty()){
+        if (parameters.isNotEmpty()) {
             logParametersWithTypeAndValue(* parameters)
         }
         //log the gotten constructor's parameters info
-        FantasySoup.logger.fatal(FantasySoup.coreMarker,"constructor parameters are as follows")
-        constructor.parameters.map { it.name }.forEach { FantasySoup.logger.fatal(FantasySoup.coreMarker,it) }
+        FantasySoup.logger.fatal(FantasySoup.coreMarker, "constructor parameters are as follows")
+        constructor.parameters.map { it.name }.forEach { FantasySoup.logger.fatal(FantasySoup.coreMarker, it) }
         //log declared constructors
         logDeclaredConstructors()
         throw e
     }
 }
 
- private fun <T : Any> Class<T>.logDeclaredConstructors() {
-     FantasySoup.logger.fatal(FantasySoup.coreMarker,"available constructors are as follows")
+private fun <T : Any> Class<T>.logDeclaredConstructors() {
+    FantasySoup.logger.fatal(FantasySoup.coreMarker, "available constructors are as follows")
     this.declaredConstructors.forEach { constructor ->
         FantasySoup.logger.fatal(FantasySoup.coreMarker, constructor.parameters.map { it.parameterizedType.typeName })
     }
@@ -107,12 +113,12 @@ private fun logParametersWithTypeAndValue(vararg parameters: Any) {
 fun <T : Any> Class<T>.emptyNewInstance(): T = this.getConstructor().newInstance()
 
 @OptIn(ExperimentalContracts::class)
-inline fun<T : Any> T.takeIfOrReturn(predicate:(T)->Boolean,codeBlock: (T) -> Unit):T {
+inline fun <T : Any> T.takeIfOrReturn(predicate: (T) -> Boolean, codeBlock: (T) -> Unit): T {
     contract {
         callsInPlace(predicate, InvocationKind.EXACTLY_ONCE)
         callsInPlace(codeBlock, InvocationKind.EXACTLY_ONCE)
     }
-    if (predicate(this)){
+    if (predicate(this)) {
         codeBlock(this)
     }
     return this
@@ -123,7 +129,7 @@ inline fun runOnClientJar(codeBlock: () -> Unit) {
 }
 
 @OptIn(ExperimentalContracts::class)
-inline fun<T : Any> T.takeIfOnClientJar(codeBlock: (T) -> Unit):T{
+inline fun <T : Any> T.takeIfOnClientJar(codeBlock: (T) -> Unit): T {
     contract {
         callsInPlace(codeBlock, InvocationKind.EXACTLY_ONCE)
     }
@@ -131,7 +137,13 @@ inline fun<T : Any> T.takeIfOnClientJar(codeBlock: (T) -> Unit):T{
     return this
 }
 
-fun modResourcesLocation(path:String) = ResourceLocation(FantasySoup.modId,path)
+fun modResourcesLocation(path: String) = ResourceLocation(FantasySoup.modId, path)
 
-fun String.rough()=this.lowercase(Locale.getDefault())
-    .replace(Regex("_"),"")
+fun String.rough() = this.lowercase(Locale.getDefault())
+    .replace(Regex("_"), "")
+
+@Throws(RuntimeException::class)
+fun <T : Any> T?.getOrThrow(errorInfo: String? = null): T {
+    if (this!=null) return this
+    throw RuntimeException(errorInfo)
+}
