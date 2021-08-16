@@ -5,7 +5,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType.FRAGM
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType.VERTEX
 import org.lwjgl.opengl.GL43
 
-abstract class Program(private val vertexShader: Shader, private val fragmentShader: Shader) {
+class Program(private val vertexShader: Shader, private val fragmentShader: Shader) {
 
     init {
         checkShaderWithValidType()
@@ -30,14 +30,14 @@ abstract class Program(private val vertexShader: Shader, private val fragmentSha
         }
     }
 
-    private var programId = -1
+    /**private**/ var programId = -1
 
     companion object {
         private val allPrograms: MutableList<Program> = mutableListOf()
     }
 
     @Throws(RuntimeException::class)
-    fun linkProgram() {
+    fun linkProgram(): Program {
         programId = GL43.glCreateProgram()
         try {
             vertexShader.attachToProgram(programId)
@@ -56,6 +56,7 @@ abstract class Program(private val vertexShader: Shader, private val fragmentSha
             Canvas.openglMarker, "link vertex ${vertexShader.shaderName} " +
                     "with fragment ${fragmentShader.shaderName}"
         )
+        return this
     }
 
     fun deleteProgram() {
@@ -63,6 +64,15 @@ abstract class Program(private val vertexShader: Shader, private val fragmentSha
         allPrograms.remove(this)
         programId = -1
         //TODO program should hold the reference of shader any more , however , type is nonnull
+    }
+
+    @Throws(RuntimeException::class)
+    fun useProgram(): Program {
+        if (programId==-1){
+            throw RuntimeException("try to use an invalid program")
+        }
+        GL43.glUseProgram(programId)
+        return this
     }
 
     fun hasLinked() = programId != -1

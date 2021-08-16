@@ -5,6 +5,9 @@ import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryStack
 
 class FileTexture(private val path: String, private val channels: Int = 0) : Texture() {
+    companion object{
+        val fileRegex = Regex("(?<=[/\\\\])[^/\\\\]+\\..+")
+    }
     override fun getImageData(): ImageData =
         MemoryStack.stackPush().use {
             STBImage.stbi_set_flip_vertically_on_load(true)
@@ -15,4 +18,6 @@ class FileTexture(private val path: String, private val channels: Int = 0) : Tex
             check(buffer != null) { "failed to read image from path:$path , reason:${STBImage.stbi_failure_reason()}" }
             ImageData(w.get(), h.get(), channel.get(), buffer)
         }
+
+    override fun getTextureName(): String = fileRegex.find(path)!!.value
 }

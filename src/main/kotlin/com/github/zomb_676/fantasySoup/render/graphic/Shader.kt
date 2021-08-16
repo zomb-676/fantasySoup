@@ -8,7 +8,7 @@ import java.io.File
 import kotlin.system.measureNanoTime
 
 
-abstract class  Shader(
+class  Shader(
     var shaderType: ShaderType,
     private val shaderString: String,
     val shaderName: String
@@ -42,13 +42,13 @@ abstract class  Shader(
 
     @Throws(RuntimeException::class)
     fun compileShader() {
-        val shaderId = GL43.glCreateShader(shaderType.type)
+        shaderId = GL43.glCreateShader(shaderType.type)
         GL43.glShaderSource(shaderId, shaderString)
         measureNanoTime { GL43.glCompileShader(shaderId) }
-            .run {
+            .let { time->
                 FantasySoup.logger.info(
                     Canvas.openglMarker,
-                    "compile shader: $shaderName  success , cost time : $this nanoseconds"
+                    "compile shader: $shaderName , cost time : $time nanoseconds"
                 )
             }
         GL43.glGetShaderInfoLog(shaderId).takeIf { it.isNotEmpty() }?.let  {

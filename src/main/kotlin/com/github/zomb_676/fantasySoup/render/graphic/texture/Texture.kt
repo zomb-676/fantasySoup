@@ -1,5 +1,7 @@
 package com.github.zomb_676.fantasySoup.render.graphic.texture
 
+import com.github.zomb_676.fantasySoup.FantasySoup
+import com.github.zomb_676.fantasySoup.render.graphic.Canvas
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.TextureFilterParameter
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.TextureFilterParameter.TextureFilterType.LINER
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.TextureWrappingType
@@ -16,8 +18,13 @@ abstract class Texture {
     private var textureID = -1
 
     protected abstract fun getImageData(): ImageData
+    protected abstract fun getTextureName():String
 
     fun genTexture() {
+        if (textureID!=-1) {
+            FantasySoup.logger.info(Canvas.openglMarker,"trying to load a loaded texture called ${getTextureName()}")
+            return
+        }
         textureID = GL43.glGenTextures()
         GL43.glBindTexture(GL43.GL_TEXTURE_2D, textureID)
         setTexWrappingType()
