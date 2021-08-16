@@ -4,6 +4,7 @@ import com.github.zomb_676.fantasySoup.FantasySoup
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.fml.loading.FMLEnvironment
+import org.jetbrains.annotations.Contract
 import java.lang.reflect.Constructor
 import java.util.*
 import kotlin.contracts.ExperimentalContracts
@@ -144,6 +145,9 @@ fun String.rough() = this.lowercase(Locale.getDefault())
 
 @Throws(RuntimeException::class)
 fun <T : Any> T?.getOrThrow(errorInfo: String? = null): T {
-    if (this!=null) return this
+    if (this != null) return this
     throw RuntimeException(errorInfo)
 }
+
+inline fun <T : Any,U> T?.takeIfNull(codeBlock: () -> U) = this ?: codeBlock()
+inline fun <T : Any,U> T?.takeIfNotNull(codeBlock: () -> U) = this?.run { codeBlock() }

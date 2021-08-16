@@ -1,6 +1,7 @@
 package com.github.zomb_676.fantasySoup.render.graphic
 
 import org.lwjgl.opengl.GL43
+import org.lwjgl.system.MemoryStack
 
 object OpenglFunctions{
     fun checkOpenGlError() {
@@ -77,6 +78,15 @@ object OpenglFunctions{
                 values().forEach { if (it.errorCode == code) return it }
                 throw RuntimeException("failed to get correct errorType")
             }
+        }
+    }
+
+    @Suppress("ConvertTryFinallyToUseCall")
+    inline fun <T, C : MemoryStack> C.use(block: C.() -> T): T {
+        try {
+            return block()
+        } finally {
+            this.close()
         }
     }
 

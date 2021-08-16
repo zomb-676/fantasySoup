@@ -113,7 +113,7 @@ fun main(){
 }
 
 @Throws(RuntimeException::class)
-fun readImage(path: String, channels: Int = 3): ImageData =
+fun readImage(path: String, channels: Int = 0): ImageData =
     MemoryStack.stackPush().use {
         STBImage.stbi_set_flip_vertically_on_load(true)
         val w = this.mallocInt(1)
