@@ -24,3 +24,6 @@ logs
 
 #vscode
 .vscode
+
+#jvm crash log
+hs_err_pid*.log

@@ -20,10 +20,10 @@ abstract class Texture {
     protected abstract fun getImageData(): ImageData
     protected abstract fun getTextureName():String
 
-    fun genTexture() {
+    fun genTexture(): Texture {
         if (textureID!=-1) {
             FantasySoup.logger.info(Canvas.openglMarker,"trying to load a loaded texture called ${getTextureName()}")
-            return
+            return this
         }
         textureID = GL43.glGenTextures()
         GL43.glBindTexture(GL43.GL_TEXTURE_2D, textureID)
@@ -38,6 +38,7 @@ abstract class Texture {
             if (needMipmap) GL43.glGenerateMipmap(GL43.GL_TEXTURE_2D)
         }
         GL43.glBindTexture(GL43.GL_TEXTURE_2D, 0)
+        return this
     }
 
     protected open fun setTexWrappingType(
@@ -72,11 +73,12 @@ abstract class Texture {
     }
 
     @Throws(RuntimeException::class)
-    fun bindTexture() {
+    fun bindTexture(): Texture {
         if (textureID != -1)
             GL43.glBindTexture(GL43.GL_TEXTURE_2D, textureID)
         else
             throw RuntimeException("try to bind an invalid texture")
+        return this
     }
 
     fun deleteTexture(){

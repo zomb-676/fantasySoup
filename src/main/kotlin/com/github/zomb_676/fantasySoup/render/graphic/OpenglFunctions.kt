@@ -31,7 +31,7 @@ object OpenglFunctions{
             errorCode = GL43.glGetError()
         }
         if (errorExisted) {
-            throw AssertionError("error occurred")
+            throw AssertionError("opengl error occurred")
         }
     }
 

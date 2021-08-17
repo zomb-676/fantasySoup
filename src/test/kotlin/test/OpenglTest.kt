@@ -1,7 +1,9 @@
 package test
 
-import calculateDoubleSize
 import com.github.zomb_676.fantasySoup.render.graphic.Constants
+import com.github.zomb_676.fantasySoup.render.graphic.MemoryFunctions.calculateDoubleSize
+import com.github.zomb_676.fantasySoup.render.graphic.MemoryFunctions.calculateFloatSize
+import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.assertNoError
 import com.github.zomb_676.fantasySoup.render.graphic.Program
 import com.github.zomb_676.fantasySoup.render.graphic.Shader
 import com.github.zomb_676.fantasySoup.render.graphic.texture.FileTexture
@@ -9,6 +11,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43
+import org.lwjgl.opengl.GL45
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 import java.io.File
@@ -63,7 +66,8 @@ fun main() {
         0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
         -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
-    ).map { it.toDouble() }.toDoubleArray()
+    )
+        .map { it.toDouble() }.toDoubleArray()
 
     val indices = intArrayOf(
         0, 1, 2,
@@ -73,17 +77,29 @@ fun main() {
     GL43.glBindVertexArray(vbo)
 
     val buffer = GL43.glGenBuffers()
-    GL43.glBindBuffer(GL43.GL_ARRAY_BUFFER, buffer)
-    GL43.glBufferData(GL43.GL_ARRAY_BUFFER, pos, GL43.GL_STATIC_DRAW)
+    GL43.glBindBuffer(GL45.GL_ARRAY_BUFFER, buffer)
+    GL43.glBufferData(GL45.GL_ARRAY_BUFFER, pos, GL43.GL_STATIC_DRAW)
+
+//    this way , in vertex shader must use dvec3 (3 double)
+//    GL43.glEnableVertexAttribArray(0)//pos
+//    GL43.glVertexAttribLPointer(0, 3, GL43.GL_DOUBLE, 5.calculateDoubleSize, 0)
+//    GL43.glEnableVertexAttribArray(1)//tex
+//    GL43.glVertexAttribLPointer(1, 2, GL43.GL_DOUBLE, 5.calculateDoubleSize, 3.calculateDoubleSize.toLong())
+
+//    this way , in vertex shader must use vec3 (3 float)
+//    GL43.glEnableVertexAttribArray(0)//pos
+//    GL43.glVertexAttribPointer(0,3,GL43.GL_FLOAT,false,5.calculateFloatSize,0)
+//    GL43.glEnableVertexAttribArray(1)//tex
+//    GL43.glVertexAttribPointer(1,2,GL43.GL_FLOAT,false,5.calculateFloatSize,3.calculateFloatSize.toLong())
+
+//    this way , in vertex shader must use vec3 (3 float) , thought we specify double here , this method will tell opengl cast data to a float
     GL43.glEnableVertexAttribArray(0)//pos
-    GL43.glVertexAttribLPointer(0, 3, GL43.GL_DOUBLE, 5.calculateDoubleSize(), 0)
+    GL43.glVertexAttribPointer(0,3,GL43.GL_DOUBLE,false,5.calculateDoubleSize,0)
     GL43.glEnableVertexAttribArray(1)//tex
-    GL43.glVertexAttribLPointer(1, 2, GL43.GL_DOUBLE, 5.calculateDoubleSize(), 3.calculateDoubleSize().toLong())
-
+    GL43.glVertexAttribPointer(1,2,GL43.GL_DOUBLE,false,5.calculateDoubleSize,3.calculateDoubleSize.toLong())
+    assertNoError()
     val texture: Texture = FileTexture("src/test/resources/texture/malayp.png")
-
-    texture.genTexture()
-    texture.bindTexture()
+        .genTexture().bindTexture()
 
     val program = Program(
         Shader(Constants.ShaderType.VERTEX, File("src/test/resources/vertex/basic.vsh")),
@@ -92,11 +108,12 @@ fun main() {
         .linkProgram()
         .useProgram()
 
-    GL43.glUniform1i(2, 0)
+    GL43.glUniform1i(1, 0)
 
     while (!GLFW.glfwWindowShouldClose(window)) {
-        GL43.glClear(GL43.GL_COLOR_BUFFER_BIT.or(GL43.GL_DEPTH_BUFFER_BIT))
-        GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 36)
+        assertNoError()
+        GL43.glClear(GL45.GL_COLOR_BUFFER_BIT.or(GL45.GL_DEPTH_BUFFER_BIT))
+        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
         GLFW.glfwSwapBuffers(window)
         GLFW.glfwPollEvents()
     }
