@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL43
  */
 class VertexArrayObject {
     private var vertexArrayObjectId = -1
-    private val types = mutableListOf<AttributeIndex>()
+    private val types = mutableListOf<AttributeIndexNormal>()
     private val bindingIndex = bindingIndexTotal++
     private val arrayID = 0
     private var vertexIndexCount = 0
@@ -22,27 +22,27 @@ class VertexArrayObject {
         vertexArrayObjectId = GL43.glGenVertexArrays()
     }
 
-    fun pushVertexType(vertexAttribute: VertexAttribute) {
-        types.add(AttributeIndex(vertexAttribute,vertexIndexCount++))
+    fun pushVertexType(vertexAttribute: VertexAttribute,needNormalized: Boolean=false) {
+        types.add(AttributeIndexNormal(vertexAttribute,vertexIndexCount++,needNormalized))
     }
 
     fun bindVertexArrayObject(){
         GL43.glBindVertexArray(vertexArrayObjectId)
     }
 
-    fun setup(data:FloatArray){
+    fun setup(){
         this.bindVertexArrayObject()
         var stride = 0
-        for (attributeIndexed in types){
-            val vertexIndex = attributeIndexed.vertexIndex
-            val data = attributeIndexed.attribute
+        for (attributeIndexNormal in types){
+            val vertexIndex = attributeIndexNormal.vertexIndex
+            val data = attributeIndexNormal.attributeData
             GL43.glEnableVertexAttribArray(vertexIndex)
-            GL43.glVertexAttribFormat(vertexIndex,data.vertexDataType.count
-                ,data.vertexDataType.type.type,false,stride)
+            GL43.glVertexAttribFormat(data.attributeIndex,data.vertexDataType.count
+                ,data.vertexDataType.internalType.glType,attributeIndexNormal.needNormalized,stride)
             GL43.glVertexAttribBinding(vertexIndex,bindingIndex)
             stride+=data.vertexDataType.size
         }
-        GL43.glBindVertexBuffer(bindingIndex,arrayID,0,stride)
+        GL43.glBindVertexBuffer(bindingIndex,vertexArrayObjectId,0,stride)
         endUse()
     }
 
@@ -53,8 +53,9 @@ class VertexArrayObject {
 
     /**
      * @param vertexIndex inconsistent with layout (location = num)
+     * @property needNormalized if data should be mapped to (-1,1)
      */
-    data class AttributeIndex(val attribute: VertexAttribute,val vertexIndex:Int)
+    data class AttributeIndexNormal(val attributeData: VertexAttribute, val vertexIndex:Int,val needNormalized:Boolean)
 
     fun a() {
 //    VertexArrayObject().pushVertexType()

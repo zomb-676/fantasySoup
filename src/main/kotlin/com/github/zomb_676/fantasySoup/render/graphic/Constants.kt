@@ -66,7 +66,7 @@ object Constants {
      * indic the opengl type
      */
     enum class InternalType(
-        val size: Int, val type: Int
+        val size: Int, val glType: Int
     ) {
         FLOAT(Float.SIZE_BYTES, GL43.GL_FLOAT),
         DOUBLE(Double.SIZE_BYTES,GL43.GL_DOUBLE),
@@ -83,10 +83,10 @@ object Constants {
      * indic the type in Vertex Shader
      *
      * @param count how many element this type has
-     * @param type the internal type
+     * @param internalType the internal type
      * @property size how many memory it uses , measured in byte
      */
-    enum class VertexDataType(val count: Int, val type: InternalType) {
+    enum class VertexDataType(val count: Int, val internalType: InternalType) {
 
         FLOAT(1, InternalType.FLOAT),
         VEC2(2, InternalType.FLOAT),
@@ -98,7 +98,7 @@ object Constants {
         INT(1,InternalType.INT),
         DOUBLE(1,InternalType.DOUBLE);
 
-        val size: Int = count * type.size
+        val size: Int = count * internalType.size
 
     }
 
