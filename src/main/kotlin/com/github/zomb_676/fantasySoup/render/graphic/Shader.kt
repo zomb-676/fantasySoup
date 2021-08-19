@@ -47,7 +47,7 @@ class  Shader(
         measureNanoTime { GL43.glCompileShader(shaderId) }
             .let { time->
                 FantasySoup.logger.info(
-                    Canvas.openglMarker,
+                    Canvas.graphicMarker,
                     "compile shader: $shaderName , cost time : $time nanoseconds"
                 )
             }

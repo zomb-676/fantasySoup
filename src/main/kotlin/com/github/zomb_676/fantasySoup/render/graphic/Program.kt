@@ -48,12 +48,12 @@ class Program(private val vertexShader: Shader, private val fragmentShader: Shad
                         "vertex shader ${vertexShader.shaderName} and fragment shader ${vertexShader.shaderName}", e
             )
         } finally {
-            FantasySoup.logger.debug(Canvas.openglMarker, "vertex shaderInfo $vertexShader")
-            FantasySoup.logger.debug(Canvas.openglMarker, "fragment shaderInfo $fragmentShader")
+            FantasySoup.logger.debug(Canvas.graphicMarker, "vertex shaderInfo $vertexShader")
+            FantasySoup.logger.debug(Canvas.graphicMarker, "fragment shaderInfo $fragmentShader")
         }
         GL43.glLinkProgram(programId)
         FantasySoup.logger.info(
-            Canvas.openglMarker, "link vertex ${vertexShader.shaderName} " +
+            Canvas.graphicMarker, "link vertex ${vertexShader.shaderName} " +
                     "with fragment ${fragmentShader.shaderName}"
         )
         return this

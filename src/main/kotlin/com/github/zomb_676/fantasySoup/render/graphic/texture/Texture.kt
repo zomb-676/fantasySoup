@@ -22,7 +22,7 @@ abstract class Texture {
 
     fun genTexture(): Texture {
         if (textureID!=-1) {
-            FantasySoup.logger.info(Canvas.openglMarker,"trying to load a loaded texture called ${getTextureName()}")
+            FantasySoup.logger.info(Canvas.graphicMarker,"trying to load a loaded texture called ${getTextureName()}")
             return this
         }
         textureID = GL43.glGenTextures()
@@ -68,7 +68,6 @@ abstract class Texture {
                 )
         }
         if (narrowFilterType is TextureFilterParameter.TextureMipmapFilterType) return true
-        if (narrowFilterType is TextureFilterParameter.TextureFilterType) return true
         return false
     }
 

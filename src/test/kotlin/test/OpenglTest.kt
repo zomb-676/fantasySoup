@@ -102,7 +102,7 @@ fun main() {
 //    GL43.glEnableVertexAttribArray(1)//tex
 //    GL43.glVertexAttribPointer(1,2,GL43.GL_DOUBLE,false,5.calculateDoubleSize,3.calculateDoubleSize.toLong())
     val bindingIndex = 0
-    assertNoError()
+
     GL43.glEnableVertexAttribArray(0)//pos
     GL43.glVertexAttribFormat(0,3,GL43.GL_FLOAT,false,0)
     GL43.glVertexAttribBinding(0,bindingIndex)
@@ -110,7 +110,7 @@ fun main() {
     GL43.glVertexAttribFormat(1,2,GL43.GL_FLOAT,false,3.calculateFloatSize)
     GL43.glVertexAttribBinding(1,bindingIndex)
     GL43.glBindVertexBuffer(bindingIndex,vbo,0,5.calculateFloatSize)
-    assertNoError()
+
     val texture: Texture = FileTexture("src/test/resources/texture/malayp.png")
         .genTexture().bindTexture()
 
