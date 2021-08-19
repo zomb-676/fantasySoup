@@ -1,8 +1,6 @@
 package test
 
 import com.github.zomb_676.fantasySoup.render.graphic.Constants
-import com.github.zomb_676.fantasySoup.render.graphic.MemoryFunctions.calculateDoubleSize
-import com.github.zomb_676.fantasySoup.render.graphic.MemoryFunctions.calculateFloatSize
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.assertNoError
 import com.github.zomb_676.fantasySoup.render.graphic.Program
 import com.github.zomb_676.fantasySoup.render.graphic.Shader
@@ -114,15 +112,15 @@ fun main() {
 //    GL43.glBindVertexBuffer(bindingIndex,vbo,0,5.calculateFloatSize)
 
     val vboObject = VertexArrayObject()
-    vboObject.genVertexArrayObject()
-    vboObject.bindVertexArrayObject()
+        .genVertexArrayObject()
+        .bindVertexArrayObject()
     val buffer = GL43.glGenBuffers()
     GL43.glBindBuffer(GL45.GL_ARRAY_BUFFER, buffer)
     GL43.glBufferData(GL45.GL_ARRAY_BUFFER, pos, GL43.GL_STATIC_DRAW)
     vboObject.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3))
-    vboObject.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC2))
-    vboObject.setup()
-    vboObject.bindVertexArrayObject()
+        .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC2))
+        .setup()
+        .bindVertexArrayObject()
 
     val texture: Texture = FileTexture("src/test/resources/texture/malayp.png")
         .genTexture().bindTexture()

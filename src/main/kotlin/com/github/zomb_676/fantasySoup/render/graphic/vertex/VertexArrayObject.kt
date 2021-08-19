@@ -18,19 +18,22 @@ class VertexArrayObject {
         private var bindingIndexTotal = 0
     }
 
-    fun genVertexArrayObject() {
+    fun genVertexArrayObject(): VertexArrayObject {
         vertexArrayObjectId = GL43.glGenVertexArrays()
+        return this
     }
 
-    fun pushVertexType(vertexAttribute: VertexAttribute,needNormalized: Boolean=false) {
+    fun pushVertexType(vertexAttribute: VertexAttribute,needNormalized: Boolean=false): VertexArrayObject {
         types.add(AttributeIndexNormal(vertexAttribute,vertexIndexCount++,needNormalized))
+        return this
     }
 
-    fun bindVertexArrayObject(){
+    fun bindVertexArrayObject(): VertexArrayObject {
         GL43.glBindVertexArray(vertexArrayObjectId)
+        return this
     }
 
-    fun setup(){
+    fun setup(): VertexArrayObject {
         this.bindVertexArrayObject()
         var stride = 0
         for (attributeIndexNormal in types){
@@ -44,6 +47,7 @@ class VertexArrayObject {
         }
         GL43.glBindVertexBuffer(bindingIndex,vertexArrayObjectId,0,stride)
         endUse()
+        return this
     }
 
     fun endUse(){
