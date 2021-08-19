@@ -24,6 +24,10 @@ fun main() {
     val window = GLFW.glfwCreateWindow(800, 450, "OpenglTest", MemoryUtil.NULL, MemoryUtil.NULL)
     GLFW.glfwMakeContextCurrent(window)
     GL.createCapabilities()
+    assertNoError()
+    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4)
+    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5)
+    assertNoError()
     val pos = floatArrayOf(
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
         0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
@@ -67,7 +71,7 @@ fun main() {
         -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
     )
-        .map { it.toDouble() }.toDoubleArray()
+//        .map { it.toDouble() }.toDoubleArray()
 
     val indices = intArrayOf(
         0, 1, 2,
@@ -93,10 +97,19 @@ fun main() {
 //    GL43.glVertexAttribPointer(1,2,GL43.GL_FLOAT,false,5.calculateFloatSize,3.calculateFloatSize.toLong())
 
 //    this way , in vertex shader must use vec3 (3 float) , thought we specify double here , this method will tell opengl cast data to a float
+//    GL43.glEnableVertexAttribArray(0)//pos
+//    GL43.glVertexAttribPointer(0,3,GL43.GL_DOUBLE,false,5.calculateDoubleSize,0)
+//    GL43.glEnableVertexAttribArray(1)//tex
+//    GL43.glVertexAttribPointer(1,2,GL43.GL_DOUBLE,false,5.calculateDoubleSize,3.calculateDoubleSize.toLong())
+    val bindingIndex = 0
+    assertNoError()
     GL43.glEnableVertexAttribArray(0)//pos
-    GL43.glVertexAttribPointer(0,3,GL43.GL_DOUBLE,false,5.calculateDoubleSize,0)
+    GL43.glVertexAttribFormat(0,3,GL43.GL_FLOAT,false,0)
+    GL43.glVertexAttribBinding(0,bindingIndex)
     GL43.glEnableVertexAttribArray(1)//tex
-    GL43.glVertexAttribPointer(1,2,GL43.GL_DOUBLE,false,5.calculateDoubleSize,3.calculateDoubleSize.toLong())
+    GL43.glVertexAttribFormat(1,2,GL43.GL_FLOAT,false,3.calculateFloatSize)
+    GL43.glVertexAttribBinding(1,bindingIndex)
+    GL43.glBindVertexBuffer(bindingIndex,vbo,0,5.calculateFloatSize)
     assertNoError()
     val texture: Texture = FileTexture("src/test/resources/texture/malayp.png")
         .genTexture().bindTexture()
