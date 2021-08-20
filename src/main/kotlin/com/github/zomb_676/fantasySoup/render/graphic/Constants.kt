@@ -102,6 +102,9 @@ object Constants {
 
     }
 
+    /**
+     * tell the gpu whether to put data in high speed cache or not
+     */
     enum class VertexStorageType(val type:Int, val typeName:String){
         /**
          * not change or nearly not change

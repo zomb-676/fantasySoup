@@ -17,7 +17,8 @@ class VertexBufferObject(private val vertexStorageType: VertexStorageType) {
         return this
     }
 
-    fun bindDate(floatArray: FloatArray){
+    fun bindDate(floatArray: FloatArray): VertexBufferObject {
         GL43.glBufferData(GL43.GL_ARRAY_BUFFER,floatArray,vertexStorageType.type)
+        return this
     }
 }
