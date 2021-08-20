@@ -102,4 +102,21 @@ object Constants {
 
     }
 
+    enum class VertexStorageType(val type:Int, val typeName:String){
+        /**
+         * not change or nearly not change
+         */
+        STATIC_DRAW(GL43.GL_STATIC_DRAW,"static draw"),
+
+        /**
+         * change a lot
+         */
+        DYNAMIC_DRAW(GL43.GL_DYNAMIC_DRAW,"dynamic draw"),
+
+        /**
+         * change every time when drawing
+         */
+        STREAM_DRAW(GL43.GL_STREAM_DRAW,"stream draw");
+    }
+
 }

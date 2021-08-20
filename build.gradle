@@ -24,6 +24,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 //repositories {
 //    maven {
+//        name = "ldtteam"
+//        url = "https://ldtteam.jfrog.io/artifactory/parchmentmc-snapshots/"
+//    }
+//    maven {
 //         location of the maven that hosts JEI files
 //        name = "Progwml6 maven"
 //        url = "https://dvs1.progwml6.com/files/maven/"
@@ -35,10 +39,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 //    }
 //}
 
-configurations{
-    library
-    implementation.extendsFrom library
-}
+//configurations{
+//    library
+//    implementation.extendsFrom library
+//}
 
 dependencies {
     mappings minecraft.officialMojangMappings()

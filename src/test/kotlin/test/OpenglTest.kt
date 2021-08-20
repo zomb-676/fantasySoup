@@ -8,6 +8,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.FileTexture
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
+import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43
@@ -77,48 +78,21 @@ fun main() {
         0, 1, 2,
         1, 3, 0
     )
-//    val vbo = GL43.glGenVertexArrays()
-//    GL43.glBindVertexArray(vbo)
 
-//    val buffer = GL43.glGenBuffers()
-//    GL43.glBindBuffer(GL45.GL_ARRAY_BUFFER, buffer)
-//    GL43.glBufferData(GL45.GL_ARRAY_BUFFER, pos, GL43.GL_STATIC_DRAW)
+    val posAttribute = VertexAttribute(Constants.VertexDataType.VEC3 , "pos")
+    val colorAttribute = VertexAttribute(Constants.VertexDataType.VEC2 , "color")
 
-//    this way , in vertex shader must use dvec3 (3 double)
-//    GL43.glEnableVertexAttribArray(0)//pos
-//    GL43.glVertexAttribLPointer(0, 3, GL43.GL_DOUBLE, 5.calculateDoubleSize, 0)
-//    GL43.glEnableVertexAttribArray(1)//tex
-//    GL43.glVertexAttribLPointer(1, 2, GL43.GL_DOUBLE, 5.calculateDoubleSize, 3.calculateDoubleSize.toLong())
-
-//    this way , in vertex shader must use vec3 (3 float)
-//    GL43.glEnableVertexAttribArray(0)//pos
-//    GL43.glVertexAttribPointer(0,3,GL43.GL_FLOAT,false,5.calculateFloatSize,0)
-//    GL43.glEnableVertexAttribArray(1)//tex
-//    GL43.glVertexAttribPointer(1,2,GL43.GL_FLOAT,false,5.calculateFloatSize,3.calculateFloatSize.toLong())
-
-//    this way , in vertex shader must use vec3 (3 float) , thought we specify double here , this method will tell opengl cast data to a float
-//    GL43.glEnableVertexAttribArray(0)//pos
-//    GL43.glVertexAttribPointer(0,3,GL43.GL_DOUBLE,false,5.calculateDoubleSize,0)
-//    GL43.glEnableVertexAttribArray(1)//tex
-//    GL43.glVertexAttribPointer(1,2,GL43.GL_DOUBLE,false,5.calculateDoubleSize,3.calculateDoubleSize.toLong())
-//    val bindingIndex = 0
-//
-//    GL43.glEnableVertexAttribArray(0)//pos
-//    GL43.glVertexAttribFormat(0,3,GL43.GL_FLOAT,false,0)
-//    GL43.glVertexAttribBinding(0,bindingIndex)
-//    GL43.glEnableVertexAttribArray(1)//tex
-//    GL43.glVertexAttribFormat(1,2,GL43.GL_FLOAT,false,3.calculateFloatSize)
-//    GL43.glVertexAttribBinding(1,bindingIndex)
-//    GL43.glBindVertexBuffer(bindingIndex,vbo,0,5.calculateFloatSize)
-
-    val vboObject = VertexArrayObject()
+    val vao = VertexArrayObject()
         .genVertexArrayObject()
         .bindVertexArrayObject()
-    val buffer = GL43.glGenBuffers()
-    GL43.glBindBuffer(GL45.GL_ARRAY_BUFFER, buffer)
-    GL43.glBufferData(GL45.GL_ARRAY_BUFFER, pos, GL43.GL_STATIC_DRAW)
-    vboObject.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3))
-        .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC2))
+
+    val vbo = VertexBufferObject(Constants.VertexStorageType.STATIC_DRAW)
+        .genVertexBufferObject()
+        .bindVertexBufferObject()
+        .bindDate(pos)
+    
+    vao.pushVertexType(posAttribute)
+        .pushVertexType(colorAttribute)
         .setup()
         .bindVertexArrayObject()
 

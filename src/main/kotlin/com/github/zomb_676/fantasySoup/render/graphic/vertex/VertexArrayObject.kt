@@ -1,5 +1,6 @@
 package com.github.zomb_676.fantasySoup.render.graphic.vertex
 
+import net.minecraftforge.client.settings.KeyBindingMap
 import org.lwjgl.opengl.GL43
 
 /**
@@ -61,7 +62,4 @@ class VertexArrayObject {
      */
     data class AttributeIndexNormal(val attributeData: VertexAttribute, val vertexIndex:Int,val needNormalized:Boolean)
 
-    fun a() {
-//    VertexArrayObject().pushVertexType()
-    }
 }
