@@ -1,8 +1,13 @@
 package com.github.zomb_676.fantasySoup.render.graphic
 
 import com.github.zomb_676.fantasySoup.FantasySoup
+import com.github.zomb_676.fantasySoup.render.graphic.Constants.Regexes.fileExtensionRegex
+import com.github.zomb_676.fantasySoup.render.graphic.Constants.Regexes.fileNameRegex
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType
 import com.github.zomb_676.fantasySoup.utils.getOrThrow
+import com.github.zomb_676.fantasySoup.utils.math
+import net.minecraft.client.Minecraft
+import net.minecraft.resources.ResourceLocation
 import org.lwjgl.opengl.GL43
 import java.io.File
 import kotlin.system.measureNanoTime
@@ -14,11 +19,6 @@ class  Shader(
     val shaderName: String
 ) {
     companion object {
-        /**
-         * regex:(?!\.)[a-z]+$
-         * math file extension exclude .
-         */
-        val regex = Regex("(?!\\.)[a-z]+\$")
         private val allShaders: MutableList<Shader> = mutableListOf()
     }
 
@@ -32,10 +32,15 @@ class  Shader(
 
     constructor(shaderType: ShaderType, shaderPath: File) : this(shaderType, shaderPath.readText(), shaderPath.name)
 
+    constructor(shaderType: ShaderType,shaderPath: ResourceLocation):this(shaderType,
+        Minecraft.getInstance().resourceManager.getResource(shaderPath).inputStream.reader().readText()
+            ,shaderPath.path.math(fileNameRegex)!!.value){
+    }
+
     @Throws(RuntimeException::class)
     constructor(shaderPath: String) : this(
         ShaderType.getShaderTypeFromExtension(
-            regex.find(shaderPath, 0)
+            fileExtensionRegex.find(shaderPath, 0)
                 .getOrThrow("can't resolve file extension string from $shaderPath").value
         ), File(shaderPath)
     )

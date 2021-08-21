@@ -1,5 +1,6 @@
 package com.github.zomb_676.fantasySoup.render.graphic.texture
 
+import com.github.zomb_676.fantasySoup.render.graphic.Constants.Regexes.fileNameRegex
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.use
 import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryStack
@@ -8,9 +9,6 @@ import org.lwjgl.system.MemoryStack
  * @param desiredChannels 0 for auto
  */
 class FileTexture(private val path: String, private val desiredChannels: Int = 0) : Texture() {
-    companion object{
-        val fileRegex = Regex("(?<=[/\\\\])[^/\\\\]+\\..+")
-    }
 
     /**
      * @return [Texture.ImageData] implement [AutoCloseable]
@@ -28,5 +26,5 @@ class FileTexture(private val path: String, private val desiredChannels: Int = 0
             ImageData(w.get(), h.get(), channel.get(), buffer)
         }
 
-    override fun getTextureName(): String = fileRegex.find(path)!!.value
+    override fun getTextureName(): String = fileNameRegex.find(path)!!.value
 }

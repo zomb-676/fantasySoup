@@ -3,6 +3,20 @@ package com.github.zomb_676.fantasySoup.render.graphic
 import org.lwjgl.opengl.GL43
 
 object Constants {
+
+    object Regexes{
+        /**
+         * regex:(?!\.)[a-z]+$
+         * math file extension exclude .
+         */
+        val fileExtensionRegex = Regex("(?!\\.)[a-z]+\$")
+
+        /**
+         * regex:(?<=[/\\])[^/\\]+\..+ , math file name
+         */
+        val fileNameRegex = Regex("(?<=[/\\\\])[^/\\\\]+\\..+")
+    }
+
     enum class ShaderType(val type: Int, val typeName: String) {
         VERTEX(GL43.GL_VERTEX_SHADER, "vertex shader"),
         FRAGMENT_SHADER(GL43.GL_FRAGMENT_SHADER, "fragment shader");

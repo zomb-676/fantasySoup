@@ -151,3 +151,5 @@ fun <T : Any> T?.getOrThrow(errorInfo: String? = null): T {
 
 inline fun <T : Any,U> T?.takeIfNull(codeBlock: () -> U) = this ?: codeBlock()
 inline fun <T : Any,U> T?.takeIfNotNull(codeBlock: () -> U) = this?.run { codeBlock() }
+
+fun String.math(regex: Regex,startIndex :Int= 0) = regex.find(this,startIndex)
