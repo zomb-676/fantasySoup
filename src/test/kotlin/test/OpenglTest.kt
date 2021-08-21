@@ -120,7 +120,7 @@ fun main() {
         Shader(Constants.ShaderType.FRAGMENT_SHADER, File("src/test/resources/fragment/basic.fsh"))
     ).linkProgram()
     val programBlur = Program(
-        Shader(Constants.ShaderType.VERTEX, File("src/test/resources/vertex/TexPos.vsh")),
+        Shader(Constants.ShaderType.VERTEX, File("src/test/resources/vertex/tex_pos.vsh")),
         Shader(Constants.ShaderType.FRAGMENT_SHADER, File("src/test/resources/fragment/blur.fsh"))
     ).linkProgram()
 

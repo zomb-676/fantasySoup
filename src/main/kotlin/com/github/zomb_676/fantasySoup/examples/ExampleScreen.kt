@@ -24,7 +24,7 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
     }
     private val frameBuffer: Int
     private val programBlur = Program(
-        Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/TexPos.vsh")),
+        Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/tex_pos.vsh")),
         Shader(Constants.ShaderType.FRAGMENT_SHADER, modResourcesLocation("shader/fragment/blur.fsh"))
     ).linkProgram()
     private val programDrawFull = Program(
