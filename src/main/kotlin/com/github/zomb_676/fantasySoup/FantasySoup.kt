@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Marker
 import org.apache.logging.log4j.MarkerManager
 import com.github.zomb_676.fantasySoup.examples.Regs
 import com.github.zomb_676.fantasySoup.utils.manuallyInitClass
+import net.minecraft.resources.ResourceLocation
 
 @Mod(FantasySoup.modId)
 class FantasySoup {
@@ -21,5 +22,7 @@ class FantasySoup {
         const val modId: String = "fantasy_soup"
         val coreMarker: Marker = MarkerManager.getMarker("core")
         val logger: Logger = LogManager.getLogger(modName)
+
+        fun modResourcesLocation(path:String) = ResourceLocation(FantasySoup.modId,path)
     }
 }

@@ -7,6 +7,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.Shader
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
+import com.github.zomb_676.fantasySoup.utils.modResourcesLocation
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.network.chat.Component
@@ -23,12 +24,12 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
     }
     private val frameBuffer: Int
     private val programBlur = Program(
-        Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/TexPos.vsh")),
-        Shader(Constants.ShaderType.FRAGMENT_SHADER, File("src/main/resources/assets/fantasy_soup/shader/fragment/blur.fsh"))
+        Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/TexPos.vsh")),
+        Shader(Constants.ShaderType.FRAGMENT_SHADER, modResourcesLocation("shader/fragment/blur.fsh"))
     ).linkProgram()
     private val programDrawFull = Program(
-        Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/basic.vsh")),
-        Shader(Constants.ShaderType.FRAGMENT_SHADER, File("src/main/resources/assets/fantasy_soup/shader/fragment/basic.fsh"))
+        Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/basic.vsh")),
+        Shader(Constants.ShaderType.FRAGMENT_SHADER, modResourcesLocation("shader/fragment/basic.fsh"))
     ).linkProgram()
     private val pos = floatArrayOf(
         -1.0f, -1.0f, 0.0f, -1.0f, -1.0f,
