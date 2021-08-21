@@ -140,7 +140,8 @@ fun main() {
         GL43.GL_TEXTURE_2D, frameBufferTex, 0
     )
 
-    var rad = 0.1f
+//    var rad = 0.1f
+    var rad = 2f
     var isAdd = 1
 
     while (!GLFW.glfwWindowShouldClose(window)) {
@@ -158,13 +159,12 @@ fun main() {
 //        GL43.glUniform1i(1, 1)
 //        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
 
-        if (rad<=0f){
-            isAdd = 1
-        }else if (rad >= 5f){
-            isAdd = -1
-        }
-        rad += (0.1 * isAdd).toFloat()
-        println(rad)
+//        if (rad<=0f){
+//            isAdd = 1
+//        }else if (rad >= 5f){
+//            isAdd = -1
+//        }
+//        rad += (0.1 * isAdd).toFloat()
 
         vaoBlur.bindVertexArrayObject()
         GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
