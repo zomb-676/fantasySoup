@@ -1,6 +1,8 @@
 package com.github.zomb_676.fantasySoup.render.graphic
 
+import com.github.zomb_676.fantasySoup.FantasySoup
 import org.lwjgl.opengl.GL43
+import org.lwjgl.opengl.GLDebugMessageCallback
 import org.lwjgl.system.MemoryStack
 
 object OpenglFunctions{
@@ -88,6 +90,84 @@ object OpenglFunctions{
         } finally {
             this.close()
         }
+    }
+
+    @Throws(IllegalArgumentException::class)
+    fun sourceToString(int: Int): String {
+        return when (int) {
+            GL43.GL_DEBUG_SOURCE_API -> "API"
+            GL43.GL_DEBUG_SOURCE_WINDOW_SYSTEM -> "WINDOW SYSTEM"
+            GL43.GL_DEBUG_SOURCE_SHADER_COMPILER -> "SHADER COMPILER"
+            GL43.GL_DEBUG_SOURCE_THIRD_PARTY -> "THIRD PARTY"
+            GL43.GL_DEBUG_SOURCE_APPLICATION -> "APPLICATION"
+            GL43.GL_DEBUG_SOURCE_OTHER -> "OTHER"
+            else ->  throw IllegalArgumentException("failed to fetch source name from $int")
+        }
+    }
+
+    @Throws(IllegalArgumentException::class)
+    fun typeToString(int: Int): String {
+        return when (int) {
+            GL43.GL_DEBUG_TYPE_ERROR -> "ERROR"
+            GL43.GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR -> "DEPRECATED BEHAVIOR"
+            GL43.GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR -> "UNDEFINED BEHAVIOR"
+            GL43.GL_DEBUG_TYPE_PORTABILITY -> "PORTABILITY"
+            GL43.GL_DEBUG_TYPE_PERFORMANCE -> "PERFORMANCE"
+            GL43.GL_DEBUG_TYPE_OTHER -> "OTHER"
+            GL43.GL_DEBUG_TYPE_MARKER -> "MARKER"
+            else -> throw IllegalArgumentException("failed to fetch type name from $int")
+        }
+    }
+
+    @Throws(IllegalArgumentException::class)
+    fun severityToString(int: Int): String {
+        return when (int) {
+            GL43.GL_DEBUG_SEVERITY_NOTIFICATION -> "NOTIFICATION"
+            GL43.GL_DEBUG_SEVERITY_HIGH -> "HIGH"
+            GL43.GL_DEBUG_SEVERITY_MEDIUM -> "MEDIUM"
+            GL43.GL_DEBUG_SEVERITY_LOW -> "LOW"
+            else -> throw IllegalArgumentException("failed to fetch severity name from $int")
+        }
+    }
+
+    fun addGlDebugMessageCallback(identifyFlag:Long){
+        GL43.glDebugMessageCallback(object : GLDebugMessageCallback(){
+            override fun invoke(
+                source: Int,
+                type: Int,
+                id: Int,
+                severity: Int,
+                length: Int,
+                message: Long,
+                userParam: Long
+            ) {
+                FantasySoup.logger.error(Canvas.graphicMarker,"gl error occurred")
+                FantasySoup.logger.error(Canvas.graphicMarker,"source:${sourceToString(source)}")
+                FantasySoup.logger.error(Canvas.graphicMarker,"type:${typeToString(type)}")
+                FantasySoup.logger.error(Canvas.graphicMarker,"id:$id")
+                FantasySoup.logger.error(Canvas.graphicMarker,"severity:${severityToString(severity)}")
+                FantasySoup.logger.error(Canvas.graphicMarker,"message:${getMessage(length,message)}")
+            }
+        },identifyFlag)
+    }
+
+    /**
+     * @param codeBlock source , type , id , severity , identifyFlag
+     */
+    fun addGlDebugMessageCallback(identifyFlag:Long,codeBlock:(String,String,Int,String,String,Long)->Unit){
+        GL43.glDebugMessageCallback(object : GLDebugMessageCallback(){
+            override fun invoke(
+                source: Int,
+                type: Int,
+                id: Int,
+                severity: Int,
+                length: Int,
+                message: Long,
+                userParam: Long
+            ) {
+                codeBlock.invoke(sourceToString(source), typeToString(type),id, severityToString(severity),getMessage(length,message),userParam)
+            }
+        },identifyFlag)
     }
 
 }
