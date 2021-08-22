@@ -1,6 +1,7 @@
 package test
 
 import com.github.zomb_676.fantasySoup.render.graphic.Constants
+import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.addGlDebugMessageCallback
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.assertNoError
 import com.github.zomb_676.fantasySoup.render.graphic.Program
 import com.github.zomb_676.fantasySoup.render.graphic.Shader
@@ -9,6 +10,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
+import com.sun.jna.Native
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43
@@ -16,8 +18,10 @@ import org.lwjgl.opengl.GL45
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 import java.io.File
+import java.lang.management.ManagementFactory
 
 fun main() {
+//    System.loadLibrary("renderdoc")
     if (!GLFW.glfwInit()) {
         print("failed to init glfw")
         return
@@ -27,9 +31,21 @@ fun main() {
     val window = GLFW.glfwCreateWindow(width, height, "OpenglTest", MemoryUtil.NULL, MemoryUtil.NULL)
     GLFW.glfwMakeContextCurrent(window)
     GL.createCapabilities()
+    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE)
+    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT,GL43.GL_FALSE)
+    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_COMPAT_PROFILE,GL43.GL_FALSE)
+    assertNoError()
+    println(ManagementFactory.getRuntimeMXBean().name.split("@")[0])
+    GL43.glEnable(GL43.GL_DEBUG_OUTPUT)
+    assertNoError()
+    addGlDebugMessageCallback(1)
     assertNoError()
     GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4)
-    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5)
+    GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3)
+    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL43.GL_FALSE)
+    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE)
+
+    println(GLFW.glfwGetVersionString())
     assertNoError()
     val pos = floatArrayOf(
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -80,7 +96,10 @@ fun main() {
         -1.0f, -1.0f, 0.0f,     -1.0f, -1.0f,
         1.0f, -1.0f, 0.0f,      1.0f, -1.0f,
         1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
-        -1.0f, 1.0f, 0.0f,      -1.0f, 1.0f
+
+        -1.0f, -1.0f, 0.0f,     -1.0f, -1.0f,
+        1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
+        -1.0f, 1.0f, 0.0f,      -1.0f, 1.0f,
     )
 
     val posAttribute = VertexAttribute(Constants.VertexDataType.VEC3, "pos")
@@ -116,12 +135,12 @@ fun main() {
         .genTexture().bindTexture()
 
     val programDraw = Program(
-        Shader(Constants.ShaderType.VERTEX, File("src/test/resources/vertex/basic.vsh")),
-        Shader(Constants.ShaderType.FRAGMENT_SHADER, File("src/test/resources/fragment/basic.fsh"))
+        Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/basic.vsh")),
+        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/basic.fsh"))
     ).linkProgram()
     val programBlur = Program(
-        Shader(Constants.ShaderType.VERTEX, File("src/test/resources/vertex/tex_pos.vsh")),
-        Shader(Constants.ShaderType.FRAGMENT_SHADER, File("src/test/resources/fragment/blur.fsh"))
+        Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/tex_pos.vsh")),
+        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/blur.fsh"))
     ).linkProgram()
 
     val frameBuffer = GL43.glGenFramebuffers()
@@ -151,7 +170,7 @@ fun main() {
         GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
         programDraw.useProgram()
         GL43.glUniform1i(1, 0)
-        GL43.glDrawArrays(GL45.GL_QUADS, 0, 4)
+        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
 
 //        vaoBlur.bindVertexArrayObject()
 //        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)

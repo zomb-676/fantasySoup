@@ -1,7 +1,7 @@
 package com.github.zomb_676.fantasySoup.render.graphic
 
 import com.github.zomb_676.fantasySoup.FantasySoup
-import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType.FRAGMENT_SHADER
+import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType.FRAGMENT
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType.VERTEX
 import org.lwjgl.opengl.GL43
 
@@ -22,7 +22,7 @@ class Program(private val vertexShader: Shader, private val fragmentShader: Shad
             throw ve
         } finally {
             try {
-                if (fragmentShader.shaderType != FRAGMENT_SHADER)
+                if (fragmentShader.shaderType != FRAGMENT)
                     throw IllegalStateException("$fragmentShader is not a fragment shader ")
             } catch (fe: IllegalArgumentException) {
                 throw fe
