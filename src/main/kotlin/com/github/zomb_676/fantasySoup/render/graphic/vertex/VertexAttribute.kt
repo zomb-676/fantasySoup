@@ -8,6 +8,9 @@ open class VertexAttribute(val vertexDataType: VertexDataType , val name:String 
         var index = 0
     }
 
+    /**
+     * redundant ?
+     */
     val attributeIndex = index++
 
 }

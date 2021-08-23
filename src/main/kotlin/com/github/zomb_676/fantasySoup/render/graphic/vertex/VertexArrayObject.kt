@@ -5,14 +5,12 @@ import org.lwjgl.opengl.GL43
 
 /**
  * @property bindingIndex
- * @property arrayID the vertex data ID
  * @property vertexIndexCount Self-increasing with the push of VertexAttribute
  */
 class VertexArrayObject {
     private var vertexArrayObjectId = -1
     private val types = mutableListOf<AttributeIndexNormal>()
     private val bindingIndex = bindingIndexTotal++
-    private val arrayID = 0
     private var vertexIndexCount = 0
 
     companion object{
@@ -41,7 +39,7 @@ class VertexArrayObject {
             val vertexIndex = attributeIndexNormal.vertexIndex
             val data = attributeIndexNormal.attributeData
             GL43.glEnableVertexAttribArray(vertexIndex)
-            GL43.glVertexAttribFormat(data.attributeIndex,data.vertexDataType.count
+            GL43.glVertexAttribFormat(vertexIndex,data.vertexDataType.count
                 ,data.vertexDataType.internalType.glType,attributeIndexNormal.needNormalized,stride)
             GL43.glVertexAttribBinding(vertexIndex,bindingIndex)
             stride+=data.vertexDataType.size

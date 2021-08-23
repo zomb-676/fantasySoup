@@ -54,6 +54,10 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
             Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/basic.vsh")),
             Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/basic.fsh"))
         ).linkProgram()
+        private val programTest = Program(
+            Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/rectangle.vsh")),
+            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/rectangle.fsh"))
+        ).linkProgram()
         private val pos = floatArrayOf(
             -1.0f, -1.0f, 0.0f,     -1.0f, -1.0f,
             1.0f, -1.0f, 0.0f,      1.0f, -1.0f,
@@ -62,6 +66,15 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
             -1.0f, -1.0f, 0.0f,     -1.0f, -1.0f,
             1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
             -1.0f, 1.0f, 0.0f,      -1.0f, 1.0f,
+        )
+        private val posTest = floatArrayOf(
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,
+            1.0f, 1.0f, 0.0f,
+
+            -1.0f, -1.0f, 0.0f,
+            1.0f, 1.0f, 0.0f,
+            -1.0f, 1.0f, 0.0f
         )
         private val vaoFull: VertexArrayObject = VertexArrayObject()
             .genVertexArrayObject()
@@ -76,6 +89,20 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
                 .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC2, "tex"))
                 .setup()
         }
+
+        private val vaoTest: VertexArrayObject = VertexArrayObject()
+            .genVertexArrayObject()
+            .bindVertexArrayObject()
+        private val vboTest: VertexBufferObject = VertexBufferObject(Constants.VertexStorageType.STATIC_DRAW)
+            .genVertexBufferObject()
+            .bindVertexBufferObject()
+            .bindDate(posTest)
+
+        val d = run {
+            vaoTest.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3, "pos"))
+                .setup()
+        }
+
         val b = OpenglFunctions.addGlDebugMessageCallback(2)
 
         val c = run {

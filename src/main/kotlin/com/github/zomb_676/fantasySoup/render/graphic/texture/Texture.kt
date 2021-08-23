@@ -72,9 +72,11 @@ abstract class Texture {
     }
 
     @Throws(RuntimeException::class)
-    fun bindTexture(): Texture {
-        if (textureID != -1)
+    fun bindTexture(slotIndex:Int = 0): Texture {
+        if (textureID != -1){
+            GL43.glActiveTexture(GL43.GL_TEXTURE0+slotIndex)
             GL43.glBindTexture(GL43.GL_TEXTURE_2D, textureID)
+        }
         else
             throw RuntimeException("try to bind an invalid texture")
         return this
