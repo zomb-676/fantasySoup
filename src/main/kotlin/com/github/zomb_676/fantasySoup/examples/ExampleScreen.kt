@@ -10,8 +10,10 @@ import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
 import com.github.zomb_676.fantasySoup.utils.modResourcesLocation
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
+import net.minecraft.client.Screenshot
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import org.lwjgl.opengl.GL43
@@ -87,21 +89,24 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
         GL43.glBindTexture(GL43.GL_TEXTURE_2D,textureID)
         val shaderBackup = RenderSystem.getShader()
 
-        vaoFull.bindVertexArrayObject()
-        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,frameBuffer)
-        programDrawFull.useProgram()
-        GL43.glUniform1i(1,2)
-        GL43.glDrawArrays(GL43.GL_TRIANGLES,0,6)
-        GL43.glBindVertexArray(0)
+//        vaoFull.bindVertexArrayObject()
+//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,frameBuffer)
+//        programDrawFull.useProgram()
+//        GL43.glUniform1i(1,2)
+//        GL43.glDrawArrays(GL43.GL_TRIANGLES,0,6)
+//        GL43.glBindVertexArray(0)
+//        vaoFull.bindVertexArrayObject()
+//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,minecraft!!.mainRenderTarget.frameBufferId)
+//        programBlur.useProgram()
+//        GL43.glUniform2f(0, 5f, 5f)//BlurDir
+//        GL43.glUniform1f(1, 3f)//radius
+//        GL43.glUniform1i(2, 1)//texture
+//        GL43.glUniform2f(3, 1f / width, 1f / height)//oneTexel
+//        GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
+
         vaoFull.bindVertexArrayObject()
         GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,minecraft!!.mainRenderTarget.frameBufferId)
-        vboFull.bindVertexBufferObject()
-        programBlur.useProgram()
-        GL43.glUniform2f(0, 5f, 5f)//BlurDir
-        GL43.glUniform1f(1, 3f)//radius
-        GL43.glUniform1i(2, 1)//texture
-        GL43.glUniform2f(3, 1f / width, 1f / height)//oneTexel
-        GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
+
 
         GL43.glBindVertexArray(0)
 //        GL43.glBindVertexArray()
