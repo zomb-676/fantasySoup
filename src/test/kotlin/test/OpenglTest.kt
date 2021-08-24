@@ -10,7 +10,6 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
-import com.sun.jna.Native
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43
@@ -102,6 +101,16 @@ fun main() {
         -1.0f, 1.0f, 0.0f,      -1.0f, 1.0f,
     )
 
+    val posTest = floatArrayOf(
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        1.0f,1.0f, 0.0f,
+
+        -1.0f, -1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f
+    )
+
     val posAttribute = VertexAttribute(Constants.VertexDataType.VEC3, "pos")
     val texAttribute = VertexAttribute(Constants.VertexDataType.VEC2, "tex")
 
@@ -131,6 +140,19 @@ fun main() {
         .pushVertexType(texAttribute)
         .setup()
 
+    val vaoTest: VertexArrayObject = VertexArrayObject()
+        .genVertexArrayObject()
+        .bindVertexArrayObject()
+    val vboTest: VertexBufferObject = VertexBufferObject(Constants.VertexStorageType.STATIC_DRAW)
+        .genVertexBufferObject()
+        .bindVertexBufferObject()
+        .bindDate(posTest)
+
+    vaoTest
+        .pushVertexType(posAttribute)
+//        .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3,"pos"))
+        .setup()
+
     val texture: Texture = FileTexture("src/test/resources/texture/malayp.png")
         .genTexture().bindTexture()
 
@@ -141,6 +163,10 @@ fun main() {
     val programBlur = Program(
         Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/tex_pos.vsh")),
         Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/blur.fsh"))
+    ).linkProgram()
+    val programTest = Program(
+        Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/rectangle.vsh")),
+        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/rectangle.fsh"))
     ).linkProgram()
 
     val frameBuffer = GL43.glGenFramebuffers()
@@ -162,15 +188,15 @@ fun main() {
 //    var rad = 0.1f
     var rad = 2f
     var isAdd = 1
-
+    GL43.glViewport(0,0,width,height)
     while (!GLFW.glfwWindowShouldClose(window)) {
         GL43.glClear(GL45.GL_COLOR_BUFFER_BIT.or(GL45.GL_DEPTH_BUFFER_BIT))
 
-        vaoFull.bindVertexArrayObject()
-        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
-        programDraw.useProgram()
-        GL43.glUniform1i(1, 0)
-        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
+//        vaoFull.bindVertexArrayObject()
+//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
+//        programDraw.useProgram()
+//        GL43.glUniform1i(1, 0)
+//        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
 
 //        vaoBlur.bindVertexArrayObject()
 //        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
@@ -185,14 +211,19 @@ fun main() {
 //        }
 //        rad += (0.1 * isAdd).toFloat()
 
-        vaoBlur.bindVertexArrayObject()
-        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
-        programBlur.useProgram()
-        GL43.glUniform2f(0, 5f, 5f)
-        GL43.glUniform1f(1, rad)
-        GL43.glUniform1i(2, 1)
-        GL43.glUniform2f(3, 1f / width, 1f / height)
-        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
+//        vaoBlur.bindVertexArrayObject()
+//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
+//        programBlur.useProgram()
+//        GL43.glUniform2f(0, 5f, 5f)
+//        GL43.glUniform1f(1, rad)
+//        GL43.glUniform1i(2, 1)
+//        GL43.glUniform2f(3, 1f / width, 1f / height)
+//        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
+
+        vaoTest.bindVertexArrayObject()
+        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,0)
+        programTest.useProgram()
+        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
 
         GLFW.glfwSwapBuffers(window)
         GLFW.glfwPollEvents()
