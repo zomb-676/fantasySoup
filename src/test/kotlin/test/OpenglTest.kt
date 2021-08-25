@@ -125,7 +125,7 @@ fun main() {
 
     vaoBlur.pushVertexType(posAttribute)
         .pushVertexType(texAttribute)
-        .setup()
+        .setupByAttributePointer()
 
     val vaoFull = VertexArrayObject()
         .genVertexArrayObject()
@@ -138,7 +138,7 @@ fun main() {
 
     vaoFull.pushVertexType(posAttribute)
         .pushVertexType(texAttribute)
-        .setup()
+        .setupByAttributePointer()
 
     val vaoTest: VertexArrayObject = VertexArrayObject()
         .genVertexArrayObject()
@@ -151,7 +151,7 @@ fun main() {
     vaoTest
         .pushVertexType(posAttribute)
 //        .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3,"pos"))
-        .setup()
+        .setupByAttributePointer()
 
     val texture: Texture = FileTexture("src/test/resources/texture/malayp.png")
         .genTexture().bindTexture()

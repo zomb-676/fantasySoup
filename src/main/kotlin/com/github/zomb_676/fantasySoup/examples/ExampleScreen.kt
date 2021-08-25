@@ -2,23 +2,29 @@ package com.github.zomb_676.fantasySoup.examples
 
 import com.github.zomb_676.fantasySoup.gui.IScreen
 import com.github.zomb_676.fantasySoup.render.graphic.Constants
-import com.github.zomb_676.fantasySoup.render.graphic.MemoryFunctions.calculateFloatSize
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions
+import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.assertNoError
 import com.github.zomb_676.fantasySoup.render.graphic.Program
 import com.github.zomb_676.fantasySoup.render.graphic.Shader
+import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
+import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
+import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
 import com.github.zomb_676.fantasySoup.utils.modResourcesLocation
+import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import org.lwjgl.opengl.GL43
+import org.lwjgl.system.MemoryUtil
 
 class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: Component) :
     IScreen<ExampleContainer>(container, inventory, pTitle) {
 
     companion object {
-        //        private val frameBuffer: Int = run {
-//            val frameBuffer = GL43.glGenFramebuffers()
-//            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
+        private val frameBuffer: Int = run {
+            val frameBuffer = GL43.glGenFramebuffers()
+            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
 //            val frameBufferTex = GL43.glGenTextures()
 //            GL43.glActiveTexture(GL43.GL_TEXTURE1)
 //            GL43.glBindTexture(GL43.GL_TEXTURE_2D, frameBufferTex)
@@ -37,16 +43,24 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
 //                println("failed to create frame buffer")
 //            }
 //            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
-//            frameBuffer
-//        }
-//        private val programBlur = Program(
-//            Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/tex_pos.vsh")),
-//            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/blur.fsh"))
-//        ).linkProgram()
-//        private val programDrawFull = Program(
-//            Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/basic.vsh")),
-//            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/basic.fsh"))
-//        ).linkProgram()
+//            GL43.glBindTexture(GL43.GL_TEXTURE_2D,GlStateManager._getActiveTexture())
+            GL43.glGenTextures().apply {
+                GL43.glActiveTexture(GL43.GL_TEXTURE2)
+                GL43.glBindTexture(GL43.GL_TEXTURE_2D,this)
+                GL43.glActiveTexture(GL43.GL_TEXTURE0)
+            }
+            assertNoError()
+            Minecraft.getInstance().mainRenderTarget.unbindWrite()
+            frameBuffer
+        }
+        private val programBlur = Program(
+            Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/tex_pos.vsh")),
+            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/blur.fsh"))
+        ).linkProgram()
+        private val programDrawFull = Program(
+            Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/basic.vsh")),
+            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/basic.fsh"))
+        ).linkProgram()
         private val programTest = Program(
             Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/rectangle.vsh")),
             Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/rectangle.fsh"))
@@ -70,37 +84,39 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
             -1.0f, 1.0f, 0.0f
         )
 
-        //        private val vaoTest: VertexArrayObject = VertexArrayObject()
-//            .genVertexArrayObject()
-//            .bindVertexArrayObject()
-//        private val vboTest: VertexBufferObject = VertexBufferObject(Constants.VertexStorageType.STATIC_DRAW)
-//            .genVertexBufferObject()
-//            .bindVertexBufferObject()
-//            .bindDate(posTest)
-//
-//        val d = run {
-//            vaoTest.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3, "pos"))
-//                .setup()
-//        }
-        private val vaoId = run {
-            val vaoId = GL43.glGenVertexArrays()
-            GL43.glBindVertexArray(vaoId)
+        private val vaoTest: VertexArrayObject = run {
+            val vao = VertexArrayObject()
+                .genVertexArrayObject()
+                .bindVertexArrayObject()
+            val vboTest: VertexBufferObject = VertexBufferObject(Constants.VertexStorageType.STATIC_DRAW)
+                .genVertexBufferObject()
+                .bindVertexBufferObject()
+                .bindDate(posTest)
 
-            val bufferId =GL43.glGenBuffers()
-            GL43.glBindBuffer(GL43.GL_ARRAY_BUFFER,bufferId)
-            GL43.glBufferData(GL43.GL_ARRAY_BUFFER, posTest,GL43.GL_STATIC_DRAW)
-
-            val bindingIndex = 1
-            GL43.glEnableVertexAttribArray(0)
-            GL43.glVertexAttribPointer(0,3,GL43.GL_FLOAT,false,3.calculateFloatSize
-                ,0)
-            GL43.glVertexAttribFormat(0,3,GL43.GL_FLOAT,false,0)
-            GL43.glVertexAttribBinding(0,bindingIndex)
-            GL43.glBindVertexBuffer(bindingIndex,vaoId,0,3.calculateFloatSize)
-
-            GL43.glBindVertexArray(0)
-            vaoId
+            vao.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3, "pos"))
+                .setupByAttributePointer()
+            vao
         }
+//        private val vaoId = run {
+//            val vaoId = GL43.glGenVertexArrays()
+//            GL43.glBindVertexArray(vaoId)
+//
+//            val bufferId =GL43.glGenBuffers()
+//            GL43.glBindBuffer(GL43.GL_ARRAY_BUFFER,bufferId)
+//            GL43.glBufferData(GL43.GL_ARRAY_BUFFER, posTest,GL43.GL_STATIC_DRAW)
+//
+//            val bindingIndex = 2
+//            GL43.glEnableVertexAttribArray(0)
+////            GL43.glVertexAttribPointer(0,3,GL43.GL_FLOAT,false,3.calculateFloatSize
+////                ,0)
+//            GL43.glVertexAttribFormat(0,3,GL43.GL_FLOAT,false,0)
+//            GL43.glVertexAttribBinding(0,bindingIndex)
+//            GL43.glBindVertexBuffer(bindingIndex,vaoId,0,3.calculateFloatSize)
+//
+//            GL43.glDisableVertexAttribArray(0)
+//            GL43.glBindVertexArray(0)
+//            vaoId
+//        }
 
 
 //        private val vaoFull: VertexArrayObject = VertexArrayObject()
@@ -147,9 +163,9 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
 //        GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
 
 //        vaoFull.bindVertexArrayObject()
-//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,minecraft!!.mainRenderTarget.frameBufferId)
+        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, minecraft!!.mainRenderTarget.frameBufferId)
 //        vaoTest.bindVertexArrayObject()
-        GL43.glBindVertexArray(vaoId)
+        vaoTest.bindVertexArrayObject()
         programTest.useProgram()
         GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
         GL43.glBindVertexArray(0)
