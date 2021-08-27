@@ -24,12 +24,12 @@ object OpenglFunctions{
         var errorCode = GL43.glGetError()
         while (errorCode != GL43.GL_NO_ERROR) {
             errorExisted = true
-            println(
-                "[glErrorCode]:$errorCode${
-                    if (needReason) ErrorType.gerErrorFromCode(errorCode)
-                        .let { "\n[errorName]:${it.errorName}\n[Reason]:${it.detailReason}" } else ""
-                }"
-            )
+            FantasySoup.logger.error(Canvas.graphicMarker,"[glErrorCode]:$errorCode")
+            if (needReason) ErrorType.gerErrorFromCode(errorCode)
+                .let {
+                    FantasySoup.logger.error(Canvas.graphicMarker,"[errorName]:${it.errorName}")
+                    FantasySoup.logger.error(Canvas.graphicMarker,"[Reason]:${it.detailReason}")
+                }
             errorCode = GL43.glGetError()
         }
         if (errorExisted) {
