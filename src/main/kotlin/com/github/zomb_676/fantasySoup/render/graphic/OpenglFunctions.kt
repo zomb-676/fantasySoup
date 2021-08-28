@@ -1,6 +1,8 @@
 package com.github.zomb_676.fantasySoup.render.graphic
 
 import com.github.zomb_676.fantasySoup.FantasySoup
+import org.lwjgl.glfw.GLFW
+import org.lwjgl.glfw.GLFWKeyCallback
 import org.lwjgl.opengl.GL43
 import org.lwjgl.opengl.GLDebugMessageCallback
 import org.lwjgl.system.MemoryStack
@@ -151,10 +153,8 @@ object OpenglFunctions{
         },identifyFlag)
     }
 
-    /**
-     * @param codeBlock source , type , id , severity , identifyFlag
-     */
-    fun addGlDebugMessageCallback(identifyFlag:Long,codeBlock:(String,String,Int,String,String,Long)->Unit){
+    fun addGlDebugMessageCallback(identifyFlag:Long,
+         codeBlock:(source:String,type:String,id:Int,severity:String,message:String,identifyFlag:Long)->Unit){
         GL43.glDebugMessageCallback(object : GLDebugMessageCallback(){
             override fun invoke(
                 source: Int,
@@ -168,6 +168,21 @@ object OpenglFunctions{
                 codeBlock.invoke(sourceToString(source), typeToString(type),id, severityToString(severity),getMessage(length,message),userParam)
             }
         },identifyFlag)
+    }
+
+    fun addGlKeyCallback(window:Long,codeBlock:(key: Int, scancode: Int, action: Int, mods: Int)->Unit){
+        GLFW.glfwSetKeyCallback(window,object :GLFWKeyCallback(){
+            override fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
+                codeBlock.invoke(key,scancode,action, mods)
+            }
+        })
+    }
+
+    @Throws(IllegalArgumentException::class)
+    fun getFrameBufferInfo(frameBufferId:Int){
+        if (!GL43.glIsFramebuffer(frameBufferId))
+            throw IllegalArgumentException("id $frameBufferId is not a frameBuffer object")
+//        GL43.glGetFramebufferAttachmentParameteri(GL43.GL_FRAMEBUFFER,,GL43.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE)
     }
 
 }

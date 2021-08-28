@@ -2,6 +2,7 @@ package test
 
 import com.github.zomb_676.fantasySoup.render.graphic.Constants
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.addGlDebugMessageCallback
+import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.addGlKeyCallback
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.assertNoError
 import com.github.zomb_676.fantasySoup.render.graphic.Program
 import com.github.zomb_676.fantasySoup.render.graphic.Shader
@@ -184,6 +185,13 @@ fun main() {
         GL43.GL_FRAMEBUFFER, GL43.GL_COLOR_ATTACHMENT0,
         GL43.GL_TEXTURE_2D, frameBufferTex, 0
     )
+
+    addGlKeyCallback(window){key: Int, scancode: Int, action: Int, mods: Int ->
+        if (key == GLFW.GLFW_KEY_R){
+            programTest.reloadProgram()
+            println("reload success")
+        }
+    }
 
 //    var rad = 0.1f
     var rad = 2f

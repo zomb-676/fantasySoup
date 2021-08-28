@@ -13,9 +13,9 @@ import java.io.File
 import kotlin.system.measureNanoTime
 
 
-class  Shader(
+class Shader(
     var shaderType: ShaderType,
-    private val shaderString: String,
+    private var shaderString: String,
     val shaderName: String
 ) {
     companion object {
@@ -29,12 +29,19 @@ class  Shader(
 
     private var shaderId: Int = -1
     private var attachedNum = 0
+    private var getShaderSource: (() -> String)? = null
 
-    constructor(shaderType: ShaderType, shaderPath: File) : this(shaderType, shaderPath.readText(), shaderPath.name)
+    constructor(shaderType: ShaderType, shaderPath: File) : this(shaderType, shaderPath.readText(), shaderPath.name) {
+        getShaderSource = { shaderPath.readText() }
+    }
 
-    constructor(shaderType: ShaderType,shaderPath: ResourceLocation):this(shaderType,
-        Minecraft.getInstance().resourceManager.getResource(shaderPath).inputStream.reader().readText()
-            ,shaderPath.path.math(fileNameRegex)!!.value){
+    constructor(shaderType: ShaderType, shaderPath: ResourceLocation) : this(
+        shaderType,
+        Minecraft.getInstance().resourceManager.getResource(shaderPath).inputStream.reader().readText(),
+        shaderPath.path.math(fileNameRegex)!!.value
+    ) {
+        getShaderSource =
+            { Minecraft.getInstance().resourceManager.getResource(shaderPath).inputStream.reader().readText() }
     }
 
     @Throws(RuntimeException::class)
@@ -43,40 +50,63 @@ class  Shader(
             fileExtensionRegex.find(shaderPath, 0)
                 .getOrThrow("can't resolve file extension string from $shaderPath").value
         ), File(shaderPath)
-    )
+    ) {
+        getShaderSource = { File(shaderPath).readText() }
+    }
 
     @Throws(RuntimeException::class)
-    fun compileShader() {
+    fun compileShader(isFromReload: Boolean = false) {
         shaderId = GL43.glCreateShader(shaderType.type)
         GL43.glShaderSource(shaderId, shaderString)
         measureNanoTime { GL43.glCompileShader(shaderId) }
-            .let { time->
+            .let { time ->
                 FantasySoup.logger.info(
                     Canvas.graphicMarker,
-                    "compile shader: $shaderName , cost time : $time nanoseconds"
+                    "${if (isFromReload) "re-" else ""}compile shader: $shaderName , cost time : $time nanoseconds"
                 )
             }
-        GL43.glGetShaderInfoLog(shaderId).takeIf { it.isNotEmpty() }?.let  {
+        GL43.glGetShaderInfoLog(shaderId).takeIf { it.isNotEmpty() }?.let {
             println("shader status:$it")
             throw RuntimeException("failed to compile shader , reason $it")
         }
     }
 
     fun deleteShader() {
+        FantasySoup.logger.info(Canvas.graphicMarker, "delete shader $this")
         GL43.glDeleteShader(shaderId)
         allShaders.remove(this)
         shaderId = -1
         attachedNum--
     }
 
-    fun attachToProgram(programID:Int){
+    fun attachToProgram(programID: Int) {
         if (!isCompiled())
             compileShader()
-        GL43.glAttachShader(programID,shaderId)
+        GL43.glAttachShader(programID, shaderId)
         attachedNum++
     }
 
-    fun isCompiled() = shaderId!=-1
+    fun isCompiled() = shaderId != -1
 
-    override fun toString(): String ="{type:${shaderType.typeName},name:$shaderName}"
+    fun isReloadable() = getShaderSource != null
+
+    override fun toString(): String = "{type:${shaderType.typeName},name:$shaderName}"
+
+    @Throws(IllegalArgumentException::class)
+    fun reloadShader(): Boolean {
+        val newSource = getShaderSource?.invoke()
+        if (newSource == shaderString) {
+            FantasySoup.logger.info(Canvas.graphicMarker, "trying to reload a same reloadable shader : $this")
+            FantasySoup.logger.debug(Canvas.graphicMarker, "shader string:$shaderString")
+            return false
+        }
+        if (newSource == null) {
+            FantasySoup.logger.info(Canvas.graphicMarker, "trying to reload a not reloadable shader : $this")
+            throw IllegalArgumentException("trying to reload a not reloadable shader : $this")
+        }
+        this.deleteShader()
+        shaderString = newSource
+        this.compileShader(true)
+        return true
+    }
 }

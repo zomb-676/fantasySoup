@@ -66,6 +66,15 @@ class Program(private val vertexShader: Shader, private val fragmentShader: Shad
         //TODO program should hold the reference of shader any more , however , type is nonnull
     }
 
+    fun deleteProgramAndShader() {
+        vertexShader.deleteShader()
+        fragmentShader.deleteShader()
+        GL43.glDeleteProgram(programId)
+        allPrograms.remove(this)
+        programId = -1
+        //TODO program should hold the reference of shader any more , however , type is nonnull
+    }
+
     @Throws(RuntimeException::class)
     fun useProgram(): Program {
         if (programId==-1){
@@ -80,4 +89,10 @@ class Program(private val vertexShader: Shader, private val fragmentShader: Shad
     override fun toString(): String = "{vertex shader ${vertexShader.shaderName}," +
             "fragment shader ${vertexShader.shaderName}}"
 
+    fun reloadProgram(){
+        this.deleteProgram()
+        vertexShader.reloadShader()
+        fragmentShader.reloadShader()
+        this.linkProgram()
+    }
 }
