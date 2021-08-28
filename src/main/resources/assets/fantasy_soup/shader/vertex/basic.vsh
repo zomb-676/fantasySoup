@@ -10,5 +10,5 @@ out vec2 texCord;
 void main() {
 //    gl_Position = vec4(float(position.x), float(position.y), float(position.z), 1);
     gl_Position = vec4(position, 1);
-    texCord = vec2(float(text_cord.x), float(text_cord.y));
+    texCord = text_cord;
 }

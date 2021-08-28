@@ -19,7 +19,7 @@ import net.minecraftforge.fmllegacy.RegistryObject
  * All example collections
  */
 object Regs :AllInMethods{
-     val instance: RegisterHandle = RegisterHandle.gerOrCreate(FantasySoup.modId, FantasySoup.modName)
+    val instance: RegisterHandle = RegisterHandle.gerOrCreate(FantasySoup.modId, FantasySoup.modName)
     val a = instance.registerAllRegistersToEvent(FMLJavaModLoadingContext.get().modEventBus)
     val item: RegistryObject<ExampleItem> = instance.classItem(ExampleItem::class.java, "example_item",){tab(CreativeModeTab.TAB_BREWING)}
     val block: BlockItemPair<ExampleBlock, BlockItem> = instance.classBlockWithItem(ExampleBlock::class.java, "example_block"){tab(CreativeModeTab.TAB_BREWING)}

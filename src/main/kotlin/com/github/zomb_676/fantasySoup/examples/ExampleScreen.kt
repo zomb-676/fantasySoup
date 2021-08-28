@@ -10,11 +10,11 @@ import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
 import com.github.zomb_676.fantasySoup.utils.modResourcesLocation
-import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL43
 import org.lwjgl.system.MemoryUtil
 
@@ -22,31 +22,31 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
     IScreen<ExampleContainer>(container, inventory, pTitle) {
 
     companion object {
-        private val frameBuffer: Int = run {
+        val frameBuffer: Int = run {
             val frameBuffer = GL43.glGenFramebuffers()
             GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
-//            val frameBufferTex = GL43.glGenTextures()
-//            GL43.glActiveTexture(GL43.GL_TEXTURE1)
-//            GL43.glBindTexture(GL43.GL_TEXTURE_2D, frameBufferTex)
-//            val window = Minecraft.getInstance().window
-//            GL43.glTexImage2D(
-//                GL43.GL_TEXTURE_2D, 0, GL43.GL_RGBA8, window.width, window.height,
-//                0, GL43.GL_RGBA, GL43.GL_UNSIGNED_BYTE, MemoryUtil.NULL
-//            )
-//            GL43.glTexParameteri(GL43.GL_TEXTURE_2D, GL43.GL_TEXTURE_MIN_FILTER, GL43.GL_LINEAR)
-//            GL43.glTexParameteri(GL43.GL_TEXTURE_2D, GL43.GL_TEXTURE_MAG_FILTER, GL43.GL_LINEAR)
-//            GL43.glFramebufferTexture2D(
-//                GL43.GL_FRAMEBUFFER, GL43.GL_COLOR_ATTACHMENT0,
-//                GL43.GL_TEXTURE_2D, frameBufferTex, 0
-//            )
-//            if (GL43.glCheckFramebufferStatus(GL43.GL_FRAMEBUFFER) == GL43.GL_FALSE) {
-//                println("failed to create frame buffer")
-//            }
-//            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
-//            GL43.glBindTexture(GL43.GL_TEXTURE_2D,GlStateManager._getActiveTexture())
+            val frameBufferTex = GL43.glGenTextures()
+            GL43.glActiveTexture(GL43.GL_TEXTURE3)
+            GL43.glBindTexture(GL43.GL_TEXTURE_2D, frameBufferTex)
+            val window = Minecraft.getInstance().window
+            GL43.glTexImage2D(
+                GL43.GL_TEXTURE_2D, 0, GL43.GL_RGBA8, window.width, window.height,
+                0, GL43.GL_RGBA, GL43.GL_UNSIGNED_BYTE, MemoryUtil.NULL
+            )
+            GL43.glTexParameteri(GL43.GL_TEXTURE_2D, GL43.GL_TEXTURE_MIN_FILTER, GL43.GL_LINEAR)
+            GL43.glTexParameteri(GL43.GL_TEXTURE_2D, GL43.GL_TEXTURE_MAG_FILTER, GL43.GL_LINEAR)
+            GL43.glFramebufferTexture2D(
+                GL43.GL_FRAMEBUFFER, GL43.GL_COLOR_ATTACHMENT0,
+                GL43.GL_TEXTURE_2D, frameBufferTex, 0
+            )
+            takeIf { GL43.glCheckFramebufferStatus(GL43.GL_FRAMEBUFFER) == GL43.GL_FALSE }?.run {
+                println("failed to create frame buffer")
+            }
+
+            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
             GL43.glGenTextures().apply {
                 GL43.glActiveTexture(GL43.GL_TEXTURE2)
-                GL43.glBindTexture(GL43.GL_TEXTURE_2D,this)
+                GL43.glBindTexture(GL43.GL_TEXTURE_2D, this)
                 GL43.glActiveTexture(GL43.GL_TEXTURE0)
             }
             assertNoError()
@@ -119,59 +119,77 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
 //        }
 
 
-//        private val vaoFull: VertexArrayObject = VertexArrayObject()
-//            .genVertexArrayObject()
-//            .bindVertexArrayObject()
-//        private val vboFull: VertexBufferObject = VertexBufferObject(Constants.VertexStorageType.STATIC_DRAW)
-//            .genVertexBufferObject()
-//            .bindVertexBufferObject()
-//            .bindDate(pos)
-//
-//        val a = run {
-//            vaoFull.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3, "pos"))
-//                .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC2, "tex"))
-//                .setup()
-//        }
+        private val vaoFull: VertexArrayObject = run {
+            val vaoFull = VertexArrayObject()
+                .genVertexArrayObject()
+                .bindVertexArrayObject()
 
+            val vboFull: VertexBufferObject = VertexBufferObject(Constants.VertexStorageType.STATIC_DRAW)
+                .genVertexBufferObject()
+                .bindVertexBufferObject()
+                .bindDate(pos)
 
-        val b = OpenglFunctions.addGlDebugMessageCallback(2)
+            vaoFull.pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3, "pos"))
+                .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC2, "tex"))
+                .setupByAttributePointer()
+
+            vaoFull
+        }
 
         val c = run {
             GL43.glBindVertexArray(0)
+
+            OpenglFunctions.addGlKeyCallback(Minecraft.getInstance().window.window) { key: Int, scancode: Int, action: Int, mods: Int ->
+                if (key == GLFW.GLFW_KEY_R) {
+                    programBlur.reloadProgram()
+                    programTest.reloadProgram()
+                    programDrawFull.reloadProgram()
+                    println("reload success")
+                }
+            }
         }
     }
 
     override fun renderBg(poseStack: PoseStack, partialTicks: Float, mouseX: Int, mouseY: Int) {
-//        val textureID = minecraft!!.mainRenderTarget.colorTextureId
-//        GL43.glActiveTexture(GL43.GL_TEXTURE2)
-//        GL43.glBindTexture(GL43.GL_TEXTURE_2D,textureID)
+        val textureID = minecraft!!.mainRenderTarget.colorTextureId
+        {
+            GL43.glActiveTexture(GL43.GL_TEXTURE4)
+            GL43.glBindTexture(GL43.GL_TEXTURE_2D, textureID)
+            GL43.glActiveTexture(GL43.GL_TEXTURE0)
 //        val shaderBackup = RenderSystem.getShader()
 
-//        vaoFull.bindVertexArrayObject()
-//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,frameBuffer)
-//        programDrawFull.useProgram()
-//        GL43.glUniform1i(1,2)
-//        GL43.glDrawArrays(GL43.GL_TRIANGLES,0,6)
-//        GL43.glBindVertexArray(0)
-//        vaoFull.bindVertexArrayObject()
-//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,minecraft!!.mainRenderTarget.frameBufferId)
-//        programBlur.useProgram()
-//        GL43.glUniform2f(0, 5f, 5f)//BlurDir
-//        GL43.glUniform1f(1, 3f)//radius
-//        GL43.glUniform1i(2, 1)//texture
-//        GL43.glUniform2f(3, 1f / width, 1f / height)//oneTexel
-//        GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
+            vaoFull.bindVertexArrayObject()
+            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
+            GL43.glClear(GL43.GL_COLOR_BUFFER_BIT)
+            programDrawFull.useProgram()
+            GL43.glUniform1i(1, 4)//texture
+            GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
+            GL43.glBindVertexArray(0)
 
-//        vaoFull.bindVertexArrayObject()
-        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, minecraft!!.mainRenderTarget.frameBufferId)
-//        vaoTest.bindVertexArrayObject()
-        vaoTest.bindVertexArrayObject()
-        programTest.useProgram()
-        GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
-        GL43.glBindVertexArray(0)
-//        GL43.glBindVertexArray()
-//        GL43.glUseProgram(shaderBackup!!.id)
-//        RenderSystem.setShader { shaderBackup }
+            vaoFull.bindVertexArrayObject()
+            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, minecraft!!.mainRenderTarget.frameBufferId)
+//        GL43.glClear(GL43.GL_COLOR_BUFFER_BIT)
+            programBlur.useProgram()
+            GL43.glUniform2f(0, 5f, 5f)//BlurDir
+            GL43.glUniform1f(1, 3f)//radius
+            GL43.glUniform1i(2, 3)//texture
+            GL43.glUniform2f(3, 1f / width, 1f / height)//oneTexel
+            GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
+
+            GL43.glBindVertexArray(0)
+        }.invoke()
+
+//        {
+//            vaoFull.bindVertexArrayObject()
+//            GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, minecraft!!.mainRenderTarget.frameBufferId)
+//            vaoTest.bindVertexArrayObject()
+//            vaoTest.bindVertexArrayObject()
+//            programTest.useProgram()
+//            GL43.glDrawArrays(GL43.GL_TRIANGLES, 0, 6)
+//            GL43.glBindVertexArray(0)
+////            GL43.glUseProgram(shaderBackup!!.id)
+////            RenderSystem.setShader { shaderBackup }
+//        }
     }
 
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTicks: Float) {

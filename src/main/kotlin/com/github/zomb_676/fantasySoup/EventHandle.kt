@@ -13,7 +13,7 @@ object EventHandle {
     @JvmStatic
     @SubscribeEvent
     fun initGraphicObjects(event:FMLLoadCompleteEvent){
-        event.enqueueWork{ExampleScreen::class.manuallyInitClass()}
+        event.enqueueWork(ExampleScreen::class::manuallyInitClass)
     }
 
     @JvmStatic

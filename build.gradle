@@ -22,11 +22,11 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-//repositories {
-//    maven {
-//        name = "ldtteam"
-//        url = "https://ldtteam.jfrog.io/artifactory/parchmentmc-snapshots/"
-//    }
+repositories {
+    maven {
+        name = "ldtteam"
+        url = "https://ldtteam.jfrog.io/artifactory/parchmentmc-snapshots/"
+    }
 //    maven {
 //         location of the maven that hosts JEI files
 //        name = "Progwml6 maven"
@@ -37,7 +37,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 //        name = "ModMaven"
 //        url = "https://modmaven.k-4u.nl"
 //    }
-//}
+}
 
 //configurations{
 //    library
@@ -46,6 +46,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     mappings minecraft.officialMojangMappings()
+//    mappings loom.layered(){
+//        minecraft.officialMojangMappings()
+//        parchment("org.parchmentmc.data:parchment-1.17.1:2021.08.19-nightly-SNAPSHOT@zip")
+//    }
     forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     forgeDependencies  "org.jetbrains.kotlin:kotlin-stdlib:1.5.21"

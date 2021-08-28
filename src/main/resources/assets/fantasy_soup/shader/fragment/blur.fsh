@@ -17,4 +17,5 @@ void main() {
     }
 
     clolr = vec4(blurred.rgb / (radius * 2.0 + 1.0), 1.0);
+    color = texture2D(texture,texCoord);
 }

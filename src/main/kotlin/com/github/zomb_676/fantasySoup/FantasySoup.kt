@@ -1,6 +1,7 @@
 package com.github.zomb_676.fantasySoup
 
 import com.github.zomb_676.fantasySoup.examples.Regs
+import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions
 import com.github.zomb_676.fantasySoup.utils.manuallyInitClass
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.fml.common.Mod
