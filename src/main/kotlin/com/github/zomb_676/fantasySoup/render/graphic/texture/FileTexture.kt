@@ -8,7 +8,7 @@ import org.lwjgl.system.MemoryStack
 /**
  * @param desiredChannels 0 for auto
  */
-class FileTexture(private val path: String, private val desiredChannels: Int = 0) : Texture() {
+open class FileTexture(private val path: String, private val desiredChannels: Int = 0) : Texture() {
 
     /**
      * @return [Texture.ImageData] implement [AutoCloseable]

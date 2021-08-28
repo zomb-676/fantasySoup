@@ -4,7 +4,6 @@ import com.github.zomb_676.fantasySoup.FantasySoup
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.fml.loading.FMLEnvironment
-import org.jetbrains.annotations.Contract
 import java.lang.reflect.Constructor
 import java.util.*
 import kotlin.contracts.ExperimentalContracts
@@ -149,7 +148,22 @@ fun <T : Any> T?.getOrThrow(errorInfo: String? = null): T {
     throw RuntimeException(errorInfo)
 }
 
-inline fun <T : Any,U> T?.takeIfNull(codeBlock: () -> U) = this ?: codeBlock()
-inline fun <T : Any,U> T?.takeIfNotNull(codeBlock: () -> U) = this?.run { codeBlock() }
+inline fun <T : Any, U> T?.takeIfNull(codeBlock: () -> U) = this ?: codeBlock()
+inline fun <T : Any, U> T?.takeIfNotNull(codeBlock: () -> U) = this?.run { codeBlock() }
 
-fun String.math(regex: Regex,startIndex :Int= 0) = regex.find(this,startIndex)
+fun String.math(regex: Regex, startIndex: Int = 0) = regex.find(this, startIndex)
+
+/**
+ * wrap [kotlin.run] with try
+ */
+inline fun <T : Any?> runTry(codeBlock: () -> T): T =
+    try {
+        run(codeBlock)
+    } catch (e: RuntimeException) {
+        throw e
+    }
+
+/**
+ * wrap code bolck with try
+ */
+inline fun <T : Any> wrapTry(crossinline codeBlock: () -> T): () -> T = { runTry(codeBlock) }

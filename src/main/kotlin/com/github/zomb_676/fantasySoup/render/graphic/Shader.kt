@@ -66,8 +66,7 @@ class Shader(
                 )
             }
         GL43.glGetShaderInfoLog(shaderId).takeIf { it.isNotEmpty() }?.let {
-            println("shader status:$it")
-            throw RuntimeException("failed to compile shader , reason $it")
+            throw RuntimeException("failed to compile shader $this, reason $it")
         }
     }
 

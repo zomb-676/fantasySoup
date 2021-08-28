@@ -2,7 +2,7 @@
 
 in vec2 texCoord;
 
-out vec4 clolr;
+out vec4 color;
 
 layout (location = 0) uniform vec2 BlurDir;
 layout (location = 1) uniform float radius;
@@ -16,6 +16,6 @@ void main() {
         blurred = blurred + texture2D(texture, texCoord + oneTexel * r * BlurDir);
     }
 
-    clolr = vec4(blurred.rgb / (radius * 2.0 + 1.0), 1.0);
-    color = texture2D(texture,texCoord);
+    color = vec4(blurred.rgb / (radius * 2.0 + 1.0), 1.0);
+//    color = texture2D(texture,texCoord);
 }

@@ -23,10 +23,10 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven {
-        name = "ldtteam"
-        url = "https://ldtteam.jfrog.io/artifactory/parchmentmc-snapshots/"
-    }
+//    maven {
+//        name = "ldtteam"
+//        url = "https://ldtteam.jfrog.io/artifactory/parchmentmc-snapshots/"
+//    }
 //    maven {
 //         location of the maven that hosts JEI files
 //        name = "Progwml6 maven"

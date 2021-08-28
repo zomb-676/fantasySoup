@@ -3,11 +3,11 @@
 //layout (location = 0) in dvec3 position;
 //layout (location = 1) in dvec3 text_cord;
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 text_cord;
+layout (location = 1) in vec2 text_cord;
 
 out vec2 texCord;
 
 void main() {
     gl_Position = vec4(position, 1);
-    texCord = vec2(text_cord.x, text_cord.y);
+    texCord = text_cord;
 }

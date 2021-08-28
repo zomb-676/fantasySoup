@@ -20,10 +20,13 @@ import org.lwjgl.system.MemoryUtil
 import java.io.File
 import java.lang.management.ManagementFactory
 
+/**
+ * add jvm options:-Dorg.lwjgl.librarypath=./src/test/resources/lib -Dorg.lwjgl.util.Debug=true
+ */
 fun main() {
 //    System.loadLibrary("renderdoc")
     if (!GLFW.glfwInit()) {
-        print("failed to init glfw")
+        println("failed to init glfw")
         return
     }
     val width = 800;
@@ -93,13 +96,13 @@ fun main() {
 //        .map { it.toDouble() }.toDoubleArray()
 
     val pos2 = floatArrayOf(
-        -1.0f, -1.0f, 0.0f,     -1.0f, -1.0f,
-        1.0f, -1.0f, 0.0f,      1.0f, -1.0f,
+        -1.0f, -1.0f, 0.0f,     0f, 0f,
+        1.0f, -1.0f, 0.0f,      1.0f, 0f,
         1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
 
-        -1.0f, -1.0f, 0.0f,     -1.0f, -1.0f,
+        -1.0f, -1.0f, 0.0f,     0f, 0f,
         1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
-        -1.0f, 1.0f, 0.0f,      -1.0f, 1.0f,
+        -1.0f, 1.0f, 0.0f,      0f, 1.0f,
     )
 
     val posTest = floatArrayOf(
@@ -154,7 +157,14 @@ fun main() {
 //        .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3,"pos"))
         .setupByAttributePointer()
 
-    val texture: Texture = FileTexture("src/test/resources/texture/malayp.png")
+    val texture: Texture = object :FileTexture("src/test/resources/texture/malayp.png"){
+        override fun setTexWrappingType(
+            xWrappingType: Constants.TextureWrappingType,
+            yWrappingType: Constants.TextureWrappingType
+        ) {
+            super.setTexWrappingType(Constants.TextureWrappingType.CLAM_TO_EDGE, Constants.TextureWrappingType.CLAM_TO_EDGE)
+        }
+    }
         .genTexture().bindTexture()
 
     val programDraw = Program(
@@ -200,11 +210,12 @@ fun main() {
     while (!GLFW.glfwWindowShouldClose(window)) {
         GL43.glClear(GL45.GL_COLOR_BUFFER_BIT.or(GL45.GL_DEPTH_BUFFER_BIT))
 
-//        vaoFull.bindVertexArrayObject()
+        vaoFull.bindVertexArrayObject()
+        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,0)
 //        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
-//        programDraw.useProgram()
-//        GL43.glUniform1i(1, 0)
-//        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
+        programDraw.useProgram()
+        GL43.glUniform1i(1, 0)
+        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
 
 //        vaoBlur.bindVertexArrayObject()
 //        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
@@ -228,10 +239,10 @@ fun main() {
 //        GL43.glUniform2f(3, 1f / width, 1f / height)
 //        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
 
-        vaoTest.bindVertexArrayObject()
-        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,0)
-        programTest.useProgram()
-        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
+//        vaoTest.bindVertexArrayObject()
+//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,0)
+//        programTest.useProgram()
+//        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
 
         GLFW.glfwSwapBuffers(window)
         GLFW.glfwPollEvents()
