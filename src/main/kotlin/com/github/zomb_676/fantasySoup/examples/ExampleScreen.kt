@@ -62,15 +62,18 @@ class ExampleScreen(container: ExampleContainer, inventory: Inventory, pTitle: C
         }
         private val programBlur = runTry { Program(
             Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/tex_pos.vsh")),
-            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/blur.fsh"))
+            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/blur.fsh")),
+            "blur"
         ).linkProgram() }
         private val programDrawFull = runTry { Program(
             Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/basic.vsh")),
-            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/basic.fsh"))
+            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/basic.fsh")),
+            "draw"
         ).linkProgram() }
         private val programTest = runTry { Program(
             Shader(Constants.ShaderType.VERTEX, modResourcesLocation("shader/vertex/rectangle.vsh")),
-            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/rectangle.fsh"))
+            Shader(Constants.ShaderType.FRAGMENT, modResourcesLocation("shader/fragment/rectangle.fsh")),
+            "test"
         ).linkProgram() }
 
         private val pos = floatArrayOf(

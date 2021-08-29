@@ -11,6 +11,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
+import org.ice1000.jimgui.JImGui
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43
@@ -24,6 +25,10 @@ import java.lang.management.ManagementFactory
  * add jvm options:-Dorg.lwjgl.librarypath=./src/test/resources/lib -Dorg.lwjgl.util.Debug=true
  */
 fun main() {
+
+
+    Thread { JImGuiTest.main() }.start()
+
 //    System.loadLibrary("renderdoc")
     if (!GLFW.glfwInit()) {
         println("failed to init glfw")
@@ -35,8 +40,8 @@ fun main() {
     GLFW.glfwMakeContextCurrent(window)
     GL.createCapabilities()
     GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE)
-    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT,GL43.GL_FALSE)
-    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_COMPAT_PROFILE,GL43.GL_FALSE)
+    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL43.GL_FALSE)
+    GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_COMPAT_PROFILE, GL43.GL_FALSE)
     assertNoError()
     println(ManagementFactory.getRuntimeMXBean().name.split("@")[0])
     GL43.glEnable(GL43.GL_DEBUG_OUTPUT)
@@ -96,19 +101,19 @@ fun main() {
 //        .map { it.toDouble() }.toDoubleArray()
 
     val pos2 = floatArrayOf(
-        -1.0f, -1.0f, 0.0f,     0f, 0f,
-        1.0f, -1.0f, 0.0f,      1.0f, 0f,
-        1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 0f, 0f,
+        1.0f, -1.0f, 0.0f, 1.0f, 0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 
-        -1.0f, -1.0f, 0.0f,     0f, 0f,
-        1.0f, 1.0f, 0.0f,       1.0f, 1.0f,
-        -1.0f, 1.0f, 0.0f,      0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 0f, 0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, 0.0f, 0f, 1.0f,
     )
 
     val posTest = floatArrayOf(
         -1.0f, -1.0f, 0.0f,
         1.0f, -1.0f, 0.0f,
-        1.0f,1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
 
         -1.0f, -1.0f, 0.0f,
         1.0f, 1.0f, 0.0f,
@@ -157,27 +162,36 @@ fun main() {
 //        .pushVertexType(VertexAttribute(Constants.VertexDataType.VEC3,"pos"))
         .setupByAttributePointer()
 
-    val texture: Texture = object :FileTexture("src/test/resources/texture/malayp.png"){
+    val texture: Texture = object : FileTexture("src/test/resources/texture/malayp.png") {
         override fun setTexWrappingType(
             xWrappingType: Constants.TextureWrappingType,
             yWrappingType: Constants.TextureWrappingType
         ) {
-            super.setTexWrappingType(Constants.TextureWrappingType.CLAM_TO_EDGE, Constants.TextureWrappingType.CLAM_TO_EDGE)
+            super.setTexWrappingType(
+                Constants.TextureWrappingType.CLAM_TO_EDGE,
+                Constants.TextureWrappingType.CLAM_TO_EDGE
+            )
         }
     }
         .genTexture().bindTexture()
 
     val programDraw = Program(
         Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/basic.vsh")),
-        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/basic.fsh"))
+        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/basic.fsh")),
+        "draw"
     ).linkProgram()
     val programBlur = Program(
         Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/tex_pos.vsh")),
-        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/blur.fsh"))
+        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/blur.fsh")),
+        "blur"
     ).linkProgram()
     val programTest = Program(
         Shader(Constants.ShaderType.VERTEX, File("src/main/resources/assets/fantasy_soup/shader/vertex/rectangle.vsh")),
-        Shader(Constants.ShaderType.FRAGMENT, File("src/main/resources/assets/fantasy_soup/shader/fragment/rectangle.fsh"))
+        Shader(
+            Constants.ShaderType.FRAGMENT,
+            File("src/main/resources/assets/fantasy_soup/shader/fragment/rectangle.fsh")
+        ),
+        "test"
     ).linkProgram()
 
     val frameBuffer = GL43.glGenFramebuffers()
@@ -196,9 +210,9 @@ fun main() {
         GL43.GL_TEXTURE_2D, frameBufferTex, 0
     )
 
-    addGlKeyCallback(window){key: Int, scancode: Int, action: Int, mods: Int ->
-        if (key == GLFW.GLFW_KEY_R){
-            programTest.reloadProgram()
+    addGlKeyCallback(window) { key: Int, scancode: Int, action: Int, mods: Int ->
+        if (key == GLFW.GLFW_KEY_R && action == GLFW.GLFW_PRESS) {
+            programBlur.reloadProgram()
             println("reload success")
         }
     }
@@ -206,22 +220,27 @@ fun main() {
 //    var rad = 0.1f
     var rad = 2f
     var isAdd = 1
-    GL43.glViewport(0,0,width,height)
+    GL43.glViewport(0, 0, width, height)
+
+
+
     while (!GLFW.glfwWindowShouldClose(window)) {
+
+        JImGuiTest.blurDirX.apply { modifyValue(accessValue()+1) }
+
+        val iterator = JImGuiTest.renderCalls.iterator()
+        while (iterator.hasNext()) {
+            iterator.next().invoke()
+            iterator.remove()
+        }
+
         GL43.glClear(GL45.GL_COLOR_BUFFER_BIT.or(GL45.GL_DEPTH_BUFFER_BIT))
 
         vaoFull.bindVertexArrayObject()
-        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,0)
-//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
+        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
         programDraw.useProgram()
         GL43.glUniform1i(1, 0)
         GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
-
-//        vaoBlur.bindVertexArrayObject()
-//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
-//        programDraw.useProgram()
-//        GL43.glUniform1i(1, 1)
-//        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
 
 //        if (rad<=0f){
 //            isAdd = 1
@@ -230,14 +249,14 @@ fun main() {
 //        }
 //        rad += (0.1 * isAdd).toFloat()
 
-//        vaoBlur.bindVertexArrayObject()
-//        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
-//        programBlur.useProgram()
-//        GL43.glUniform2f(0, 5f, 5f)
-//        GL43.glUniform1f(1, rad)
-//        GL43.glUniform1i(2, 1)
-//        GL43.glUniform2f(3, 1f / width, 1f / height)
-//        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
+        vaoBlur.bindVertexArrayObject()
+        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
+        programBlur.useProgram()
+        GL43.glUniform2f(0, JImGuiTest.blurDirX.accessValue(), JImGuiTest.blurDirY.accessValue())//blur dir
+        GL43.glUniform1f(1, JImGuiTest.radius.accessValue())//radius
+        GL43.glUniform1i(2, 1)
+        GL43.glUniform2f(3, 1f / width, 1f / height)
+        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
 
 //        vaoTest.bindVertexArrayObject()
 //        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,0)

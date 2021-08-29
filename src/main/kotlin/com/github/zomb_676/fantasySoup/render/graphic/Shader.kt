@@ -19,7 +19,7 @@ class Shader(
     val shaderName: String
 ) {
     companion object {
-        private val allShaders: MutableList<Shader> = mutableListOf()
+        internal val allShaders: MutableList<Shader> = mutableListOf()
     }
 
     init {

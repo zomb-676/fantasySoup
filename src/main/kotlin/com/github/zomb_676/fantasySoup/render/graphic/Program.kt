@@ -5,7 +5,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType.FRAGM
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.ShaderType.VERTEX
 import org.lwjgl.opengl.GL43
 
-class Program(private val vertexShader: Shader, private val fragmentShader: Shader) {
+class Program(private val vertexShader: Shader, private val fragmentShader: Shader , val programName:String) {
 
     init {
         checkShaderWithValidType()
@@ -33,7 +33,7 @@ class Program(private val vertexShader: Shader, private val fragmentShader: Shad
     /**private**/ var programId = -1
 
     companion object {
-        private val allPrograms: MutableList<Program> = mutableListOf()
+        internal val allPrograms: MutableList<Program> = mutableListOf()
     }
 
     @Throws(RuntimeException::class)
@@ -93,6 +93,7 @@ class Program(private val vertexShader: Shader, private val fragmentShader: Shad
         this.deleteProgram()
         vertexShader.reloadShader()
         fragmentShader.reloadShader()
+        allPrograms.add(this)
         this.linkProgram()
     }
 }
