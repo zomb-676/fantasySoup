@@ -1,3 +1,5 @@
+import java.lang.annotation.ElementType
+
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.0'
     id 'com.github.johnrengelman.shadow' version "5.2.0"
@@ -59,7 +61,30 @@ dependencies {
     forgeDependencies  group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.5.21'
     forgeDependencies 'org.joml:joml:1.10.1'
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-    implementation "org.ice1000.jimgui:core:v0.21.0"
+
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    ['', '-opengl', '-glfw'].each {
+        implementation "org.lwjgl:lwjgl$it:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl$it::natives-${getOs()}"
+    }
+
+    implementation "io.github.spair:imgui-java-binding:$imguiVersion"
+    implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+    implementation "io.github.spair:imgui-java-natives-${getOs()}:$imguiVersion"
+
+
+//    implementation group: 'org.ice1000.jimgui', name: 'core', version: 'v0.21.0'
+//    implementation group: 'org.ice1000.jimgui', name: 'extension', version: 'v0.13.1'
+
+}
+
+def static getOs(){
+    def osName = System.getProperty("os.name")
+    if (osName.contains("Windows")) return "windows"
+    else if (osName.contains("Linux")) return "linux"
+    else if (osName.contains("MacOs")) return "macos"
+    else throw new IllegalStateException("failed to analyze system from $osName")
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
