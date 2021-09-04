@@ -1,7 +1,5 @@
 package com.github.zomb_676.fantasySoup.render.graphic.texture
 
-import com.github.zomb_676.fantasySoup.FantasySoup
-import com.github.zomb_676.fantasySoup.render.graphic.Canvas
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.TextureFilterParameter
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.TextureFilterParameter.TextureFilterType.LINER
 import com.github.zomb_676.fantasySoup.render.graphic.Constants.TextureWrappingType
@@ -10,36 +8,23 @@ import org.lwjgl.opengl.GL43
 import org.lwjgl.stb.STBImage
 import java.nio.ByteBuffer
 
-abstract class Texture {
+abstract class Texture(var width: Int = -1, var height: Int = -1) {
     companion object {
         private val allTextures: MutableList<Texture> = mutableListOf()
     }
 
-    private var textureID = -1
+    var textureID = -1
+    var channels: Int = -1
 
-    protected abstract fun getImageData(): ImageData
-    protected abstract fun getTextureName():String
+    abstract fun getImageData(): ImageData
+    protected abstract fun getTextureName(): String
 
-    fun genTexture(): Texture {
-        if (textureID!=-1) {
-            FantasySoup.logger.info(Canvas.graphicMarker,"trying to load a loaded texture called ${getTextureName()}")
-            return this
-        }
-        textureID = GL43.glGenTextures()
-        GL43.glBindTexture(GL43.GL_TEXTURE_2D, textureID)
-        setTexWrappingType()
-        val needMipmap = setTexParameter()
-        getImageData().use {
-            val internalFormat = if (it.channels == 3) GL43.GL_RGB else GL43.GL_RGBA
-            GL43.glTexImage2D(
-                GL43.GL_TEXTURE_2D, 0, internalFormat,
-                it.width, it.height, 0, internalFormat, GL43.GL_UNSIGNED_BYTE, it.data
-            )
-            if (needMipmap) GL43.glGenerateMipmap(GL43.GL_TEXTURE_2D)
-        }
-        GL43.glBindTexture(GL43.GL_TEXTURE_2D, 0)
-        return this
-    }
+    /**
+     * unbind self after gen
+     */
+    abstract fun genTexture(): Texture
+
+    abstract fun resize(width: Int, height: Int)
 
     protected open fun setTexWrappingType(
         xWrappingType: TextureWrappingType = REPEAT,
@@ -72,19 +57,18 @@ abstract class Texture {
     }
 
     @Throws(RuntimeException::class)
-    fun bindTexture(slotIndex:Int = 0): Texture {
-        if (textureID != -1){
-            GL43.glActiveTexture(GL43.GL_TEXTURE0+slotIndex)
+    fun bindTexture(slotIndex: Int = 0): Texture {
+        if (textureID != -1) {
+            GL43.glActiveTexture(GL43.GL_TEXTURE0 + slotIndex)
             GL43.glBindTexture(GL43.GL_TEXTURE_2D, textureID)
-        }
-        else
+        } else
             throw RuntimeException("try to bind an invalid texture")
         return this
     }
 
-    fun deleteTexture(){
+    fun deleteTexture() {
         GL43.glDeleteTextures(textureID)
-        textureID=-1
+        textureID = -1
     }
 
     data class ImageData(val width: Int, val height: Int, val channels: Int, val data: ByteBuffer) : AutoCloseable {

@@ -164,6 +164,10 @@ inline fun <T : Any?> runTry(codeBlock: () -> T): T =
     }
 
 /**
- * wrap code bolck with try
+ * wrap code block with try
  */
 inline fun <T : Any> wrapTry(crossinline codeBlock: () -> T): () -> T = { runTry(codeBlock) }
+
+inline fun Boolean.takeIfTrue(codeBlock: () -> Unit) {
+    if (this) codeBlock()
+}
