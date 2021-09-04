@@ -1,0 +1,136 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
+    id 'com.github.johnrengelman.shadow' version "5.2.0"
+    id 'dev.architectury.loom' version '0.7.4-SNAPSHOT'
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+group = 'com.github.zomb_676'
+version = '1.0'
+archivesBaseName = 'fantasySoup'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "16"
+}
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    mavenCentral()
+    maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
+
+//    maven {
+//        name = "ldtteam"
+//        url = "https://ldtteam.jfrog.io/artifactory/parchmentmc-snapshots/"
+//    }
+//    maven {
+//         location of the maven that hosts JEI files
+//        name = "Progwml6 maven"
+//        url = "https://dvs1.progwml6.com/files/maven/"
+//    }
+//    maven {
+//         location of a maven mirror for JEI files, as a fallback
+//        name = "ModMaven"
+//        url = "https://modmaven.k-4u.nl"
+//    }
+}
+
+//configurations{
+//    library
+//    implementation.extendsFrom library
+//}
+
+dependencies {
+    mappings minecraft.officialMojangMappings()
+//    mappings loom.layered(){
+//        minecraft.officialMojangMappings()
+//        parchment("org.parchmentmc.data:parchment-1.17.1:2021.08.19-nightly-SNAPSHOT@zip")
+//    }
+    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    forgeDependencies "org.jetbrains.kotlin:kotlin-stdlib:1.5.21"
+    forgeDependencies group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.5.1'
+    forgeDependencies group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.5.21'
+    forgeDependencies 'org.joml:joml:1.10.1'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    ['', '-opengl', '-glfw'].each {
+        implementation "org.lwjgl:lwjgl$it:$lwjglVersion"
+        implementation "org.lwjgl:lwjgl$it::natives-${getOs()}"
+    }
+
+    implementation "io.github.spair:imgui-java-binding:$imguiVersion"
+    implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+    implementation "io.github.spair:imgui-java-natives-${getOs()}:$imguiVersion"
+
+
+//    implementation group: 'org.ice1000.jimgui', name: 'core', version: 'v0.21.0'
+//    implementation group: 'org.ice1000.jimgui', name: 'extension', version: 'v0.13.1'
+
+}
+
+def static getOs() {
+    def osName = System.getProperty("os.name")
+    if (osName.contains("Windows")) return "windows"
+    else if (osName.contains("Linux")) return "linux"
+    else if (osName.contains("MacOs")) return "macos"
+    else throw new IllegalStateException("failed to analyze system from $osName")
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier "sources"
+    exclude "**/*.psd"
+    exclude "**/*.bbmodel"
+    exclude "**/*.md"
+    from sourceSets.main.allSource
+}
+
+task deobfJar(type: Jar) {
+    classifier "deobf"
+    exclude "**/*.psd"
+    exclude "**/*.bbmodel"
+    exclude "**/*.md"
+    from(sourceSets.main.output)
+}
+
+shadowJar {
+    exclude "**/*.psd"
+    exclude "**/*.bbmodel"
+    exclude "**/*.md"
+    archiveClassifier.set('')
+    dependencies {
+        include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
+        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core"))
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact sourcesJar
+            artifact deobfJar
+            pom {
+                name = "fantasySoup"
+                description = "my library mod"
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "http://ruaruarua.ddns.net:1011/artifactory/fantasySoup"
+            credentials {
+                username System.getenv("ARTIFACTORY_USERNAME")
+                password System.getenv("ARTIFACTORY_PASSWORD")
+            }
+        }
+    }
+}

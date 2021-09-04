@@ -1,10 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "package": "com.github.zomb_676.fantasySoup.mixin",
   "refmap": "fantasy_soup.refmap.json",
   "mixins": [
+    "GameRenderMixin"
   ],
   "client": [
   ],
