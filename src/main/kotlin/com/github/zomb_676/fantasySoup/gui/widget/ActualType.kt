@@ -110,7 +110,7 @@ enum class ActualType(private val typeName: String, private vararg val validAddi
 
     companion object {
 
-        private val strictMap: HashMap<String, ActualType> =
+        internal val strictMap: HashMap<String, ActualType> =
             hashMapOf(*values().map { it.typeName to it }.toTypedArray())
         private val roughMap: HashMap<String, ActualType> =
             hashMapOf(*values().map { it.roughName to it }.toTypedArray())
