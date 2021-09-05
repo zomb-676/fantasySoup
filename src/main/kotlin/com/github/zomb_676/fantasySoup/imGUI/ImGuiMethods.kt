@@ -1,7 +1,9 @@
 package com.github.zomb_676.fantasySoup.imGUI
 
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
+import com.github.zomb_676.fantasySoup.utils.rough
 import com.github.zomb_676.fantasySoup.utils.takeIfTrue
+import imgui.ImFont
 import imgui.ImGui
 import imgui.flag.ImGuiDir
 import org.intellij.lang.annotations.MagicConstant
@@ -230,9 +232,81 @@ object ImGuiMethods {
         }
     }
 
-    inline fun tableItem(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun tableItem(codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.tableNextColumn()
         codeBlock(ImGuiMethods)
     }
+
+    fun tableHeader(headerName:String){
+        tableItem { ImGui.tableHeader(headerName) }
+    }
+
+    inline fun indent(codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.indent()
+        codeBlock(ImGuiMethods)
+        ImGui.unindent()
+    }
+
+    inline fun indent(indentWidth:Float,codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.indent(indentWidth)
+        codeBlock(ImGuiMethods)
+        ImGui.unindent(indentWidth)
+    }
+
+    @Throws(IllegalArgumentException::class)
+    fun getSystemFontDir(): String {
+        val systemName = System.getProperty("os.name").rough()
+        return if ("windows" in systemName) {
+            "C:/Windows/Fonts/"
+        } else if ("linux" in systemName) {
+            "/usr/share/fonts"
+        } else {
+            throw IllegalArgumentException("can't get font file form os $systemName")
+        }
+    }
+
+    fun getFontFromSysTTFDir(ttfName:String): ImFont {
+        val imGuiIO = ImGui.getIO()
+        val font = imGuiIO.fonts.addFontFromFileTTF(getSystemFontDir() + ttfName, 20f)
+        IImGUI.State.imGuiGl3.updateFontsTexture()
+        return font
+    }
+
+    inline fun leftClickLast(codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.isItemClicked(0).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun rightClickLast(codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.isItemClicked(1).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun middleClickLast(codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.isItemClicked(2).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun doubleLeftClickClickLast(codeBlock: ImGuiMethods.() -> Unit){
+        (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(0)).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun doubleRightClickClickLast(codeBlock: ImGuiMethods.() -> Unit){
+        (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(1)).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun doubleMiddleClickClickLast(codeBlock: ImGuiMethods.() -> Unit){
+        (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(2)).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
 
 }
