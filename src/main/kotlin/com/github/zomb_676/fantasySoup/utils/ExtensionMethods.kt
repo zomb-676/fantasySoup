@@ -11,6 +11,7 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.reflect.KClass
 
+
 /**
  * init code by get the instance of class
  */
@@ -149,7 +150,7 @@ fun <T : Any> T?.getOrThrow(errorInfo: String? = null): T {
 }
 
 inline fun <T : Any, U> T?.takeIfNull(codeBlock: () -> U) = this ?: codeBlock()
-inline fun <T : Any, U> T?.takeIfNotNull(codeBlock: () -> U) = this?.run { codeBlock() }
+inline fun <T : Any, U> T?.takeIfNotNull(codeBlock: (T) -> U) = this?.run { codeBlock(this) }
 
 fun String.math(regex: Regex, startIndex: Int = 0) = regex.find(this, startIndex)
 
@@ -171,3 +172,12 @@ inline fun <T : Any> wrapTry(crossinline codeBlock: () -> T): () -> T = { runTry
 inline fun Boolean.takeIfTrue(codeBlock: () -> Unit) {
     if (this) codeBlock()
 }
+
+@Throws(AssertionError::class)
+inline fun <T : Any> T.assert(codeBlock: T.() -> Boolean): T {
+    if (!codeBlock(this)) throw AssertionError()
+    return this
+}
+
+@Throws(AssertionError::class)
+fun <T : Any> T?.assertNotNull(): T = this ?: throw AssertionError()

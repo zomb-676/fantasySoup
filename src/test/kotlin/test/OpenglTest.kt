@@ -1,5 +1,6 @@
 package test
 
+import com.github.zomb_676.fantasySoup.imGUI.IImGUI
 import com.github.zomb_676.fantasySoup.render.graphic.Constants
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.addGlDebugMessageCallback
 import com.github.zomb_676.fantasySoup.render.graphic.OpenglFunctions.addGlKeyCallback
@@ -11,7 +12,7 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexArrayObject
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexAttribute
 import com.github.zomb_676.fantasySoup.render.graphic.vertex.VertexBufferObject
-import org.ice1000.jimgui.JImGui
+import imgui.ImGui
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL43
@@ -27,7 +28,7 @@ import java.lang.management.ManagementFactory
 fun main() {
 
 
-    Thread { JImGuiTest.main() }.start()
+//    Thread { JImGuiTest.main() }.start()
 
 //    System.loadLibrary("renderdoc")
     if (!GLFW.glfwInit()) {
@@ -217,24 +218,18 @@ fun main() {
         }
     }
 
+    IImGUI.initFromOther(window)
 //    var rad = 0.1f
     var rad = 2f
     var isAdd = 1
     GL43.glViewport(0, 0, width, height)
 
-
+    val dir = floatArrayOf(1f,1f)
+    val radius = floatArrayOf(1f)
 
     while (!GLFW.glfwWindowShouldClose(window)) {
 
-        JImGuiTest.blurDirX.apply { modifyValue(accessValue()+1) }
-
-        val iterator = JImGuiTest.renderCalls.iterator()
-        while (iterator.hasNext()) {
-            iterator.next().invoke()
-            iterator.remove()
-        }
-
-        GL43.glClear(GL45.GL_COLOR_BUFFER_BIT.or(GL45.GL_DEPTH_BUFFER_BIT))
+        GL43.glClear(GL45.GL_COLOR_BUFFER_BIT or GL45.GL_DEPTH_BUFFER_BIT)
 
         vaoFull.bindVertexArrayObject()
         GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, frameBuffer)
@@ -249,19 +244,27 @@ fun main() {
 //        }
 //        rad += (0.1 * isAdd).toFloat()
 
-        vaoBlur.bindVertexArrayObject()
+//        vaoBlur.bindVertexArrayObject()
         GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER, 0)
         programBlur.useProgram()
-        GL43.glUniform2f(0, JImGuiTest.blurDirX.accessValue(), JImGuiTest.blurDirY.accessValue())//blur dir
-        GL43.glUniform1f(1, JImGuiTest.radius.accessValue())//radius
+        GL43.glUniform2f(0, dir[0], dir[1])//blur dir
+        GL43.glUniform1f(1, radius.first())//radius
         GL43.glUniform1i(2, 1)
         GL43.glUniform2f(3, 1f / width, 1f / height)
-        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 36)
+        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
 
 //        vaoTest.bindVertexArrayObject()
 //        GL43.glBindFramebuffer(GL43.GL_FRAMEBUFFER,0)
 //        programTest.useProgram()
 //        GL43.glDrawArrays(GL45.GL_TRIANGLES, 0, 6)
+
+        IImGUI.wrapRunImGUIOnly {
+            window("thonk"){
+                ImGui.sliderFloat2("dir",dir,0f,20f)
+                ImGui.sliderFloat("radius",radius,0f,10f)
+//                image(0,100f,100f)
+            }
+        }
 
         GLFW.glfwSwapBuffers(window)
         GLFW.glfwPollEvents()
