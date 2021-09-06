@@ -181,6 +181,31 @@ object ImGuiMethods {
         }
     }
 
+    inline fun menuItem(name:String,codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.menuItem(name).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun menuItem(name:String,shortcut:String,codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.menuItem(name,shortcut).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun menuItem(name:String,shortcut:String,selected:Boolean,codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.menuItem(name,shortcut,selected).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+    inline fun menuItem(name:String,shortcut:String,selected:Boolean,enabled:Boolean,codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.menuItem(name,shortcut,selected,enabled).takeIfTrue {
+            codeBlock(ImGuiMethods)
+        }
+    }
+
+
     inline fun tooltip(codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.beginTooltip()
         codeBlock(ImGuiMethods)
