@@ -1,14 +1,15 @@
 package com.github.zomb_676.fantasySoup.gui.widget
 
 import com.github.zomb_676.fantasySoup.gui.widget.prototype.*
+import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage
 import com.github.zomb_676.fantasySoup.utils.rough
-import java.io.File
+import java.lang.reflect.Constructor
 import kotlin.reflect.KClass
 
 /**
  * indicate all the widget types classified by its function
  */
-enum class ActualType(private val typeName: String, widgetTypeInfo: KClass<out IWidgetTypeInfo>) {
+enum class ActualType(private val typeName: String, widgetTypeInfo: KClass<out IWidgetTypeInfo<*>>) {
 
     /**
      * only for decorations or split contents, like simple and some embellishments
@@ -103,7 +104,7 @@ enum class ActualType(private val typeName: String, widgetTypeInfo: KClass<out I
 
 //    UV_MAP("uv_map");
 
-    val constructor = widgetTypeInfo.java.getConstructor(File::class.java)
+    val constructor: Constructor<out IWidgetTypeInfo<*>> = widgetTypeInfo.java.getConstructor(OperationStage.WidgetInfoInitObject::class.java)
 
     val roughName: String = typeName.rough()
 
