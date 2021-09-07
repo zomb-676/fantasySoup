@@ -87,27 +87,32 @@ object WidgetInfoSelector {
         ActualType.strictMap.forEach { (name, type) ->
             tableItem {
                 button(name) {}
-                leftClickLast {
-                    val newTypeInfo = newTypeInfo(type, file, texture)
-                    selectedPicInfo.add(type, newTypeInfo)
-                    widgetInfos.add(type, newTypeInfo)
-                }
-                rightClickLast {
-                    val typeInfo: IWidgetTypeInfo<*>
-                    if (selectedPicInfo[type].isEmpty()) {
-                        typeInfo = newTypeInfo(type, file, texture)
-                        selectedPicInfo.add(type, typeInfo)
-                        widgetInfos.add(type, typeInfo)
-                    } else {
-                        existWidgetSelect = Pair(type, selectedPicInfo)
-                        enableExistWidgetSelectPopup = true
-                        return@rightClickLast
-                    }
-                    WidgetInfoSelector.typeInfo = typeInfo
-                    enablePicTypePopup = true
-                }
+                var hasDoubleClickTrigged = false
                 doubleLeftClickClickLast {
-
+                    hasDoubleClickTrigged = true
+                    selectedPicInfo[type].clear()
+                    widgetInfos[type].removeAll { it.contains(file) }
+                }
+                if (!hasDoubleClickTrigged){
+                    leftClickLast {
+                        val newTypeInfo = newTypeInfo(type, file, texture)
+                        selectedPicInfo.add(type, newTypeInfo)
+                        widgetInfos.add(type, newTypeInfo)
+                    }
+                    rightClickLast {
+                        val typeInfo: IWidgetTypeInfo<*>
+                        if (selectedPicInfo[type].isEmpty()) {
+                            typeInfo = newTypeInfo(type, file, texture)
+                            selectedPicInfo.add(type, typeInfo)
+                            widgetInfos.add(type, typeInfo)
+                        } else {
+                            existWidgetSelect = Pair(type, selectedPicInfo)
+                            enableExistWidgetSelectPopup = true
+                            return@rightClickLast
+                        }
+                        WidgetInfoSelector.typeInfo = typeInfo
+                        enablePicTypePopup = true
+                    }
                 }
                 tooltipHover { ImGui.text("type:$name,descriptor:wip") }
             }

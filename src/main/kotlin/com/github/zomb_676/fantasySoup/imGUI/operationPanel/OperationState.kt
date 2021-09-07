@@ -44,11 +44,11 @@ sealed class OperationStage {
         fun isEmpty(type: ActualType) = container[type]!!.isEmpty()
 
         fun contains(type: ActualType, file: File) {//slow
-            container[type]!!.any { it.initialInfo.file == file }
+            container[type]!!.any { it.contains(file) }
         }
 
         fun contains(type: ActualType, texture: Texture) {//slow
-            container[type]!!.any { it.initialInfo.texture == texture }
+            container[type]!!.any { it.contains(texture) }
         }
 
         operator fun set(type: ActualType, widgetInfo: IWidgetTypeInfo<*>) =

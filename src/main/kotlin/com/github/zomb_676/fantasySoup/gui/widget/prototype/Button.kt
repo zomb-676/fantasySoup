@@ -2,12 +2,11 @@ package com.github.zomb_676.fantasySoup.gui.widget.prototype
 
 import com.github.zomb_676.fantasySoup.gui.widget.ActualType
 import com.github.zomb_676.fantasySoup.gui.widget.WidgetPicHolder
-import com.github.zomb_676.fantasySoup.imGUI.ImGuiMethods
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage
-import com.github.zomb_676.fantasySoup.utils.takeIfNotNull
+import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
+import java.io.File
 
 class Button(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Button>(initialInfo) {
-    private val main: WidgetPicHolder = WidgetPicHolder(initialInfo)
     private val hover: WidgetPicHolder? = null
     private val pressed: WidgetPicHolder? = null
 
@@ -19,43 +18,19 @@ class Button(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo
 
     }
 
-    override fun drawSelectPicTypeInfo() {
-        ImGuiMethods.wrapImGUIObject {
-            table("pic type selector", 2) {
-                tableHeader("pic type")
-                tableHeader("select status")
-                tableItem { text("main") }
-                tableItem {
-                    button(main.file.name) {}
-                }
-                tableItem { text("hover") }
-                tableItem {
-                }
-                tableItem { text("pressed") }
-                tableItem {
-
-                }
-            }
-        }
+    override fun drawComponentCore() {
+        drawComponent("default", default)
+        drawComponent("hover", hover)
+        drawComponent("pressed", pressed)
     }
 
-    override fun drawComponentInfo() {
-        ImGuiMethods.wrapImGUIObject {
-            table("widget component", 2) {
-                tableHeader("pic type")
-                tableHeader("status")
-                drawComponent("main", main)
-                drawComponent("hover", hover)
-                drawComponent("pressed", pressed)
-            }
-        }
-    }
+    override fun contains(texture: Texture): Boolean =
+        default.texture == texture || hover?.texture == texture || pressed?.texture == texture
 
-    private fun drawComponent(picTypeName: String, widgetPicHolder: WidgetPicHolder?) {
-        ImGuiMethods.wrapImGUIObject {
-            tableItem { text(picTypeName) }
-            tableItem { text(widgetPicHolder?.file?.name ?: "unspecific") }
-            widgetPicHolder.takeIfNotNull { tooltipHover { imageFlip(it.texture) } }
-        }
-    }
+    override fun contains(file: File): Boolean =
+        default.file == file || hover?.file == file || pressed?.file == file
+
+    override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
+        default == widgetPicHolder || hover == widgetPicHolder || pressed == widgetPicHolder
+
 }
