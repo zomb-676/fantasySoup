@@ -7,7 +7,6 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class Process(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Process>(initialInfo) {
-
     private var fill : WidgetPicHolder? = null
     private var hover : WidgetPicHolder? = null
 

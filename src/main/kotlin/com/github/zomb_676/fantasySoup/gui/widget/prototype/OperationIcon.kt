@@ -7,7 +7,6 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class OperationIcon(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<OperationIcon>(initialInfo) {
-
     private val hover: WidgetPicHolder? = null
 
     override fun getWidgetType(): ActualType = ActualType.OPERATION_ICON

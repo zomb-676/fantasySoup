@@ -7,7 +7,6 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class Energy(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Energy>(initialInfo) {
-
     private val fill : WidgetPicHolder? = null
     private val hover : WidgetPicHolder? = null
 
@@ -28,10 +27,8 @@ class Energy(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo
     override fun contains(texture: Texture): Boolean =
         super.contains(texture) || fill?.texture==texture ||hover?.texture == texture
 
-
     override fun contains(file: File): Boolean =
         super.contains(file) || fill?.file == file ||hover?.file == file
-
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || fill == widgetPicHolder || hover == widgetPicHolder

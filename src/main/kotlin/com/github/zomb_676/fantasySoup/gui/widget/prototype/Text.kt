@@ -7,7 +7,6 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class Text(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Text>(initialInfo) {
-
     private val hover: WidgetPicHolder? = null
 
     override fun getWidgetType(): ActualType = ActualType.TEXT
@@ -26,10 +25,8 @@ class Text(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<T
     override fun contains(texture: Texture): Boolean =
         super.contains(texture) || hover?.texture == texture
 
-
     override fun contains(file: File): Boolean =
         super.contains(file) || hover?.file == file
-
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || hover == widgetPicHolder

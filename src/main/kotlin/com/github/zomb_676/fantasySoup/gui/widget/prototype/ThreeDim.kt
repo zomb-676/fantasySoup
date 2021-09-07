@@ -7,7 +7,6 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class ThreeDim(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<ThreeDim>(initialInfo) {
-
     private val hover : WidgetPicHolder? = null
     private val interact : WidgetPicHolder? = null
 
@@ -28,10 +27,8 @@ class ThreeDim(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeIn
     override fun contains(texture: Texture): Boolean =
         super.contains(texture) || hover?.texture == texture || interact?.texture == texture
 
-
     override fun contains(file: File): Boolean =
         super.contains(file) || hover?.file == file || interact?.file == file
-
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || hover == widgetPicHolder || interact == widgetPicHolder

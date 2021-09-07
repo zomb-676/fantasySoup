@@ -27,10 +27,8 @@ class Misc(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<M
     override fun contains(texture: Texture): Boolean =
         super.contains(texture) || hover?.texture == texture || interact?.texture == texture
 
-
     override fun contains(file: File): Boolean =
         super.contains(file) || hover?.file == file || interact?.file == file
-
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || hover == widgetPicHolder || interact == widgetPicHolder

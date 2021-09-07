@@ -7,7 +7,6 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class CategoryIcon(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<CategoryIcon>(initialInfo) {
-
     private var hover: WidgetPicHolder? = null
 
     override fun getWidgetType(): ActualType = ActualType.CATEGORY_ICON
@@ -26,13 +25,10 @@ class CategoryIcon(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTy
     override fun contains(texture: Texture): Boolean =
         super.contains(texture) || hover?.texture == texture
 
-
     override fun contains(file: File): Boolean =
         super.contains(file) || hover?.file == file
 
-
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || hover == widgetPicHolder
-
 
 }
