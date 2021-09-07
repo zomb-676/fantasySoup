@@ -88,6 +88,10 @@ object ImGuiMethods {
         ImGui.image(texture.textureID, sizeX, sizeY, 0f, 1f, 1f, 0f)
     }
 
+    fun imageFlip(texture: Texture) {
+        ImGui.image(texture.textureID, texture.width.toFloat(), texture.height.toFloat(), 0f, 1f, 1f, 0f)
+    }
+
     inline fun imageButton(textureId: Int, sizeX: Float, sizeY: Float, codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.imageButton(textureId, sizeX, sizeY).takeIfTrue {
             codeBlock(ImGuiMethods)
@@ -181,26 +185,32 @@ object ImGuiMethods {
         }
     }
 
-    inline fun menuItem(name:String,codeBlock: ImGuiMethods.() -> Unit){
+    inline fun menuItem(name: String, codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.menuItem(name).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun menuItem(name:String,shortcut:String,codeBlock: ImGuiMethods.() -> Unit){
-        ImGui.menuItem(name,shortcut).takeIfTrue {
+    inline fun menuItem(name: String, shortcut: String, codeBlock: ImGuiMethods.() -> Unit) {
+        ImGui.menuItem(name, shortcut).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun menuItem(name:String,shortcut:String,selected:Boolean,codeBlock: ImGuiMethods.() -> Unit){
-        ImGui.menuItem(name,shortcut,selected).takeIfTrue {
+    inline fun menuItem(name: String, shortcut: String, selected: Boolean, codeBlock: ImGuiMethods.() -> Unit) {
+        ImGui.menuItem(name, shortcut, selected).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun menuItem(name:String,shortcut:String,selected:Boolean,enabled:Boolean,codeBlock: ImGuiMethods.() -> Unit){
-        ImGui.menuItem(name,shortcut,selected,enabled).takeIfTrue {
+    inline fun menuItem(
+        name: String,
+        shortcut: String,
+        selected: Boolean,
+        enabled: Boolean,
+        codeBlock: ImGuiMethods.() -> Unit
+    ) {
+        ImGui.menuItem(name, shortcut, selected, enabled).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
@@ -262,17 +272,17 @@ object ImGuiMethods {
         codeBlock(ImGuiMethods)
     }
 
-    fun tableHeader(headerName:String){
+    fun tableHeader(headerName: String) {
         tableItem { ImGui.tableHeader(headerName) }
     }
 
-    inline fun indent(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun indent(codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.indent()
         codeBlock(ImGuiMethods)
         ImGui.unindent()
     }
 
-    inline fun indent(indentWidth:Float,codeBlock: ImGuiMethods.() -> Unit){
+    inline fun indent(indentWidth: Float, codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.indent(indentWidth)
         codeBlock(ImGuiMethods)
         ImGui.unindent(indentWidth)
@@ -290,48 +300,75 @@ object ImGuiMethods {
         }
     }
 
-    fun getFontFromSysTTFDir(ttfName:String): ImFont {
+    fun getFontFromSysTTFDir(ttfName: String): ImFont {
         val imGuiIO = ImGui.getIO()
         val font = imGuiIO.fonts.addFontFromFileTTF(getSystemFontDir() + ttfName, 20f)
         IImGUI.State.imGuiGl3.updateFontsTexture()
         return font
     }
 
-    inline fun leftClickLast(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun leftClickLast(codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.isItemClicked(0).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun rightClickLast(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun rightClickLast(codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.isItemClicked(1).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun middleClickLast(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun middleClickLast(codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.isItemClicked(2).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun doubleLeftClickClickLast(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun doubleLeftClickClickLast(codeBlock: ImGuiMethods.() -> Unit) {
         (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(0)).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun doubleRightClickClickLast(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun doubleRightClickClickLast(codeBlock: ImGuiMethods.() -> Unit) {
         (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(1)).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
-    inline fun doubleMiddleClickClickLast(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun doubleMiddleClickClickLast(codeBlock: ImGuiMethods.() -> Unit) {
         (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(2)).takeIfTrue {
             codeBlock(ImGuiMethods)
         }
     }
 
+    fun setPopupEnable(strID: String) = ImGui.openPopup(strID)
+
+    /**
+     * use with [ImGui.openPopup] or [setPopupEnable]
+     */
+    inline fun popup(strID: String, codeBlock: ImGuiMethods.() -> Unit) {
+        ImGui.beginPopup(strID).takeIfTrue {
+            codeBlock(ImGuiMethods)
+            ImGui.endPopup()
+        }
+    }
+
+    fun text(text:String){
+        ImGui.text(text)
+    }
+
+    fun coloredText(text:String,color:Int){
+        ImGui.textColored(color,text)
+    }
+
+    fun coloredText(text: String, red:Int, green:Int, blue:Int, alpha:Int){
+        ImGui.textColored(red, green, blue,alpha,text)
+    }
+
+    fun coloredText(text: String, red:Float, green:Float, blue:Float, alpha:Float){
+        ImGui.textColored(red, green, blue,alpha,text)
+    }
 
 }

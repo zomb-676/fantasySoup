@@ -16,20 +16,27 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(val initialInfo: OperationS
      */
     abstract fun merge(another: T)
 
-    fun contains(texture: Texture): Boolean {
+    open fun needMultiPicType():Boolean = false
+
+    open fun contains(texture: Texture): Boolean {
         return initialInfo.texture == texture
     }
 
-    fun contains(file: File): Boolean {
+    open fun contains(file: File): Boolean {
         return initialInfo.file == file
     }
 
-    fun contains(picInfo: OperationStage.WidgetInfoInitObject): Boolean {
+    open fun contains(picInfo: OperationStage.WidgetInfoInitObject): Boolean {
         return initialInfo == picInfo
     }
 
     /**
-     * already in tooltip scope
+     * wrap in tooltip scope by outside
      */
-    fun drawComponentToolTip() {}
+    open fun drawComponentToolTip() {}
+
+    /**
+     * wrap in scope outside
+     */
+    open fun drawSelectPicTypeInfo(){}
 }

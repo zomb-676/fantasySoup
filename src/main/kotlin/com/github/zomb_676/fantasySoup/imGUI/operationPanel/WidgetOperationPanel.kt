@@ -4,12 +4,13 @@ import com.github.zomb_676.fantasySoup.imGUI.IImGUI
 import com.github.zomb_676.fantasySoup.imGUI.ImGuiMethods
 import com.github.zomb_676.fantasySoup.utils.assert
 import com.github.zomb_676.fantasySoup.utils.takeIfNotNull
+import com.github.zomb_676.fantasySoup.utils.takeIfTrue
 import imgui.ImGui
 import java.io.File
 
 object WidgetOperationPanel {
 
-    var currentStage: OperationStage = OperationStage.NeedLoadStage()
+    var currentStage: OperationStage = NeedLoadStage()
 
     /**
      * independent launch
