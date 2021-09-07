@@ -18,7 +18,7 @@ object AllWidgetPanel {
                                 val (file, texture) = widgetInfo.initialInfo
                                 tableItem { ImGui.text("${type.roughName}:${index++}") }
                                 tooltipHover {
-                                    ImGui.text("name:${file.name}")
+                                    ImGui.text(widgetInfo.widgetName)
                                     imageFlip(texture.textureID, texture.width.toFloat(), texture.height.toFloat())
                                 }
                                 tableItem { ImGui.text(type.name) }

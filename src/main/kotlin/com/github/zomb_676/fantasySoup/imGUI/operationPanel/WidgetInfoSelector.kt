@@ -12,10 +12,14 @@ import kotlin.math.roundToInt
 
 object WidgetInfoSelector {
     var selectedTexture: OperationStage.PicInfo? = null
-    val scale = floatArrayOf(1f)
+    val widgetScale = floatArrayOf(1f)
     var needDraw = false
+
+    var existWidgetSelect: Pair<ActualType, OperationStage.PicInfo>? = null
+    var enableExistWidgetSelectPopup = false
+
     var typeInfo: IWidgetTypeInfo<*>? = null
-    var enablePopup = false
+    var enablePicTypePopup = false
 
     fun setSelected(widgetInfo: OperationStage.PicInfo) {
         selectedTexture = widgetInfo
@@ -28,23 +32,32 @@ object WidgetInfoSelector {
             window("WidgetInfoSelector") {
                 val (file, texture) = selectedTexture!!
                 ImGui.text("file name:${file.name}")
-                val sizeX = texture.width.toFloat() * scale[0]
-                val sizeY = texture.height.toFloat() * scale[0]
+                val sizeX = texture.width.toFloat() * widgetScale[0]
+                val sizeY = texture.height.toFloat() * widgetScale[0]
                 ImGui.text("file size:[width:${texture.width},height:${texture.height}],render size:[width:${sizeX.roundToInt()},width:${sizeY.roundToInt()}]")
                 imageFlip(texture.textureID, sizeX, sizeY)
-                ImGui.sliderFloat("scale", scale, 0.5f, 10f)
+                ImGui.sliderFloat("widgetScale", widgetScale, 0.5f, 10f)
                 ImGui.separator()
                 table("WidgetSelector", 3) {
                     widgetSelectorDraw(selectedTexture!!, widgetInfos)
                 }
             }
-            if (enablePopup) {
-                setPopupEnable("select")
-                enablePopup = false
+            if (enablePicTypePopup) {
+                setPopupEnable("selectPicType")
+                enablePicTypePopup = false
             }
             typeInfo?.takeIfNotNull {
-                popup("select") {
+                popup("selectPicType") {
                     typeInfo!!.drawSelectPicTypeInfo()
+                }
+            }
+            if (enableExistWidgetSelectPopup) {
+                setPopupEnable("selectExistWidget")
+                enableExistWidgetSelectPopup = false
+            }
+            existWidgetSelect?.takeIfNotNull {
+                popup("selectExistWidget") {
+                    drawSpecificExistWidgetPopup(existWidgetSelect!!, widgetInfos)
                 }
             }
         }
@@ -81,17 +94,17 @@ object WidgetInfoSelector {
                 }
                 rightClickLast {
                     val typeInfo: IWidgetTypeInfo<*>
-                    if (widgetInfos.isEmpty(type)) {
+                    if (selectedPicInfo[type].isEmpty()) {
                         typeInfo = newTypeInfo(type, file, texture)
                         selectedPicInfo.add(type, typeInfo)
                         widgetInfos.add(type, typeInfo)
-                    } else if (widgetInfos.container[type]!!.size == 1) {
-                        typeInfo = widgetInfos.container[type]!!.first()
                     } else {
-                        typeInfo = newTypeInfo(type, file, texture)
+                        existWidgetSelect = Pair(type, selectedPicInfo)
+                        enableExistWidgetSelectPopup = true
+                        return@rightClickLast
                     }
                     WidgetInfoSelector.typeInfo = typeInfo
-                    enablePopup = true
+                    enablePicTypePopup = true
                 }
                 doubleLeftClickClickLast {
 
@@ -108,6 +121,20 @@ object WidgetInfoSelector {
                         iterator.remove()
                     }
                 }
+            }
+        }
+    }
+
+    private fun drawSpecificExistWidgetPopup(
+        typeAndPicInfos: Pair<ActualType, OperationStage.PicInfo>,
+        widgetInfos: OperationStage.WidgetInfos
+    ) {
+        val (type, picInf) = typeAndPicInfos
+        wrapImGUIObject {
+            text("widget type:${type.roughName}")
+            for (widgetInfo in widgetInfos[type]) {
+                text(widgetInfo.widgetName)
+                widgetInfo.drawComponentInfo()
             }
         }
     }

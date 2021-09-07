@@ -2,7 +2,6 @@ package com.github.zomb_676.fantasySoup.imGUI.operationPanel
 
 import com.github.zomb_676.fantasySoup.gui.widget.ActualType
 import com.github.zomb_676.fantasySoup.gui.widget.prototype.IWidgetTypeInfo
-import com.github.zomb_676.fantasySoup.imGUI.ImGuiMethods.wrapImGUIObject
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import imgui.ImGui
 import java.io.File
@@ -54,6 +53,8 @@ sealed class OperationStage {
 
         operator fun set(type: ActualType, widgetInfo: IWidgetTypeInfo<*>) =
             container[type]!!.add(widgetInfo)
+
+        operator fun get(type: ActualType) = container[type]!!
 
         fun remove(widgetInfo: IWidgetTypeInfo<*>) {
             container[widgetInfo.getWidgetType()]!!.remove(widgetInfo)

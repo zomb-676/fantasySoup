@@ -8,15 +8,23 @@ import java.io.File
 
 sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(val initialInfo: OperationStage.WidgetInfoInitObject) {
 
+    companion object{
+        var totalIndex = 0
+    }
+
+    val index = ++totalIndex
+
     abstract fun getWidgetType(): ActualType
 
-    /**
+    var widgetName : String = "${getWidgetType().roughName}:$index"
+
+        /**
      * return false if merge failed , which means conflict exist
      * remove another from [WidgetInfos]
      */
     abstract fun merge(another: T)
 
-    open fun needMultiPicType():Boolean = false
+    open fun needMultiPicType(): Boolean = false
 
     open fun contains(texture: Texture): Boolean {
         return initialInfo.texture == texture
@@ -30,13 +38,10 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(val initialInfo: OperationS
         return initialInfo == picInfo
     }
 
-    /**
-     * wrap in tooltip scope by outside
-     */
-    open fun drawComponentToolTip() {}
+    open fun drawComponentInfo() {}
 
     /**
      * wrap in scope outside
      */
-    open fun drawSelectPicTypeInfo(){}
+    open fun drawSelectPicTypeInfo() {}
 }
