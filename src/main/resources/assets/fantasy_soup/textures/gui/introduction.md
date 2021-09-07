@@ -2,14 +2,6 @@
 
 -----
 
-## decoration
-
-| Required State | Optional State |
-| -------------- | -------------- |
-| default        | hover          |
-
------
-
 ## button
 
 | Required State | Optional State |
@@ -18,22 +10,11 @@
 |                | pressed        |
 
 -----
-
-## text
-
-| Required State | Optional State |
-| -------------- | -------------- |
-| default        | hover          |
-| focus          |                |
-
------
-
-## input
+## category_icon
 
 | Required State | Optional State |
 | -------------- | -------------- |
 | default        | hover          |
-|                | interact       |
 
 -----
 
@@ -46,12 +27,11 @@
 
 -----
 
-## process
+## decoration
 
 | Required State | Optional State |
 | -------------- | -------------- |
 | default        | hover          |
-| fill           |                |
 
 -----
 
@@ -62,31 +42,20 @@
 | default        | hover          |
 
 -----
+## energy
 
-## three_dim
+| Required State | Optional State |
+| -------------- | -------------- |
+| default        | hover          |
+| fill           |                |
+
+-----
+## input
 
 | Required State | Optional State |
 | -------------- | -------------- |
 | default        | hover          |
 |                | interact       |
-
------
-
-## misc
-
-| Required State | Optional State |
-| -------------- | -------------- |
-| default        | hover          |
-|                | interact       |
-
------
-
-## slider
-
-| Required State | Optional State |
-| -------------- | -------------- |
-| rail           | hover          |
-| bar            |                |
 
 -----
 
@@ -98,26 +67,16 @@
 | pointer        |                |
 
 -----
-
-## tank
-
-| Required State | Optional State |
-| -------------- | -------------- |
-| default        | hover          |
-| fill           |                |
-
------
-
-## energy
+## misc
 
 | Required State | Optional State |
 | -------------- | -------------- |
 | default        | hover          |
-| fill           |                |
+|                | interact       |
 
 -----
 
-## style_icon
+## multi_slot
 
 | Required State | Optional State |
 | -------------- | -------------- |
@@ -132,12 +91,20 @@
 | default        | hover          |
 
 -----
-
-## category_icon
+## process
 
 | Required State | Optional State |
 | -------------- | -------------- |
 | default        | hover          |
+| fill           |                |
+
+-----
+## slider
+
+| Required State | Optional State |
+| -------------- | -------------- |
+| rail           | hover          |
+| bar            |                |
 
 -----
 
@@ -149,7 +116,23 @@
 
 -----
 
-## multi_slot
+## style_icon
+
+| Required State | Optional State |
+| -------------- | -------------- |
+| default        | hover          |
+
+-----
+## tank
+
+| Required State | Optional State |
+| -------------- | -------------- |
+| default        | hover          |
+| fill           |                |
+
+-----
+
+## text
 
 | Required State | Optional State |
 | -------------- | -------------- |
@@ -157,25 +140,36 @@
 
 -----
 
+
+## three_dim
+
+| Required State | Optional State |
+| -------------- | -------------- |
+| default        | hover          |
+|                | interact       |
+
+-----
+
 # Pic Type
+
+## banned
 
 ## default
 
 ## fill
 
-## interact
-
 ## hover
 
-## rail
-
-## slider
+## interact
 
 ## pointer
 
 ## pressed
 
-## banned
+## rail
+
+## slider
+
 
 # Data Type
 
