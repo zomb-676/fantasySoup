@@ -5,8 +5,9 @@ import com.github.zomb_676.fantasySoup.gui.widget.WidgetPicHolder
 import com.github.zomb_676.fantasySoup.imGUI.ImGuiMethods
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage.WidgetInfos
+import com.github.zomb_676.fantasySoup.imGUI.operationPanel.WidgetInfoSelector
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
-import com.github.zomb_676.fantasySoup.utils.takeIfNotNull
+import imgui.ImGui
 import java.io.File
 
 sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage.WidgetInfoInitObject) {
@@ -60,13 +61,42 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
         }
     }
 
-    protected fun drawComponent(picTypeName: String, widgetPicHolder: WidgetPicHolder?) {
+    open fun hasComplete() = default.isNotEmpty()
+
+    protected fun drawComponent(picTypeName: String, widgetPicHolder: WidgetPicHolder) {
         ImGuiMethods.wrapImGUIObject {
             tableItem { text(picTypeName) }
-            tableItem { text(widgetPicHolder?.file?.name ?: "unspecific") }
-            widgetPicHolder.takeIfNotNull { tooltipHover { imageFlip(it.texture) } }
+            tableItem { text(widgetPicHolder.file?.name ?: "unspecific") }
+            widgetPicHolder.takeIfNotEmpty { tooltipHover { imageFlip(it.texture!!) } }
         }
     }
 
-    open fun drawComponentCore() =drawComponent("default",default)
+    protected fun drawComponentWithSelectButton(picTypeName: String, widgetPicHolder: WidgetPicHolder) {
+        ImGuiMethods.wrapImGUIObject {
+            val picInfo = WidgetInfoSelector.selectedTexture!!
+            tableItem { text(picTypeName) }
+            tableItem { text(widgetPicHolder.file?.name ?: "unspecific") }
+            widgetPicHolder.takeIfNotEmpty { tooltipHover { imageFlip(it.texture!!) } }
+            tableItem {
+                if (widgetPicHolder.isEmpty()) {
+                    if (widgetPicHolder.texture == picInfo.texture) {
+                        button("remove") { widgetPicHolder.clear() }
+                        tooltipHover { text("remove current pic from this type") }
+                        ImGui.sameLine()
+                    } else {
+                        button("cover") {
+                            widgetPicHolder.set(picInfo.file, picInfo.texture)
+                        }
+                        tooltipHover { text("cover the already specific pic type") }
+                    }
+                } else {
+                    button("set") { widgetPicHolder.set(picInfo.file, picInfo.texture) }
+                    tooltipHover { text("set  for this pic type") }
+                }
+            }
+        }
+    }
+
+    open fun drawComponentCore() = drawComponent("default", default)
+
 }

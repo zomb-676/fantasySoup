@@ -7,8 +7,8 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class Process(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Process>(initialInfo) {
-    private var fill : WidgetPicHolder? = null
-    private var hover : WidgetPicHolder? = null
+    private var fill : WidgetPicHolder = WidgetPicHolder.empty()
+    private var hover : WidgetPicHolder = WidgetPicHolder.empty()
 
     override fun getWidgetType(): ActualType = ActualType.PROCESS
 
@@ -24,10 +24,10 @@ class Process(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInf
     }
 
     override fun contains(texture: Texture): Boolean =
-        super.contains(texture) || fill?.texture == texture|| hover?.texture == texture
+        super.contains(texture) || fill.texture == texture|| hover.texture == texture
 
     override fun contains(file: File): Boolean =
-        super.contains(file) || fill?.file == file ||hover?.file == file
+        super.contains(file) || fill.file == file ||hover.file == file
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || fill==widgetPicHolder|| hover == widgetPicHolder

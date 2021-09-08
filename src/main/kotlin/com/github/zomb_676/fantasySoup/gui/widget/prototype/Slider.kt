@@ -7,8 +7,8 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class Slider(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Slider>(initialInfo) {
-    private var hover : WidgetPicHolder? = null
-    private var bar : WidgetPicHolder? = null
+    private var hover : WidgetPicHolder = WidgetPicHolder.empty()
+    private var bar : WidgetPicHolder = WidgetPicHolder.empty()
 
     override fun getWidgetType(): ActualType = ActualType.SLIDER
 
@@ -25,10 +25,10 @@ class Slider(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo
     }
 
     override fun contains(texture: Texture): Boolean =
-        super.contains(texture) || hover?.texture == texture || bar?.texture == texture
+        super.contains(texture) || hover.texture == texture || bar.texture == texture
 
     override fun contains(file: File): Boolean =
-        super.contains(file) || hover?.file == file || bar?.file == file
+        super.contains(file) || hover.file == file || bar.file == file
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || hover == widgetPicHolder || bar == widgetPicHolder

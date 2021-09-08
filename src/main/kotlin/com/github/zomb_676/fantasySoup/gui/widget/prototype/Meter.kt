@@ -7,8 +7,8 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class Meter(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Meter>(initialInfo) {
-    private var pointer: WidgetPicHolder? = null
-    private var hover: WidgetPicHolder? = null
+    private var pointer: WidgetPicHolder = WidgetPicHolder.empty()
+    private var hover: WidgetPicHolder = WidgetPicHolder.empty()
 
     override fun getWidgetType(): ActualType = ActualType.METER
 
@@ -25,10 +25,10 @@ class Meter(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<
     }
 
     override fun contains(texture: Texture): Boolean =
-        super.contains(texture) || pointer?.texture == texture || hover?.texture == texture
+        super.contains(texture) || pointer.texture == texture || hover.texture == texture
 
     override fun contains(file: File): Boolean =
-        super.contains(file) || pointer?.file == file || hover?.file == file
+        super.contains(file) || pointer.file == file || hover.file == file
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || pointer == widgetPicHolder || hover == widgetPicHolder

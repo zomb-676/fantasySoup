@@ -7,8 +7,8 @@ import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class CheckBox(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<CheckBox>(initialInfo) {
-    var checked : WidgetPicHolder? = null
-    var banned : WidgetPicHolder? = null
+    var checked : WidgetPicHolder = WidgetPicHolder.empty()
+    var banned : WidgetPicHolder = WidgetPicHolder.empty()
 
     override fun getWidgetType(): ActualType = ActualType.CHECKBOX
 
@@ -25,11 +25,11 @@ class CheckBox(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeIn
     }
 
     override fun contains(texture: Texture): Boolean =
-        super.contains(texture) || checked?.texture == texture|| banned?.texture == texture
+        super.contains(texture) || checked.texture == texture|| banned.texture == texture
 
 
     override fun contains(file: File): Boolean =
-        super.contains(file) || checked?.file == file || banned?.file == file
+        super.contains(file) || checked.file == file || banned.file == file
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || checked == widgetPicHolder || banned == widgetPicHolder

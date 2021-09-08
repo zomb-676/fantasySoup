@@ -9,8 +9,8 @@ import java.io.File
 class Misc(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<Misc>(initialInfo) {
     override fun getWidgetType(): ActualType = ActualType.MISC
 
-    private var hover: WidgetPicHolder? = null
-    private var interact: WidgetPicHolder? = null
+    private var hover: WidgetPicHolder = WidgetPicHolder.empty()
+    private var interact: WidgetPicHolder = WidgetPicHolder.empty()
 
     override fun merge(another: Misc) {
 
@@ -25,10 +25,10 @@ class Misc(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<M
     }
 
     override fun contains(texture: Texture): Boolean =
-        super.contains(texture) || hover?.texture == texture || interact?.texture == texture
+        super.contains(texture) || hover.texture == texture || interact.texture == texture
 
     override fun contains(file: File): Boolean =
-        super.contains(file) || hover?.file == file || interact?.file == file
+        super.contains(file) || hover.file == file || interact.file == file
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || hover == widgetPicHolder || interact == widgetPicHolder

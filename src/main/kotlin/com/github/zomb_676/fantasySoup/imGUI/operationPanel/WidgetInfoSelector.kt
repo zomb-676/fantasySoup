@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
 
 object WidgetInfoSelector {
     var selectedTexture: OperationStage.PicInfo? = null
-    val widgetScale = floatArrayOf(1f)
+    private val widgetScale = floatArrayOf(1f)
     var needDraw = false
 
     var existWidgetSelect: Pair<ActualType, OperationStage.PicInfo>? = null
@@ -137,9 +137,19 @@ object WidgetInfoSelector {
         val (type, picInf) = typeAndPicInfos
         wrapImGUIObject {
             text("widget type:${type.roughName}")
-            for (widgetInfo in widgetInfos[type]) {
-                text(widgetInfo.widgetName)
-                widgetInfo.drawComponentInfo()
+            ImGui.separator()
+            if (GlobalSetting.mergedWidgetSelect){
+                for (widgetInfo in widgetInfos[type]) {
+                    text(widgetInfo.widgetName)
+                    widgetInfo.drawComponentInfo()
+                }
+            }else{
+                widgetInfos[type].forEach {
+                    radioButton(it.widgetName,it.hasComplete()){
+                        typeInfo = it
+                        enablePicTypePopup = true
+                    }
+                }
             }
         }
     }
