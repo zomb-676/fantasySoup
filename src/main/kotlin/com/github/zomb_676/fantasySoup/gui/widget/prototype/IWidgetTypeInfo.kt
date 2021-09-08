@@ -43,7 +43,8 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
     fun clearPicHolderWithSpecificTexture(texture: Texture) {
         getWidgetPicHolder(texture)?.takeIfNotNull {
             it.clear()
-            clearPicHolderWithSpecificTexture(texture) }
+            clearPicHolderWithSpecificTexture(texture)
+        }
     }
 
     fun drawComponentInfo() {
@@ -97,7 +98,7 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
         fun IWidgetTypeInfo<T>.tryRemoveFromExist(
             operatingPic: OperationStage.PicInfo?
         ) {
-            if (operatingPic!=null && !contains(operatingPic.texture)) {
+            if (operatingPic != null && !contains(operatingPic.texture)) {
                 widgetInfos.remove(this@IWidgetTypeInfo)
                 operatingPic.remove(this@IWidgetTypeInfo)
             }
@@ -109,7 +110,7 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
         fun IWidgetTypeInfo<T>.tryAddNew(
             operatingPic: OperationStage.PicInfo?
         ) {
-            if (operatingPic!=null && !contains(operatingPic.texture)) {
+            if (operatingPic != null && !contains(operatingPic.texture)) {
                 widgetInfos.add(this@IWidgetTypeInfo)
                 operatingPic.add(this@IWidgetTypeInfo)
             }
@@ -123,7 +124,7 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
             drawingPicType.takeIfNotEmpty { tooltipHover { imageFlip(it.texture!!) } }
             tableItem {
                 if (drawingPicType.texture == selectedPic.texture) {
-                    button("remove self"){
+                    button("remove self") {
                         drawingPicType.clear()
                         tryRemoveFromExist(selectedPic)
                     }
@@ -149,9 +150,9 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
                         tryRemoveFromExist(replacedPicInfo)
                     }
                 }
-                if (drawingPicType.isNotEmpty()){
+                if (drawingPicType.isNotEmpty()) {
                     sameLine()
-                    button("remove"){
+                    button("remove") {
                         drawingPicType.clear()
                         tryRemoveFromExist(selectedPic)
                     }
@@ -163,7 +164,7 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
     open fun drawComponentCore() = drawComponent("default", default)
 
     open fun drawComponentWithSelectButtonCore(widgetInfos: WidgetInfos) {
-       ImGuiMethods.pushId(1){ drawComponentWithSelectButton("default", default, widgetInfos)}
+        ImGuiMethods.pushId(1) { drawComponentWithSelectButton("default", default, widgetInfos) }
     }
 
 }

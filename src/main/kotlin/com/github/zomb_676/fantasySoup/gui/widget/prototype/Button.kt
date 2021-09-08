@@ -27,12 +27,6 @@ class Button(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo
 
     override fun hasComplete(): Boolean = super.hasComplete() && hover.isNotEmpty() && pressed.isNotEmpty()
 
-    override fun drawComponentWithSelectButtonCore(widgetInfos: OperationStage.WidgetInfos) {
-        super.drawComponentWithSelectButtonCore(widgetInfos)
-        ImGuiMethods.pushId(2){drawComponentWithSelectButton("hover",hover,widgetInfos)}
-        ImGuiMethods.pushId(3){drawComponentWithSelectButton("pressed",pressed,widgetInfos)}
-    }
-
     override fun contains(texture: Texture): Boolean =
         default.texture == texture || hover.texture == texture || pressed.texture == texture
 
@@ -42,6 +36,12 @@ class Button(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         default == widgetPicHolder || hover == widgetPicHolder || pressed == widgetPicHolder
 
-    override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder?
-        = if (default.texture == texture) default else if (hover.texture == texture) hover else if (pressed.texture==texture) pressed else null
+    override fun drawComponentWithSelectButtonCore(widgetInfos: OperationStage.WidgetInfos) {
+        super.drawComponentWithSelectButtonCore(widgetInfos)
+        ImGuiMethods.pushId(2) { drawComponentWithSelectButton("hover", hover, widgetInfos) }
+        ImGuiMethods.pushId(3) { drawComponentWithSelectButton("pressed", pressed, widgetInfos) }
+    }
+
+    override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
+        if (default.texture == texture) default else if (hover.texture == texture) hover else if (pressed.texture == texture) pressed else null
 }

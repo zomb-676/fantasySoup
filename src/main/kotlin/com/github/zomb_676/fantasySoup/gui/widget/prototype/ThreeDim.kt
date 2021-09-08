@@ -2,13 +2,14 @@ package com.github.zomb_676.fantasySoup.gui.widget.prototype
 
 import com.github.zomb_676.fantasySoup.gui.widget.ActualType
 import com.github.zomb_676.fantasySoup.gui.widget.WidgetPicHolder
+import com.github.zomb_676.fantasySoup.imGUI.ImGuiMethods
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import java.io.File
 
 class ThreeDim(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<ThreeDim>(initialInfo) {
-    private val hover : WidgetPicHolder = WidgetPicHolder.empty()
-    private val interact : WidgetPicHolder = WidgetPicHolder.empty()
+    private val hover: WidgetPicHolder = WidgetPicHolder.empty()
+    private val interact: WidgetPicHolder = WidgetPicHolder.empty()
 
     override fun getWidgetType(): ActualType = ActualType.THREE_DIM
 
@@ -32,4 +33,13 @@ class ThreeDim(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeIn
 
     override fun contains(widgetPicHolder: WidgetPicHolder): Boolean =
         super.contains(widgetPicHolder) || hover == widgetPicHolder || interact == widgetPicHolder
+
+    override fun drawComponentWithSelectButtonCore(widgetInfos: OperationStage.WidgetInfos) {
+        super.drawComponentWithSelectButtonCore(widgetInfos)
+        ImGuiMethods.pushId(2) { drawComponentWithSelectButton("hover", hover, widgetInfos) }
+        ImGuiMethods.pushId(3) { drawComponentWithSelectButton("interact", interact, widgetInfos) }
+    }
+
+    override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
+        if (default.texture == texture) default else if (hover.texture == texture) hover else if (interact.texture == texture) interact else null
 }
