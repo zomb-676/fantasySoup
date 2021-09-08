@@ -32,7 +32,7 @@ class NeedLoadStage : OperationStage() {
                         }
                     }
                     if (loadProcess != processTotal && processTotal != -1) {
-                        data[loadProcess].apply { result.add(PicInfo(this,FileTexture(this.path))) }
+                        data[loadProcess].apply { result.add(PicInfo(this,FileTexture(this.path).genTexture())) }
                         loadProcess++
                     }
                     if (loadProcess == processTotal) {

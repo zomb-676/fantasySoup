@@ -10,6 +10,10 @@ import org.intellij.lang.annotations.MagicConstant
 
 object ImGuiMethods {
 
+    fun sameLine() = ImGui.sameLine()
+
+    fun sameLine(startX:Float)  = ImGui.sameLine(startX)
+
     inline fun wrapImGUIObject(codeBlock: ImGuiMethods.() -> Unit) {
         codeBlock(ImGuiMethods)
     }
@@ -369,6 +373,12 @@ object ImGuiMethods {
 
     fun coloredText(text: String, red:Float, green:Float, blue:Float, alpha:Float){
         ImGui.textColored(red, green, blue,alpha,text)
+    }
+
+    inline fun pushId(id:Int,codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.pushID(id)
+        codeBlock(ImGuiMethods)
+        ImGui.popID()
     }
 
 }

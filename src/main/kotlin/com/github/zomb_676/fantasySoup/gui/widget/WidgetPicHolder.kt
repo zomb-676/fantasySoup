@@ -15,6 +15,11 @@ data class WidgetPicHolder(var file: File?, var texture: Texture?) {
         this.texture = texture
     }
 
+    fun set(picInfo: OperationStage.PicInfo) {
+        this.file = picInfo.file
+        this.texture = picInfo.texture
+    }
+
     fun isEmpty() = file == null || texture == null
 
     fun isNotEmpty() = file != null && texture != null

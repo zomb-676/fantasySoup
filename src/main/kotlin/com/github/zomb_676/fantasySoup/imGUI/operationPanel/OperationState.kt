@@ -24,7 +24,7 @@ sealed class OperationStage {
     /**
      * the container of the read result
      */
-    open class WidgetInfos {
+    open class WidgetInfos constructor(val rawPicDat : List<PicInfo>? = null) {
         val container: SortedMap<ActualType, MutableList<IWidgetTypeInfo<*>>> =
             sortedMapOf(
                 { t1, t2 -> t1.compareTo(t2) },
@@ -61,6 +61,10 @@ sealed class OperationStage {
         }
 
         fun length(): Int = container.values.sumOf { it.size }
+
+        fun add(widgetInfo: IWidgetTypeInfo<*>){
+            container[widgetInfo.getWidgetType()]!!.add(widgetInfo)
+        }
 
     }
 

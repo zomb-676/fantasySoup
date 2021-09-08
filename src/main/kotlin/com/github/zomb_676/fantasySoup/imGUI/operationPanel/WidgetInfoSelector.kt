@@ -18,7 +18,7 @@ object WidgetInfoSelector {
     var existWidgetSelect: Pair<ActualType, OperationStage.PicInfo>? = null
     var enableExistWidgetSelectPopup = false
 
-    var typeInfo: IWidgetTypeInfo<*>? = null
+    var selectedTypeInfo: IWidgetTypeInfo<*>? = null
     var enablePicTypePopup = false
 
     fun setSelected(widgetInfo: OperationStage.PicInfo) {
@@ -46,9 +46,9 @@ object WidgetInfoSelector {
                 setPopupEnable("selectPicType")
                 enablePicTypePopup = false
             }
-            typeInfo?.takeIfNotNull {
+            selectedTypeInfo?.takeIfNotNull {
                 popup("selectPicType") {
-                    typeInfo!!.drawSelectPicTypeInfo()
+                    selectedTypeInfo!!.drawSelectPicTypeInfo(widgetInfos)
                 }
             }
             if (enableExistWidgetSelectPopup) {
@@ -101,7 +101,7 @@ object WidgetInfoSelector {
                     }
                     rightClickLast {
                         val typeInfo: IWidgetTypeInfo<*>
-                        if (selectedPicInfo[type].isEmpty()) {
+                        if (widgetInfos[type].isEmpty()) {
                             typeInfo = newTypeInfo(type, file, texture)
                             selectedPicInfo.add(type, typeInfo)
                             widgetInfos.add(type, typeInfo)
@@ -110,7 +110,7 @@ object WidgetInfoSelector {
                             enableExistWidgetSelectPopup = true
                             return@rightClickLast
                         }
-                        WidgetInfoSelector.typeInfo = typeInfo
+                        selectedTypeInfo = typeInfo
                         enablePicTypePopup = true
                     }
                 }
@@ -146,7 +146,7 @@ object WidgetInfoSelector {
             }else{
                 widgetInfos[type].forEach {
                     radioButton(it.widgetName,it.hasComplete()){
-                        typeInfo = it
+                        selectedTypeInfo = it
                         enablePicTypePopup = true
                     }
                 }

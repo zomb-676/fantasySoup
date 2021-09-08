@@ -4,7 +4,7 @@ import com.github.zomb_676.fantasySoup.imGUI.ImGuiMethods.wrapImGUIObject
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage.InternalMethods.drawTypeNameSameLine
 
 class ManualSpecifyStage(val picFiles: List<PicInfo>) : OperationStage() {
-    val widgetInfos = WidgetInfos()
+    val widgetInfos = WidgetInfos(picFiles)
 
     override fun draw() {
         wrapImGUIObject {

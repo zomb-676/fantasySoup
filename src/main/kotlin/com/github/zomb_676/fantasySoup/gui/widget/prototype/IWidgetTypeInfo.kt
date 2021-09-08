@@ -7,7 +7,7 @@ import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage.WidgetInfos
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.WidgetInfoSelector
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
-import imgui.ImGui
+import com.github.zomb_676.fantasySoup.utils.takeIfNotNull
 import java.io.File
 
 sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage.WidgetInfoInitObject) {
@@ -38,6 +38,14 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
 
     open fun contains(widgetPicHolder: WidgetPicHolder): Boolean = default == widgetPicHolder
 
+    open fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? = if (default.texture == texture) default else null
+
+    fun clearPicHolderWithSpecificTexture(texture: Texture) {
+        getWidgetPicHolder(texture)?.takeIfNotNull {
+            it.clear()
+            clearPicHolderWithSpecificTexture(texture) }
+    }
+
     fun drawComponentInfo() {
         ImGuiMethods.wrapImGUIObject {
             table("widget component", 2) {
@@ -51,12 +59,13 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
     /**
      * wrap in scope outside
      */
-    fun drawSelectPicTypeInfo() {
+    fun drawSelectPicTypeInfo(widgetInfos: WidgetInfos) {
         ImGuiMethods.wrapImGUIObject {
-            table("pic type selector", 2) {
+            table("pic type selector", 3) {
                 tableHeader("pic type")
                 tableHeader("select status")
-                drawComponentCore()
+                tableHeader("operation")
+                drawComponentWithSelectButtonCore(widgetInfos)
             }
         }
     }
@@ -71,32 +80,90 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
         }
     }
 
-    protected fun drawComponentWithSelectButton(picTypeName: String, widgetPicHolder: WidgetPicHolder) {
+    /**
+     * @param picTypeName pic type name
+     * @param drawingPicType the drawing pic type instance
+     * @param widgetInfos the generating widgets collection
+     */
+    protected fun drawComponentWithSelectButton(
+        picTypeName: String,
+        drawingPicType: WidgetPicHolder,
+        widgetInfos: WidgetInfos
+    ) {
+
+        /**
+         * call after change
+         */
+        fun IWidgetTypeInfo<T>.tryRemoveFromExist(
+            operatingPic: OperationStage.PicInfo?
+        ) {
+            if (operatingPic!=null && !contains(operatingPic.texture)) {
+                widgetInfos.remove(this@IWidgetTypeInfo)
+                operatingPic.remove(this@IWidgetTypeInfo)
+            }
+        }
+
+        /**
+         * call before change
+         */
+        fun IWidgetTypeInfo<T>.tryAddNew(
+            operatingPic: OperationStage.PicInfo?
+        ) {
+            if (operatingPic!=null && !contains(operatingPic.texture)) {
+                widgetInfos.add(this@IWidgetTypeInfo)
+                operatingPic.add(this@IWidgetTypeInfo)
+            }
+        }
+
         ImGuiMethods.wrapImGUIObject {
-            val picInfo = WidgetInfoSelector.selectedTexture!!
+            //the changing picture
+            val selectedPic = WidgetInfoSelector.selectedTexture!!
             tableItem { text(picTypeName) }
-            tableItem { text(widgetPicHolder.file?.name ?: "unspecific") }
-            widgetPicHolder.takeIfNotEmpty { tooltipHover { imageFlip(it.texture!!) } }
+            tableItem { text(drawingPicType.file?.name ?: "unspecific") }
+            drawingPicType.takeIfNotEmpty { tooltipHover { imageFlip(it.texture!!) } }
             tableItem {
-                if (widgetPicHolder.isEmpty()) {
-                    if (widgetPicHolder.texture == picInfo.texture) {
-                        button("remove") { widgetPicHolder.clear() }
-                        tooltipHover { text("remove current pic from this type") }
-                        ImGui.sameLine()
-                    } else {
-                        button("cover") {
-                            widgetPicHolder.set(picInfo.file, picInfo.texture)
-                        }
-                        tooltipHover { text("cover the already specific pic type") }
+                if (drawingPicType.texture == selectedPic.texture) {
+                    button("remove self"){
+                        drawingPicType.clear()
+                        tryRemoveFromExist(selectedPic)
+                    }
+                    return@tableItem
+                }
+                val replacedPicInfo = widgetInfos.rawPicDat!!.find { it.texture == drawingPicType.texture }
+                val hasInited = drawingPicType.isNotEmpty()
+                val alreadyUsedInThisWidget = contains(selectedPic.texture)
+                if (alreadyUsedInThisWidget) {
+                    button("cover") {
+                        drawingPicType.set(selectedPic)
+                        tryRemoveFromExist(replacedPicInfo)
+                    }
+                    sameLine()
+                    button("switch") {
+                        clearPicHolderWithSpecificTexture(selectedPic.texture)
+                        drawingPicType.set(selectedPic)
                     }
                 } else {
-                    button("set") { widgetPicHolder.set(picInfo.file, picInfo.texture) }
-                    tooltipHover { text("set  for this pic type") }
+                    button("set") {
+                        tryAddNew(selectedPic)
+                        drawingPicType.set(selectedPic)
+                        tryRemoveFromExist(replacedPicInfo)
+                    }
+                }
+                if (drawingPicType.isNotEmpty()){
+                    sameLine()
+                    button("remove"){
+                        drawingPicType.clear()
+                        tryRemoveFromExist(selectedPic)
+                    }
                 }
             }
         }
     }
 
     open fun drawComponentCore() = drawComponent("default", default)
+
+    open fun drawComponentWithSelectButtonCore(widgetInfos: WidgetInfos) {
+       ImGuiMethods.pushId(1){ drawComponentWithSelectButton("default", default, widgetInfos)}
+    }
 
 }

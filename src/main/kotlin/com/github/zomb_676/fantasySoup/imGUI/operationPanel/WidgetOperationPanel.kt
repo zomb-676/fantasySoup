@@ -9,7 +9,16 @@ import java.io.File
 
 object WidgetOperationPanel {
 
+    val space = '\u200C'
     var currentStage: OperationStage = NeedLoadStage()
+
+    fun spaceN(n:Int):String{
+        var base = ""
+        repeat(n){
+            base+= space
+        }
+        return base
+    }
 
     /**
      * independent launch
