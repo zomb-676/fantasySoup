@@ -7,7 +7,6 @@ import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.OperationStage.WidgetInfos
 import com.github.zomb_676.fantasySoup.imGUI.operationPanel.WidgetInfoSelector
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
-import com.github.zomb_676.fantasySoup.utils.takeIfNotNull
 import java.io.File
 
 sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage.WidgetInfoInitObject) {
@@ -40,9 +39,10 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
 
     open fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? = if (default.texture == texture) default else null
 
-    fun clearPicHolderWithSpecificTexture(texture: Texture) {
-        getWidgetPicHolder(texture)?.takeIfNotNull {
-            it.clear()
+    tailrec fun clearPicHolderWithSpecificTexture(texture: Texture) {
+        val holder =getWidgetPicHolder(texture)
+        if (holder!=null){
+            holder.clear()
             clearPicHolderWithSpecificTexture(texture)
         }
     }
