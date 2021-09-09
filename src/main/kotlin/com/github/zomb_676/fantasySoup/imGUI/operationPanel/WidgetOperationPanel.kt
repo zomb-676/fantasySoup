@@ -2,6 +2,8 @@ package com.github.zomb_676.fantasySoup.imGUI.operationPanel
 
 import com.github.zomb_676.fantasySoup.imGUI.IImGUI
 import com.github.zomb_676.fantasySoup.imGUI.ImGuiMethods
+import com.github.zomb_676.fantasySoup.imGUI.node.Node
+import com.github.zomb_676.fantasySoup.imGUI.node.Vertex
 import com.github.zomb_676.fantasySoup.utils.assert
 import com.github.zomb_676.fantasySoup.utils.takeIfNotNull
 import imgui.ImGui
@@ -12,10 +14,10 @@ object WidgetOperationPanel {
     val space = '\u200C'
     var currentStage: OperationStage = NeedLoadStage()
 
-    fun spaceN(n:Int):String{
+    fun spaceN(n: Int): String {
         var base = ""
-        repeat(n){
-            base+= space
+        repeat(n) {
+            base += space
         }
         return base
     }
@@ -27,11 +29,22 @@ object WidgetOperationPanel {
     fun main(args: Array<String>) {
         IImGUI.initWithGL(1600, 900)
         val font = ImGuiMethods.getFontFromSysTTFDir("comic.ttf")
+        var hasLinked = false
+        var node = Node("input")
+            .addInput(Vertex.InputVertex("in"))
+            .addOutput(Vertex.OutputVertex("out"))
         IImGUI.wrapShouldClose {
             IImGUI.wrapRunWithGL {
                 ImGui.pushFont(font)
                 currentStage.tick().takeIfNotNull { currentStage = it }
                 currentStage.draw()
+
+//                window("node editor") {
+//                    nodeEditor {
+//                        node.draw()
+//                    }
+//                }
+
                 ImGui.popFont()
             }
 

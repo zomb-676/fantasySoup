@@ -43,4 +43,8 @@ class CheckBox(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeIn
 
     override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
         if (default.texture == texture) default else if (checked.texture == texture) checked else if (banned.texture == texture) banned else null
+
+    override fun hasFullComplete(): Boolean = hasRequiredComplete() && banned.isNotEmpty()
+
+    override fun hasRequiredComplete(): Boolean = super.hasRequiredComplete() && checked.isNotEmpty()
 }

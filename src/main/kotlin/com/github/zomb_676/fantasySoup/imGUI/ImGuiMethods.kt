@@ -5,6 +5,9 @@ import com.github.zomb_676.fantasySoup.utils.rough
 import com.github.zomb_676.fantasySoup.utils.takeIfTrue
 import imgui.ImFont
 import imgui.ImGui
+import imgui.extension.imnodes.ImNodes
+import imgui.extension.imnodes.flag.ImNodesAttributeFlags
+import imgui.extension.imnodes.flag.ImNodesPinShape
 import imgui.flag.ImGuiDir
 import org.intellij.lang.annotations.MagicConstant
 
@@ -12,7 +15,7 @@ object ImGuiMethods {
 
     fun sameLine() = ImGui.sameLine()
 
-    fun sameLine(startX:Float)  = ImGui.sameLine(startX)
+    fun sameLine(startX: Float) = ImGui.sameLine(startX)
 
     inline fun wrapImGUIObject(codeBlock: ImGuiMethods.() -> Unit) {
         codeBlock(ImGuiMethods)
@@ -359,26 +362,86 @@ object ImGuiMethods {
         }
     }
 
-    fun text(text:String){
+    fun text(text: String) {
         ImGui.text(text)
     }
 
-    fun coloredText(text:String,color:Int){
-        ImGui.textColored(color,text)
+    fun coloredText(text: String, color: Int) {
+        ImGui.textColored(color, text)
     }
 
-    fun coloredText(text: String, red:Int, green:Int, blue:Int, alpha:Int){
-        ImGui.textColored(red, green, blue,alpha,text)
+    fun coloredText(text: String, red: Int, green: Int, blue: Int, alpha: Int) {
+        ImGui.textColored(red, green, blue, alpha, text)
     }
 
-    fun coloredText(text: String, red:Float, green:Float, blue:Float, alpha:Float){
-        ImGui.textColored(red, green, blue,alpha,text)
+    fun coloredText(text: String, red: Float, green: Float, blue: Float, alpha: Float) {
+        ImGui.textColored(red, green, blue, alpha, text)
     }
 
-    inline fun pushId(id:Int,codeBlock: ImGuiMethods.() -> Unit){
+    inline fun pushId(id: Int, codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.pushID(id)
         codeBlock(ImGuiMethods)
         ImGui.popID()
     }
 
+    //extension for https://github.com/Nelarius/imnodes
+
+    inline fun nodeEditor(codeBlock: ImGuiMethods.() -> Unit) {
+        ImNodes.beginNodeEditor()
+        codeBlock(ImGuiMethods)
+        ImNodes.endNodeEditor()
+    }
+
+    inline fun node(hardcodeId: Int, codeBlock: ImGuiMethods.() -> Unit) {
+        ImNodes.beginNode(hardcodeId)
+        codeBlock(ImGuiMethods)
+        ImNodes.endNode()
+    }
+
+    inline fun inputAttribute(hardcodeId: Int, codeBlock: ImGuiMethods.() -> Unit) {
+        ImNodes.beginInputAttribute(hardcodeId)
+        codeBlock(ImGuiMethods)
+        ImNodes.endInputAttribute()
+    }
+
+    inline fun inputAttribute(
+        hardcodeId: Int,
+        @MagicConstant(valuesFromClass = ImNodesPinShape::class) imNodePinShape: Int,
+        codeBlock: ImGuiMethods.() -> Unit
+    ) {
+        ImNodes.beginInputAttribute(hardcodeId, imNodePinShape)
+        codeBlock(ImGuiMethods)
+        ImNodes.endInputAttribute()
+    }
+
+    inline fun outputAttribute(hardcodeId: Int, codeBlock: ImGuiMethods.() -> Unit) {
+        ImNodes.beginOutputAttribute(hardcodeId)
+        codeBlock(ImGuiMethods)
+        ImNodes.endOutputAttribute()
+    }
+
+    inline fun outputAttribute(
+        hardcodeId: Int,
+        @MagicConstant(valuesFromClass = ImNodesPinShape::class) imNodePinShape: Int,
+        codeBlock: ImGuiMethods.() -> Unit
+    ) {
+        ImNodes.beginOutputAttribute(hardcodeId, imNodePinShape)
+        codeBlock(ImGuiMethods)
+        ImNodes.endOutputAttribute()
+    }
+
+    inline fun attributeFlag(
+        @MagicConstant(valuesFromClass = ImNodesAttributeFlags::class) imNodesAttributeFlags: Int,
+        codeBlock: ImGuiMethods.() -> Unit
+    ) {
+        ImNodes.pushAttributeFlag(imNodesAttributeFlags)
+        codeBlock(ImGuiMethods)
+        ImNodes.endOutputAttribute()
+    }
+
+    inline fun nodeTitle(codeBlock: ImGuiMethods.() -> Unit){
+        ImNodes.beginNodeTitleBar()
+        codeBlock(ImGuiMethods)
+        ImNodes.endNodeTitleBar()
+    }
 }

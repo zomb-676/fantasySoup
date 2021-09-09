@@ -1,6 +1,7 @@
 package com.github.zomb_676.fantasySoup.imGUI
 
 import imgui.ImGui
+import imgui.extension.imnodes.ImNodes
 import imgui.flag.ImGuiConfigFlags
 import imgui.gl3.ImGuiImplGl3
 import imgui.glfw.ImGuiImplGlfw
@@ -70,6 +71,7 @@ object IImGUI {
         State.window = window
         //init ImGUI
         ImGui.createContext()
+        ImNodes.createContext()
         State.imGuiGlfw.init(State.window, true)
         State.imGuiGl3.init()
     }
@@ -90,6 +92,7 @@ object IImGUI {
 
         //init ImGUI
         ImGui.createContext()
+        ImNodes.createContext()
         State.imGuiGlfw.init(State.window, true)
         State.imGuiGl3.init()
 
@@ -135,6 +138,7 @@ object IImGUI {
         //dispose ImGUI
         State.imGuiGlfw.dispose()
         State.imGuiGl3.dispose()
+        ImNodes.destroyContext()
         ImGui.destroyContext()
         //dispose GLFW
         Callbacks.glfwFreeCallbacks(State.window)
@@ -145,10 +149,10 @@ object IImGUI {
 
     fun disposeImGUIOnly() {
         //dispose GLFW
-        Callbacks.glfwFreeCallbacks(State.window)
-        GLFW.glfwDestroyWindow(State.window)
-        GLFW.glfwTerminate()
-        GLFW.glfwSetErrorCallback(null)!!.free()
+        State.imGuiGlfw.dispose()
+        State.imGuiGl3.dispose()
+        ImNodes.destroyContext()
+        ImGui.destroyContext()
     }
 
 }

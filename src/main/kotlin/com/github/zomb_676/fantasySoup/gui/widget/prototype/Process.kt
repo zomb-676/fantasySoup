@@ -22,6 +22,7 @@ class Process(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInf
     override fun drawComponentCore() {
         super.drawComponentCore()
         drawComponent("hover", hover)
+        drawComponent("fill", fill)
     }
 
     override fun contains(texture: Texture): Boolean =
@@ -40,4 +41,8 @@ class Process(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInf
 
     override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
         if (default.texture == texture) default else if (hover.texture == texture) hover else null
+
+    override fun hasFullComplete(): Boolean = hasRequiredComplete() && hover.isNotEmpty()
+
+    override fun hasRequiredComplete(): Boolean = super.hasRequiredComplete() && fill.isNotEmpty()
 }

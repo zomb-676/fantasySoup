@@ -145,7 +145,7 @@ object WidgetInfoSelector {
                 }
             }else{
                 widgetInfos[type].forEach {
-                    radioButton(it.widgetName,it.hasComplete()){
+                    radioButton(it.widgetName,it.hasFullComplete()){
                         selectedTypeInfo = it
                         enablePicTypePopup = true
                     }

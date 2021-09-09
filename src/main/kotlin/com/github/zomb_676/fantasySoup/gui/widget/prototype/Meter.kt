@@ -42,4 +42,8 @@ class Meter(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<
 
     override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
         if (default.texture == texture) default else if (hover.texture == texture) hover else if (pointer.texture == texture) pointer else null
+
+    override fun hasFullComplete(): Boolean = hasRequiredComplete() && hover.isNotEmpty()
+
+    override fun hasRequiredComplete(): Boolean = super.hasRequiredComplete() && pointer.isNotEmpty()
 }

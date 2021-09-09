@@ -25,7 +25,7 @@ class Button(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo
         drawComponent("pressed", pressed)
     }
 
-    override fun hasComplete(): Boolean = super.hasComplete() && hover.isNotEmpty() && pressed.isNotEmpty()
+    override fun hasFullComplete(): Boolean = super.hasFullComplete() && hover.isNotEmpty() && pressed.isNotEmpty()
 
     override fun contains(texture: Texture): Boolean =
         default.texture == texture || hover.texture == texture || pressed.texture == texture

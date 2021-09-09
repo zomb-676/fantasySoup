@@ -42,4 +42,9 @@ class Slider(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo
 
     override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
         if (default.texture == texture) default else if (hover.texture == texture) hover else if (bar.texture == texture) bar else null
+
+    override fun hasFullComplete(): Boolean = hasFullComplete() && hover.isNotEmpty()
+
+    override fun hasRequiredComplete(): Boolean = super.hasRequiredComplete() && bar.isNotEmpty()
+
 }

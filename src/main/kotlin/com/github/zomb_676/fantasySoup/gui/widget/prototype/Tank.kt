@@ -42,4 +42,8 @@ class Tank(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<T
 
     override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
         if (default.texture == texture) default else if (hover.texture == texture) hover else if (fill.texture == texture) fill else null
+
+    override fun hasFullComplete(): Boolean = hasRequiredComplete() && hover.isNotEmpty()
+
+    override fun hasRequiredComplete(): Boolean = super.hasRequiredComplete() && fill.isNotEmpty()
 }

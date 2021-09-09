@@ -40,4 +40,6 @@ class Text(initialInfo: OperationStage.WidgetInfoInitObject) : IWidgetTypeInfo<T
     override fun getWidgetPicHolder(texture: Texture): WidgetPicHolder? =
         if (default.texture == texture) default else if (hover.texture == texture) hover else null
 
+    override fun hasFullComplete(): Boolean = super.hasFullComplete() && hover.isNotEmpty()
+
 }

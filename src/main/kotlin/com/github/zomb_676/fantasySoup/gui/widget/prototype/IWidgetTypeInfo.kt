@@ -71,7 +71,9 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
         }
     }
 
-    open fun hasComplete() = default.isNotEmpty()
+    open fun hasFullComplete() = default.isNotEmpty()
+
+    open fun hasRequiredComplete() = default.isNotEmpty()
 
     protected fun drawComponent(picTypeName: String, widgetPicHolder: WidgetPicHolder) {
         ImGuiMethods.wrapImGUIObject {
@@ -110,7 +112,8 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
         fun IWidgetTypeInfo<T>.tryAddNew(
             operatingPic: OperationStage.PicInfo?
         ) {
-            if (operatingPic != null && !contains(operatingPic.texture)) {
+            if (operatingPic != null && !contains(operatingPic.texture)
+                && !widgetInfos.container[this.getWidgetType()]!!.contains(this)) {
                 widgetInfos.add(this@IWidgetTypeInfo)
                 operatingPic.add(this@IWidgetTypeInfo)
             }
@@ -134,9 +137,15 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
                 val hasInited = drawingPicType.isNotEmpty()
                 val alreadyUsedInThisWidget = contains(selectedPic.texture)
                 if (alreadyUsedInThisWidget) {
-                    button("cover") {
-                        drawingPicType.set(selectedPic)
-                        tryRemoveFromExist(replacedPicInfo)
+                    if (replacedPicInfo != null){
+                        button("cover") {
+                            drawingPicType.set(selectedPic)
+                            tryRemoveFromExist(replacedPicInfo)
+                        }
+                    }else{
+                        button("set"){
+                            drawingPicType.set(selectedPic)
+                        }
                     }
                     sameLine()
                     button("switch") {
@@ -144,10 +153,18 @@ sealed class IWidgetTypeInfo<T : IWidgetTypeInfo<T>>(initialInfo: OperationStage
                         drawingPicType.set(selectedPic)
                     }
                 } else {
-                    button("set") {
-                        tryAddNew(selectedPic)
-                        drawingPicType.set(selectedPic)
-                        tryRemoveFromExist(replacedPicInfo)
+                    if (selectedPic.texture != drawingPicType.texture && drawingPicType.isNotEmpty()){
+                        button("cover"){
+                            tryAddNew(selectedPic)
+                            drawingPicType.set(selectedPic)
+                            tryRemoveFromExist(replacedPicInfo)
+                        }
+                    }else{
+                        button("set") {
+                            tryAddNew(selectedPic)
+                            drawingPicType.set(selectedPic)
+                            tryRemoveFromExist(replacedPicInfo)
+                        }
                     }
                 }
                 if (drawingPicType.isNotEmpty()) {
