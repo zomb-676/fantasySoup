@@ -5,9 +5,11 @@ import com.github.zomb_676.fantasySoup.utils.rough
 import com.github.zomb_676.fantasySoup.utils.takeIfTrue
 import imgui.ImFont
 import imgui.ImGui
+import imgui.ImVec4
 import imgui.extension.imnodes.ImNodes
 import imgui.extension.imnodes.flag.ImNodesAttributeFlags
 import imgui.extension.imnodes.flag.ImNodesPinShape
+import imgui.flag.ImGuiCol
 import imgui.flag.ImGuiDir
 import org.intellij.lang.annotations.MagicConstant
 
@@ -133,6 +135,19 @@ object ImGuiMethods {
     inline fun radioButton(name: String, isActive: Boolean, codeBlock: ImGuiMethods.() -> Unit) {
         ImGui.radioButton(name, isActive).takeIfTrue {
             codeBlock(ImGuiMethods)
+        }
+    }
+
+    /**
+     * color specific see https://github.com/ocornut/imgui/blob/17a7084b57f9713ec6538881079d6c5a1b6b3598/imgui_widgets.cpp#L1172-L1223
+     */
+    inline fun coloredRadioButton(name: String, isActive: Boolean, color: Int, codeBlock: ImGuiMethods.() -> Unit) {
+        pushColorStyle(ImGuiCol.CheckMark,color){
+            pushColorStyle(ImGuiCol.Border,color /* //TODO */){
+                radioButton(name,isActive){
+                    codeBlock(ImGuiMethods)
+                }
+            }
         }
     }
 
@@ -384,6 +399,12 @@ object ImGuiMethods {
         ImGui.popID()
     }
 
+    inline fun pushColorStyle(@MagicConstant(valuesFromClass = ImGuiCol::class) imGuiCol: Int, color: Int, codeBlock: ImGuiMethods.() -> Unit) {
+        ImGui.pushStyleColor(imGuiCol,color)
+        codeBlock(ImGuiMethods)
+        ImGui.popStyleColor()
+    }
+
     //extension for https://github.com/Nelarius/imnodes
 
     inline fun nodeEditor(codeBlock: ImGuiMethods.() -> Unit) {
@@ -439,9 +460,18 @@ object ImGuiMethods {
         ImNodes.endOutputAttribute()
     }
 
-    inline fun nodeTitle(codeBlock: ImGuiMethods.() -> Unit){
+    inline fun nodeTitle(codeBlock: ImGuiMethods.() -> Unit) {
         ImNodes.beginNodeTitleBar()
         codeBlock(ImGuiMethods)
         ImNodes.endNodeTitleBar()
+    }
+
+    fun ImVec4.toFloatArray():FloatArray=
+        floatArrayOf(x,y,z,w)
+
+    fun ImVec4.toRGB(): FloatArray {
+        val container = floatArrayOf(0f,0f,0f)
+        ImGui.colorConvertHSVtoRGB(this.toFloatArray(),container)
+        return container
     }
 }
