@@ -93,7 +93,7 @@ object WidgetInfoSelector {
                     selectedPicInfo[type].clear()
                     widgetInfos[type].removeAll { it.contains(file) }
                 }
-                if (!hasDoubleClickTrigged){
+                if (!hasDoubleClickTrigged) {
                     leftClickLast {
                         val newTypeInfo = newTypeInfo(type, file, texture)
                         selectedPicInfo.add(type, newTypeInfo)
@@ -138,16 +138,30 @@ object WidgetInfoSelector {
         wrapImGUIObject {
             text("widget type:${type.roughName}")
             ImGui.separator()
-            if (GlobalSetting.mergedWidgetSelect){
+            if (GlobalSetting.mergedWidgetSelect) {
                 for (widgetInfo in widgetInfos[type]) {
                     text(widgetInfo.widgetName)
                     widgetInfo.drawComponentInfo()
                 }
-            }else{
+            } else {
                 widgetInfos[type].forEach {
-                    radioButton(it.widgetName,it.hasFullComplete()){
-                        selectedTypeInfo = it
-                        enablePicTypePopup = true
+                    if (it.hasRequiredComplete()) {
+                        if (it.hasFullComplete()) {
+                            radioButton(it.widgetName, true) {
+                                selectedTypeInfo = it
+                                enablePicTypePopup = true
+                            }
+                        } else {
+                            coloredRadioButton(it.widgetName, true, GlobalSetting.redRadioColor) {
+                                selectedTypeInfo = it
+                                enablePicTypePopup = true
+                            }
+                        }
+                    } else {
+                        radioButton(it.widgetName, false) {
+                            selectedTypeInfo = it
+                            enablePicTypePopup = true
+                        }
                     }
                 }
             }

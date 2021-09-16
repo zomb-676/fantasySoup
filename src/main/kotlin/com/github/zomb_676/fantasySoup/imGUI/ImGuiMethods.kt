@@ -1,5 +1,6 @@
 package com.github.zomb_676.fantasySoup.imGUI
 
+import com.github.zomb_676.fantasySoup.imGUI.operationPanel.GlobalSetting
 import com.github.zomb_676.fantasySoup.render.graphic.texture.Texture
 import com.github.zomb_676.fantasySoup.utils.rough
 import com.github.zomb_676.fantasySoup.utils.takeIfTrue
@@ -139,13 +140,17 @@ object ImGuiMethods {
     }
 
     /**
-     * color specific see https://github.com/ocornut/imgui/blob/17a7084b57f9713ec6538881079d6c5a1b6b3598/imgui_widgets.cpp#L1172-L1223
+     * color specific see
+     *
+     * [https://github.com/ocornut/imgui/blob/17a7084b57f9713ec6538881079d6c5a1b6b3598/imgui_widgets.cpp#L1172-L1223]
      */
-    inline fun coloredRadioButton(name: String, isActive: Boolean, color: Int, codeBlock: ImGuiMethods.() -> Unit) {
-        pushColorStyle(ImGuiCol.CheckMark,color){
-            pushColorStyle(ImGuiCol.Border,color /* //TODO */){
-                radioButton(name,isActive){
-                    codeBlock(ImGuiMethods)
+    inline fun coloredRadioButton(name: String, isActive: Boolean,color:GlobalSetting.RadioColor, codeBlock: ImGuiMethods.() -> Unit) {
+        pushColorStyle(ImGuiCol.CheckMark,color.innerColor){
+            pushColorStyle(ImGuiCol.FrameBg,color.outerColor){
+                pushColorStyle(ImGuiCol.FrameBgHovered,color.hoverColor){
+                    radioButton(name,isActive){
+                        codeBlock(ImGuiMethods)
+                    }
                 }
             }
         }
@@ -403,6 +408,12 @@ object ImGuiMethods {
         ImGui.pushStyleColor(imGuiCol,color)
         codeBlock(ImGuiMethods)
         ImGui.popStyleColor()
+    }
+
+    inline fun pushFont(font: ImFont,codeBlock: ImGuiMethods.() -> Unit){
+        ImGui.pushFont(font)
+        codeBlock(ImGuiMethods)
+        ImGui.popFont()
     }
 
     //extension for https://github.com/Nelarius/imnodes

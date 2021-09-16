@@ -6,7 +6,6 @@ import com.github.zomb_676.fantasySoup.imGUI.node.Node
 import com.github.zomb_676.fantasySoup.imGUI.node.Vertex
 import com.github.zomb_676.fantasySoup.utils.assert
 import com.github.zomb_676.fantasySoup.utils.takeIfNotNull
-import imgui.ImGui
 import java.io.File
 
 object WidgetOperationPanel {
@@ -35,17 +34,21 @@ object WidgetOperationPanel {
             .addOutput(Vertex.OutputVertex("out"))
         IImGUI.wrapShouldClose {
             IImGUI.wrapRunWithGL {
-                ImGui.pushFont(font)
-                currentStage.tick().takeIfNotNull { currentStage = it }
-                currentStage.draw()
-
+                pushFont(font) {
+                    currentStage.tick().takeIfNotNull { currentStage = it }
+                    currentStage.draw()
+                }
+//                ImGui.pushStyleColor(ImGuiCol.CheckMark,1f,0f,0f,5f)
+//                ImGui.pushStyleColor(ImGuiCol.BorderShadow,)
+//                ImGui.pushStyleColor(ImGuiCol.Border,)
+//                ImGui.radioButton()
+//                ImGui.popStyleColor(2)
 //                window("node editor") {
 //                    nodeEditor {
 //                        node.draw()
 //                    }
 //                }
 
-                ImGui.popFont()
             }
 
         }
