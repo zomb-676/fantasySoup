@@ -154,21 +154,39 @@
 
 ## banned
 
+Checkbox indicating prohibited
+
+## checked
+
+Checkbox indicating checked
+
 ## default
+
+Default type of all widgets
 
 ## fill
 
+Filler for progress bar
+
 ## hover
+
+A state of widget, display when hover your mouse above it
 
 ## interact
 
+A state of widget, display when you interact with it
+
 ## pointer
+
+The pointer of meter
 
 ## pressed
 
+A state of widget, display when you press it
+
 ## rail
 
-## slider
+Slider track
 
 
 # Data Type
